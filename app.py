@@ -58,7 +58,7 @@ def login_form(cookie_manager):
     pm = ProfileManager()
 
     # 使用 st.tabs 替代原本的按钮切换模式，界面更现代、丝滑
-    tab_login, tab_register = st.tabs(["🔐 账号登录", "📝 新患者注册"])
+    tab_login, tab_register = st.tabs(["🔐 账号登录", "📝 新用户注册"])
 
     with tab_login:
         with st.form("login_form", border=True):

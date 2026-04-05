@@ -9,7 +9,7 @@ from config import config
 
 def inquiry_node(state: AgentState):
     """
-    增强版问诊节点：判定信息完备性。
+    问诊节点：判定信息完备性。
     """
     skill_dir = os.path.dirname(__file__)
     md_path = os.path.join(skill_dir, "inquiry.md")
@@ -60,8 +60,6 @@ def inquiry_node(state: AgentState):
                 # 再兜底，当完全解析不出 JSON 时，强行按 chat 回馈，附带文本提取的症状
                 res_data = {"intent_type": "chat", "is_complete": False, "symptoms": [], "response": content}
 
-        # 发生错误时大模型可能直接将大段文字填进 response
-        # 且本身可能包含了换行符，甚至直接就是裸 JSON 使得前端看着突兀
         intent = res_data.get("intent_type", "chat")
 
         # 覆写 AI 响应文本，剥离 JSON 痕迹

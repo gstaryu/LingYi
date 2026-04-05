@@ -4,9 +4,7 @@ import hashlib
 from typing import List, Dict
 from tqdm import tqdm
 
-# 从模型工厂导入向量模型实例
 from model_provider import model_manager
-# 使用修复后的 vector_client 实例名
 from tools.vector_db_client import vector_client
 
 

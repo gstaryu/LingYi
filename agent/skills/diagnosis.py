@@ -67,8 +67,6 @@ def diagnosis_node(state: AgentState):
     response = llm.invoke([SystemMessage(content=full_prompt)] + state["messages"][-history_window:])
 
     # 5. 更新状态字典：将辨证结果存入 diagnosis 字段
-    # Diagnosis 节点不用向用户展示，只是内部流转给 treatment
-    # 因此不需要添加到 messages 里，避免重复输出
     return {
         "diagnosis": response.content,
     }

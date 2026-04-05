@@ -2,14 +2,12 @@ import chromadb
 import os
 import hashlib
 from typing import List, Dict, Any
-# 导入模型工厂，确保检索和入库使用同一个模型实例
 from model_provider import model_manager
 
 
 class VectorDBClient:
     """
     中医药知识库向量检索客户端。
-    已修复：显式使用 BGE-M3 进行查询向量化，确保检索准确性。
     """
 
     def __init__(self, db_path: str = "./storage/chroma_db"):
@@ -35,8 +33,7 @@ class VectorDBClient:
 
     def search(self, query: str, top_k: int = 3) -> List[str]:
         """
-        原有接口：根据查询词检索相关中医文献。
-        已修复：通过显式 embed_query 统一向量空间。
+        通过显式 embed_query 统一向量空间。
         """
         # 3. 手动将文本转化为向量，避免 Chroma 使用默认的 MiniLM 模型
         query_embedding = self.embedding_model.embed_query(query)
@@ -53,7 +50,7 @@ class VectorDBClient:
 
     def hybrid_search(self, query_text: str, n_results: int = 10) -> List[Dict]:
         """
-        进阶接口：执行混合检索逻辑。
+        执行混合检索逻辑。
         """
         query_embedding = self.embedding_model.embed_query(query_text)
 
