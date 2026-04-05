@@ -1,0 +1,111 @@
+import os
+import json
+import re
+from langchain_core.messages import SystemMessage
+from agent.state import AgentState
+from model_provider import model_manager
+from config import config
+
+
+def inquiry_node(state: AgentState):
+    """
+    增强版问诊节点：判定信息完备性。
+    """
+    skill_dir = os.path.dirname(__file__)
+    md_path = os.path.join(skill_dir, "inquiry.md")
+    with open(md_path, "r", encoding="utf-8") as f:
+        inquiry_prompt = f.read()
+
+    llm = model_manager.get_model()
+
+    # 1. 提取上下文
+    file_content = state.get("extracted_file_content", "")
+    summary = state.get("summary", "")
+    existing_symptoms = ", ".join(state.get("symptoms", []))
+    has_provided_treatment = state.get("has_provided_treatment", False)
+
+    context_block = f"\n\n=== 核心上下文 ===\n已提取症状: [{existing_symptoms}]\n已给出初步方案: {'是(用户当前可能在追加症状或提问，请直接辨证解答)' if has_provided_treatment else '否(处于初诊收集阶段)'}"
+    if file_content: context_block += f"\n【文件内容】: {file_content}"
+    if summary: context_block += f"\n【历史摘要】: {summary}"
+
+    # 2. 调用模型
+    system_msg = SystemMessage(content=f"{inquiry_prompt}\n{context_block}")
+
+    try:
+        # 只带入最近 N 轮对话，保证效率
+        history_window = config.MAX_HISTORY_MESSAGES_INQUIRY
+        # 获取除了第一个系统提示词以外的消息
+        messages = state["messages"][-history_window:]
+
+        response = llm.invoke([system_msg] + messages)
+        content = response.content
+
+        # 稳健的 JSON 解析
+        # 匹配第一个 { 和最后一个 } 组合的完整对象
+        json_match = re.search(r'(\{.*})', content, re.DOTALL)
+        res_data = {}
+        if json_match:
+            try:
+                # 处理由于换行、多重转义等造成的常见JSON解析错误
+                clean_json_str = json_match.group(1).replace('\n', '\\n')
+                res_data = json.loads(json_match.group(1))
+            except json.JSONDecodeError:
+                pass
+
+        if not res_data:
+            try:
+                # 兜底：如果模型没吐 JSON，尝试直接解析
+                res_data = json.loads(content)
+            except json.JSONDecodeError:
+                # 再兜底，当完全解析不出 JSON 时，强行按 chat 回馈，附带文本提取的症状
+                res_data = {"intent_type": "chat", "is_complete": False, "symptoms": [], "response": content}
+
+        # 发生错误时大模型可能直接将大段文字填进 response
+        # 且本身可能包含了换行符，甚至直接就是裸 JSON 使得前端看着突兀
+        intent = res_data.get("intent_type", "chat")
+
+        # 覆写 AI 响应文本，剥离 JSON 痕迹
+        response.content = res_data.get("response", content)
+
+        # 3. 将新提取的症状和已有的合并
+        symptoms = state.get("symptoms", [])
+        new_symptoms = res_data.get("symptoms", [])
+        merged_symptoms = list(set(symptoms + new_symptoms))
+
+        is_complete = res_data.get("is_complete", False)
+
+
+        # 兜底强制放行：如果已经给过方案，或者是复诊调方，强行进入辨证环节，不再死缠烂打追问
+        if has_provided_treatment:
+            is_complete = True
+            if intent == "inquiry_more":
+                intent = "diagnose"
+
+        # 路由降级逻辑：如果是诊疗但信息不全，标记为继续问诊
+        if intent == "diagnose" and not is_complete:
+            intent = "inquiry_more"
+
+        # 如果是结尾客套话（用户发“谢谢”、“好的”），重置或保持 chat 意图以直接返回
+        last_user_msg = ""
+        for m in reversed(messages):
+            if m.type == "human":
+                last_user_msg = m.content
+                break
+
+        if intent in ["diagnose", "inquiry_more"] and any(word in last_user_msg for word in ["谢谢", "感谢", "好的", "再见", "拜拜"]):
+            intent = "chat"
+
+        # 如果最终的响应为空，赋予一个默认回复
+        final_response_text = res_data.get("response", "好的")
+        # 使用模型的 response 替换回 message 中去
+        response.content = final_response_text
+
+        return {
+            "intent_type": intent,
+            "symptoms": merged_symptoms,
+            "messages": [response]
+        }
+    except Exception as e:
+        print(f"❌ Inquiry 解析失败: {e}")
+        # 发生异常时退化为 chat 意图，确保流程不挂死
+        return {"intent_type": "chat"}
