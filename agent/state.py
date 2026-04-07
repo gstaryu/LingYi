@@ -23,5 +23,13 @@ class AgentState(TypedDict, total=False):
     safety_retry_count: int
     safety_violation_msg: Optional[str]
     patient_profile: Dict[str, Any]
+
+    # ====== 上下文压缩 / 摘要记忆 ======
+    # 对话历史摘要（病历纪要）
     summary: str
+    # 已经被纳入 summary 的 messages 下标边界（不包含该下标本身），通常会指向 len(messages)-KEEP_LAST_N
+    summarized_until: int
+    # 上一次进行摘要时的 messages 总数，用于冷却判断
+    last_summarized_message_count: int
+
     has_provided_treatment: bool
