@@ -1,0 +1,77 @@
+[project]
+name = "lingyi"
+version = "2.0.0"
+description = "灵医 (LingYi) — 基于 LangGraph 的中医诊疗多智能体系统"
+requires-python = ">=3.12"
+license = {text = "MIT"}
+readme = "README.md"
+
+dependencies = [
+    # LangChain / LangGraph
+    "langchain>=1.0",
+    "langchain-core>=1.0",
+    "langchain-openai>=1.0",
+    "langgraph>=1.0",
+    "langgraph-checkpoint-sqlite>=1.0",
+
+    # FastAPI 后端
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.34",
+    "websockets>=14.0",
+
+    # Streamlit 前端
+    "streamlit>=1.40",
+    "extra-streamlit-components>=0.1.70",
+
+    # 异步支持
+    "aiosqlite>=0.20",
+    "aiofiles>=24.0",
+    "httpx>=0.27",
+
+    # 认证
+    "pyjwt>=2.10",
+    "bcrypt>=4.2",
+
+    # 配置管理
+    "pydantic-settings>=2.0",
+
+    # 向量数据库
+    "chromadb>=0.6",
+
+    # Embedding / Reranker（仅 chroma 模式）
+    "sentence-transformers>=3.0",
+    "langchain-huggingface>=0.1",
+
+    # 文件解析
+    "pypdf2>=3.0",
+    "python-docx>=1.0",
+
+    # 工具
+    "python-dotenv>=1.0",
+    "tqdm>=4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.8",
+]
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["lingyi*", "data_pipeline*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
