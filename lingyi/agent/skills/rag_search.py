@@ -60,7 +60,7 @@ class RAGSearchSkill(BaseSkill):
         try:
             # 执行检索
             results = await self.rag_client.hybrid_search(query, n_results=self.recall_k)
-            docs = [r.get("content", "") for r in results if r.get("content")]
+            docs = [r.content for r in results if r.content]
             logger.info("RAG 检索完成: 查询='%s', 返回 %d 条结果", query[:50], len(docs))
             return {"retrieved_docs": docs}
         except Exception as e:

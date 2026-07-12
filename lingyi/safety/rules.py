@@ -78,35 +78,31 @@ class SafetyEngine:
             - is_safe=False 时 error_msg 包含冲突描述
         """
         found_conflicts: list[str] = []
+        seen_pairs: set[frozenset[str]] = set()
 
-        # 两两交叉检查所有药材对
+        # 两两交叉检查所有药材对（i<j 保证每对只检查一次）
         for i, herb_a in enumerate(herb_list):
             for j in range(i + 1, len(herb_list)):
                 herb_b = herb_list[j]
+                pair = frozenset({herb_a, herb_b})
+                if pair in seen_pairs:
+                    continue
 
-                # 检查 A 是否在 B 的禁忌名单里，或者 B 是否在 A 的禁忌名单里
+                # 检查 A 反 B 或 B 反 A（双向），命中即记录一次并跳过该对
                 for key, forbidden_list in self._all_rules.items():
-                    # 正向检查：herb_a 匹配 key，herb_b 匹配 forbidden
-                    if key in herb_a:
-                        for f_herb in forbidden_list:
-                            if f_herb in herb_b:
-                                found_conflicts.append(
-                                    f"【{herb_a}】与【{herb_b}】存在配伍禁忌"
-                                )
+                    violated = (key in herb_a and any(f in herb_b for f in forbidden_list)) or (
+                        key in herb_b and any(f in herb_a for f in forbidden_list)
+                    )
+                    if violated:
+                        seen_pairs.add(pair)
+                        found_conflicts.append(f"【{herb_a}】与【{herb_b}】存在配伍禁忌")
+                        break
 
-                    # 反向检查：herb_b 匹配 key，herb_a 匹配 forbidden
-                    if key in herb_b:
-                        for f_herb in forbidden_list:
-                            if f_herb in herb_a:
-                                found_conflicts.append(
-                                    f"【{herb_b}】与【{herb_a}】存在配伍禁忌"
-                                )
+        # 确定性排序，保证错误信息顺序稳定（便于测试与日志比对）
+        found_conflicts.sort()
 
-        # 去重处理
-        unique_conflicts = list(set(found_conflicts))
-
-        if unique_conflicts:
-            error_msg = "；".join(unique_conflicts)
+        if found_conflicts:
+            error_msg = "；".join(found_conflicts)
             logger.warning("药方安全校验失败: %s", error_msg)
             return False, error_msg
 

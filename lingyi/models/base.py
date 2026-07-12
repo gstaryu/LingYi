@@ -1,29 +1,15 @@
 """
-模型抽象层 — LLM / Embedding / Reranker 的抽象基类。
+模型抽象层 - LLM / Embedding 的抽象基类。
 
 设计原则:
 - 所有模型操作均为异步（async/await）
 - 通过构造函数注入配置，不依赖全局单例
 - 子类只需实现对应的抽象方法
+
+注: RAG 重排器抽象 BaseReranker 已归属 RAG 领域，定义在 lingyi/rag/base.py。
 """
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
-from typing import Any
-
-
-@dataclass
-class Document:
-    """检索文档 — RAG 检索返回的文档片段。"""
-
-    content: str
-    """文档正文内容。"""
-
-    metadata: dict[str, Any] = field(default_factory=dict)
-    """元数据（来源、章节、页码等）。"""
-
-    score: float = 0.0
-    """相关性得分（0-1）。"""
 
 
 class BaseLLM(ABC):
@@ -61,10 +47,31 @@ class BaseLLM(ABC):
         temperature: float = 0.7,
         max_tokens: int = 2048,
     ) -> str:
-        """同步调用 LLM（默认实现，子类可覆盖以提供更优的同步策略）。"""
+        """
+        同步调用 LLM。
+
+        仅可在无事件循环的同步上下文中使用；若已在异步上下文中，应直接 await ainvoke()。
+        """
         import asyncio
 
+        try:
+            asyncio.get_running_loop()
+        except RuntimeError:
+            pass
+        else:
+            raise RuntimeError(
+                "invoke() 不能在异步上下文中调用（asyncio.run 无法嵌套），请改用 await ainvoke()"
+            )
         return asyncio.run(self.ainvoke(messages, temperature, max_tokens))
+
+    def with_structured_output(self, schema):
+        """
+        返回一个 Runnable，ainvoke 时输出 schema 实例（Pydantic 对象）而非字符串。
+
+        用于强制 LLM 返回结构化数据（如问诊意图分类），避免手写 JSON 解析。
+        默认不支持；子类按需实现。调用方可捕获 NotImplementedError 回退到 JSON 解析。
+        """
+        raise NotImplementedError(f"{self.__class__.__name__} 不支持 with_structured_output")
 
 
 class BaseEmbedding(ABC):
@@ -98,31 +105,4 @@ class BaseEmbedding(ABC):
 
         Returns:
             嵌入向量
-        """
-
-
-class BaseReranker(ABC):
-    """
-    重排模型抽象基类。
-
-    对 RAG 检索到的文档进行重新排序，提升相关文档的排名。
-    """
-
-    @abstractmethod
-    async def arerank(
-        self,
-        query: str,
-        documents: list[Document],
-        top_k: int = 5,
-    ) -> list[Document]:
-        """
-        异步重排文档。
-
-        Args:
-            query: 查询文本
-            documents: 待重排的文档列表
-            top_k: 返回前 K 个文档
-
-        Returns:
-            重排后的文档列表（按相关性降序）
         """

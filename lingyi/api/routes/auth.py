@@ -1,20 +1,22 @@
-"""认证路由 — 登录/注册/JWT Token。"""
+"""认证路由 - 登录/注册/JWT Token。"""
 
 import logging
 from datetime import datetime, timedelta, timezone
+from typing import Any
 
 import jwt
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
-from lingyi.api.deps import get_storage, get_settings
+from lingyi.api.deps import get_storage
 from lingyi.api.schemas import TokenResponse, UserLogin, UserRegister
+from lingyi.config import get_settings
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
 def _create_token(username: str) -> str:
-    """创建 JWT Token。"""
+    """创建 JWT Token（sub=username，exp 由配置决定）。"""
     settings = get_settings()
     payload = {
         "sub": username,
@@ -24,11 +26,11 @@ def _create_token(username: str) -> str:
 
 
 @router.post("/login", response_model=TokenResponse)
-async def login(request: UserLogin):
-    """用户登录，返回 JWT Token。"""
-    storage = get_storage()
+async def login(request: UserLogin, storage: Any = Depends(get_storage)):
+    """用户登录，验证密码后返回 JWT Token。"""
     verified = await storage.verify_user(request.username, request.password)
     if not verified:
+        # 通用错误信息，避免泄露用户是否存在
         raise HTTPException(status_code=401, detail="用户名或密码错误")
 
     token = _create_token(request.username)
@@ -37,9 +39,8 @@ async def login(request: UserLogin):
 
 
 @router.post("/register")
-async def register(request: UserRegister):
+async def register(request: UserRegister, storage: Any = Depends(get_storage)):
     """用户注册。"""
-    storage = get_storage()
     created = await storage.create_user(request.username, request.password)
     if not created:
         raise HTTPException(status_code=400, detail="用户名已存在")

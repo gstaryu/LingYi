@@ -71,4 +71,4 @@ graph TD
 - **问诊循环控制**: `intent="consult"` 时暂停图执行，返回追问给用户。`inquiry_count` 限制最多追问 2 次，之后强制进入诊断
 - **意图重置**: 每次新消息时重置 `intent_type="chat"`，防止 checkpointer 中的旧状态影响路由
 - **回复提取**: 从消息列表中取最后一条 `type=ai` 的消息，而非 `messages[-1]`
-- **画像提取**: Writer 使用 `asyncio.create_task` 异步执行，不阻塞响应
+- **画像提取**: `ProfileWriterSkill`（原 WriterSkill）用 `await asyncio.wait_for` 在有限超时内完成写入，不 fire-and-forget；`MemRecallSkill` 在图开始时加载画像

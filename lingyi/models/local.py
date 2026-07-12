@@ -37,12 +37,8 @@ class LocalEmbedding(BaseEmbedding):
         """
         self._model_name = model_name
         self._device = device
+        self._hf_endpoint = hf_endpoint
         self._model = None
-
-        # 设置 HuggingFace 镜像
-        import os
-
-        os.environ["HF_ENDPOINT"] = hf_endpoint
 
         logger.info("LocalEmbedding 初始化: model=%s, device=%s", model_name, device)
 
@@ -50,6 +46,11 @@ class LocalEmbedding(BaseEmbedding):
         """延迟加载模型（首次调用时才加载，避免启动时占用显存）。"""
         if self._model is not None:
             return
+
+        # HF_ENDPOINT 必须在 import sentence_transformers 之前设置（国内镜像加速）
+        import os
+
+        os.environ["HF_ENDPOINT"] = self._hf_endpoint
 
         from sentence_transformers import SentenceTransformer
 

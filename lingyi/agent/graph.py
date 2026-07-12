@@ -37,8 +37,10 @@ def create_agent(
         settings: Settings 实例（可选）
 
     Returns:
-        编译后的 StateGraph
+        (编译后的 StateGraph, ProfileWriterSkill) - writer 供 lifespan 关闭时 flush
     """
+    from lingyi.agent.memory.profile_writer import ProfileWriterSkill
+    from lingyi.agent.memory.recall import MemRecallSkill
     from lingyi.agent.skills.diagnosis import DiagnosisSkill
     from lingyi.agent.skills.inquiry import InquirySkill
     from lingyi.agent.skills.rag_search import (
@@ -51,8 +53,6 @@ def create_agent(
     from lingyi.agent.skills.reader import ReaderSkill
     from lingyi.agent.skills.safety_guard import SafetyGuardSkill
     from lingyi.agent.skills.treatment import TreatmentSkill, safety_check_logic
-    from lingyi.agent.skills.writer import MemRecallSkill, WriterSkill
-    from lingyi.agent.memory.summarizer import should_summarize
 
     # 读取配置
     max_retries = settings.safety_max_retries if settings else 3
@@ -81,7 +81,7 @@ def create_agent(
         max_history=settings.max_history_messages_treatment if settings else 2,
         max_retries=max_retries,
     )
-    writer = WriterSkill(llm=llm, storage=storage)
+    writer = ProfileWriterSkill(llm=llm, storage=storage)
 
     # ==================== 构建图 ====================
     workflow = StateGraph(AgentState)
@@ -166,7 +166,8 @@ def create_agent(
 
     compiled = workflow.compile(checkpointer=checkpointer)
     logger.info("Agent 图编译完成")
-    return compiled
+    # 返回 writer 引用供 lifespan 在关闭时 flush 待完成的画像写入
+    return compiled, writer
 
 
 # ==================== 路由函数 ====================
@@ -180,25 +181,20 @@ def _safety_guard_router(state: dict[str, Any]) -> str:
 
 def _master_router(state: dict[str, Any], rag_decision_logic=None) -> str:
     """
-    问诊后主路由 — 合并了意图路由和 RAG 决策。
+    问诊后主路由 - 合并了意图路由和 RAG 决策。
+
+    问诊节点已保证 consult 时未超追问上限（InquirySkill 在达上限时直接返回 diagnose），
+    因此 consult 分支直接暂停返回追问给用户，无需在此重复判断计数。
 
     Returns:
-        "rag_search" — 需要 RAG 检索
-        "diagnosis" — 直接辨证
-        "inquiry_more" — 继续问诊
-        "end" — 结束
+        "rag_search" - 需要 RAG 检索
+        "diagnosis" - 直接辨证
+        "end" - 结束（普通对话或追问暂停）
     """
     intent = state.get("intent_type", "chat")
-    inquiry_count = state.get("inquiry_count", 0)
 
     if intent in ("consult", "inquiry_more"):
-        if inquiry_count >= 2:
-            # 已追问 2 次，强制进入诊断，不再追问
-            logger.info("已追问 %d 次，强制进入诊断", inquiry_count)
-            if rag_decision_logic:
-                return rag_decision_logic(state)
-            return "diagnosis"
-        # 未超限，暂停图执行，返回追问给用户
+        # 未超限的追问：暂停图执行，返回追问给用户
         return "end"
 
     if intent == "diagnose":
