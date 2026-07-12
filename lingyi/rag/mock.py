@@ -55,22 +55,15 @@ class MockRAGClient(BaseRAGClient):
     async def search(self, query: str, top_k: int = 3) -> list[RAGResult]:
         """根据 query pattern 匹配预设结果。"""
         results = self._match_query(query)
-        return [
-            RAGResult(
-                content=r["content"],
-                source=r.get("source", ""),
-                score=r.get("score", 0.8),
-            )
-            for r in results[:top_k]
-        ]
+        return self._to_rag_results(results)[:top_k]
 
-    async def hybrid_search(self, query: str, n_results: int = 10) -> list[dict[str, Any]]:
-        """根据 query pattern 匹配预设结果。"""
+    async def hybrid_search(self, query: str, n_results: int = 10) -> list[RAGResult]:
+        """根据 query pattern 匹配预设结果（与 search 同语义，Mock 不区分检索策略）。"""
         results = self._match_query(query)
-        return results[:n_results]
+        return self._to_rag_results(results)[:n_results]
 
     def _match_query(self, query: str) -> list[dict[str, Any]]:
-        """按正则匹配 query pattern。"""
+        """按正则匹配 query pattern，返回原始 dict 结果。"""
         for entry in self._queries:
             pattern = entry.get("query_pattern", "")
             if pattern and re.search(pattern, query):
@@ -79,7 +72,20 @@ class MockRAGClient(BaseRAGClient):
         # 无匹配时返回默认结果
         return self._default_results
 
+    @staticmethod
+    def _to_rag_results(raw: list[dict[str, Any]]) -> list[RAGResult]:
+        """将内部 dict 结果转换为 RAGResult 列表。"""
+        return [
+            RAGResult(
+                content=r.get("content", ""),
+                source=r.get("source", ""),
+                score=r.get("score", 0.8),
+                metadata=r.get("metadata", {}),
+            )
+            for r in raw
+        ]
+
     async def add_documents(self, documents: list[dict[str, Any]]) -> int:
-        """Mock 模式下直接添加到内存。"""
+        """Mock 模式下直接添加到内存默认结果。"""
         self._default_results.extend(documents)
         return len(documents)

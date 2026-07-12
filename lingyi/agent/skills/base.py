@@ -15,6 +15,8 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any
 
+from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
+
 logger = logging.getLogger(__name__)
 
 
@@ -71,35 +73,60 @@ class BaseSkill(ABC):
         logger.warning("未找到 prompt 文件: %s", md_path)
         return ""
 
-    def build_messages(self, state: dict[str, Any]) -> list[dict[str, str]]:
+    def build_messages(self, state: dict[str, Any]) -> list[BaseMessage]:
         """
         构建 LLM 调用的消息列表（模板方法）。
 
-        默认实现: system prompt + 最近 N 条对话历史。
-        子类可覆盖此方法以注入额外上下文（如症状、RAG 文档等）。
+        默认实现: system prompt + 全部对话历史，返回 LangChain BaseMessage 列表。
+        子类可覆盖以注入额外上下文（如症状、RAG 文档等），推荐复用
+        _build_system_messages() 与 _history_to_messages() 两个助手以消除重复。
 
         Args:
             state: AgentState 字典
 
         Returns:
-            消息列表，格式 [{"role": "system"|"user"|"assistant", "content": "..."}]
+            BaseMessage 列表（SystemMessage / HumanMessage / AIMessage）
         """
-        messages: list[dict[str, str]] = []
+        messages: list[BaseMessage] = self._build_system_messages(self.system_prompt, [])
+        messages.extend(self._history_to_messages(state.get("messages", [])))
+        return messages
 
-        # System prompt
-        if self.system_prompt:
-            messages.append({"role": "system", "content": self.system_prompt})
+    @staticmethod
+    def _build_system_messages(prompt: str, context_parts: list[str]) -> list[BaseMessage]:
+        """
+        构建 system 消息序列：主 prompt（若有）+ 上下文块（若有，合并为一条）。
 
-        # 对话历史
-        for msg in state.get("messages", []):
+        各 Skill 的 build_messages 共享此助手，避免重复构造 SystemMessage。
+        """
+        msgs: list[BaseMessage] = []
+        if prompt:
+            msgs.append(SystemMessage(content=prompt))
+        if context_parts:
+            msgs.append(SystemMessage(content="\n\n".join(context_parts)))
+        return msgs
+
+    @staticmethod
+    def _history_to_messages(
+        history: list, max_history: int | None = None
+    ) -> list[BaseMessage]:
+        """
+        将对话历史转为 BaseMessage 列表，可选截取最近 N 轮（每轮 user+assistant 两条）。
+
+        统一各 Skill 的历史角色映射逻辑（human->HumanMessage, ai->AIMessage），
+        消除原先在 inquiry/diagnosis/treatment/safety_guard 中各写一份的重复代码。
+        """
+        if not history:
+            return []
+        msgs = history[-max_history * 2 :] if max_history else history
+        result: list[BaseMessage] = []
+        for msg in msgs:
             role = getattr(msg, "type", "user")
             content = getattr(msg, "content", "")
             if role in ("human", "user"):
-                messages.append({"role": "user", "content": content})
+                result.append(HumanMessage(content=content))
             elif role in ("ai", "assistant"):
-                messages.append({"role": "assistant", "content": content})
-
-        return messages
+                result.append(AIMessage(content=content))
+        return result
 
     @abstractmethod
     async def execute(self, state: dict[str, Any]) -> dict[str, Any]:

@@ -33,6 +33,7 @@ class BaseRAGClient(ABC):
     RAG 检索客户端抽象基类。
 
     所有 RAG 实现（Mock、ChromaDB 等）都继承此类。
+    统一约定: search 与 hybrid_search 均返回 list[RAGResult]，避免同一接口两种返回类型。
     """
 
     @abstractmethod
@@ -49,7 +50,7 @@ class BaseRAGClient(ABC):
         """
 
     @abstractmethod
-    async def hybrid_search(self, query: str, n_results: int = 10) -> list[dict[str, Any]]:
+    async def hybrid_search(self, query: str, n_results: int = 10) -> list[RAGResult]:
         """
         混合检索（向量 + 关键词）。
 
@@ -58,7 +59,7 @@ class BaseRAGClient(ABC):
             n_results: 返回结果数量
 
         Returns:
-            [{"content": "...", "source": "...", "score": 0.9, "metadata": {...}}]
+            RAGResult 列表（按相关性降序）
         """
 
     async def add_documents(self, documents: list[dict[str, Any]]) -> int:
@@ -72,3 +73,31 @@ class BaseRAGClient(ABC):
             成功添加的文档数量
         """
         return 0
+
+
+class BaseReranker(ABC):
+    """
+    重排模型抽象基类（属于 RAG 领域）。
+
+    对 RAG 检索到的文档进行重新排序，提升相关文档的排名。
+    所有重排实现（Mock、CrossEncoder 等）继承此类。
+    """
+
+    @abstractmethod
+    async def rerank(
+        self,
+        query: str,
+        documents: list[RAGResult],
+        top_k: int = 5,
+    ) -> list[RAGResult]:
+        """
+        异步重排文档。
+
+        Args:
+            query: 查询文本
+            documents: 待重排的 RAGResult 列表
+            top_k: 返回前 K 个文档
+
+        Returns:
+            重排后的 RAGResult 列表（按相关性降序）
+        """

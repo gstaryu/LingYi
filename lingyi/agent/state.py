@@ -90,3 +90,6 @@ class AgentState(TypedDict, total=False):
 
     thread_id: str
     """会话线程 ID。"""
+
+    username: str
+    """当前认证用户名（用作画像 key，跨会话共享）。"""

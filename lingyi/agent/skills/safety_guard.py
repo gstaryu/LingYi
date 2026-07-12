@@ -8,6 +8,8 @@
 import logging
 from typing import Any
 
+from langchain_core.messages import BaseMessage
+
 from lingyi.agent.skills.base import BaseSkill
 
 logger = logging.getLogger(__name__)
@@ -30,25 +32,11 @@ class SafetyGuardSkill(BaseSkill):
         """
         super().__init__(llm=llm)
 
-    def build_messages(self, state: dict[str, Any]) -> list[dict[str, str]]:
-        """构建安全审查消息列表。"""
-        messages: list[dict[str, str]] = []
-
-        # System prompt
-        if self.system_prompt:
-            messages.append({"role": "system", "content": self.system_prompt})
-
-        # 取最近 4 条消息用于审查
-        history = state.get("messages", [])
-        recent = history[-4:] if history else []
-        for msg in recent:
-            role = getattr(msg, "type", "user")
-            content = getattr(msg, "content", "")
-            if role in ("human", "user"):
-                messages.append({"role": "user", "content": content})
-            elif role in ("ai", "assistant"):
-                messages.append({"role": "assistant", "content": content})
-
+    def build_messages(self, state: dict[str, Any]) -> list[BaseMessage]:
+        """构建安全审查消息列表（system prompt + 最近约 2 轮对话）。"""
+        messages = self._build_system_messages(self.system_prompt, [])
+        # 取最近 4 条消息（约 2 轮，max_history=2 -> 截取最后 4 条）用于审查
+        messages.extend(self._history_to_messages(state.get("messages", []), max_history=2))
         return messages
 
     async def execute(self, state: dict[str, Any]) -> dict[str, Any]:

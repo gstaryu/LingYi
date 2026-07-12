@@ -1,11 +1,14 @@
 """
-Streamlit 侧边栏模块 — 线程管理和用户画像展示。
+Streamlit 侧边栏模块 - 线程管理和用户画像展示。
 
 通过 HTTP 调用 FastAPI 后端的 /api/threads 和 /api/profiles 接口。
+所有调用携带 Bearer JWT（与 chat 模块共用 _get_auth_headers）。
 """
 
 import streamlit as st
 import httpx
+
+from lingyi.ui.chat import _get_auth_headers
 
 
 def render_sidebar(api_base: str = "http://localhost:8000"):
@@ -66,9 +69,9 @@ def render_sidebar(api_base: str = "http://localhost:8000"):
 
 
 def _get_threads(api_base: str) -> list:
-    """获取线程列表。"""
+    """获取当前用户的线程列表（携带认证头）。"""
     try:
-        resp = httpx.get(f"{api_base}/api/threads", timeout=10)
+        resp = httpx.get(f"{api_base}/api/threads", headers=_get_auth_headers(), timeout=10)
         if resp.status_code == 200:
             return resp.json()
     except Exception:
@@ -77,17 +80,19 @@ def _get_threads(api_base: str) -> list:
 
 
 def _delete_thread(api_base: str, thread_id: str):
-    """删除线程。"""
+    """删除线程（携带认证头）。"""
     try:
-        httpx.delete(f"{api_base}/api/threads/{thread_id}", timeout=10)
+        httpx.delete(f"{api_base}/api/threads/{thread_id}", headers=_get_auth_headers(), timeout=10)
     except Exception:
         pass
 
 
 def _get_profile(api_base: str, patient_id: str) -> dict:
-    """获取患者画像。"""
+    """获取患者画像（携带认证头）。"""
     try:
-        resp = httpx.get(f"{api_base}/api/profiles/{patient_id}", timeout=10)
+        resp = httpx.get(
+            f"{api_base}/api/profiles/{patient_id}", headers=_get_auth_headers(), timeout=10
+        )
         if resp.status_code == 200:
             return resp.json()
     except Exception:

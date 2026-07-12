@@ -18,8 +18,8 @@ sys.path.insert(0, _PROJECT_ROOT)
 @pytest.fixture
 def mock_llm():
     """返回可控响应的 Stub LLM。"""
-    from lingyi.models.factory import _StubLLM
-    return _StubLLM(response='{"intent_type": "chat", "symptoms": [], "response": "测试回复"}')
+    from tests.stubs import StubLLM
+    return StubLLM(response='{"intent_type": "chat", "symptoms": [], "response": "测试回复"}')
 
 
 @pytest.fixture
@@ -71,11 +71,6 @@ def tmp_storage(tmp_db):
 
 @pytest.fixture
 def test_settings():
-    """返回测试用 Settings。"""
-    os.environ["ENVIRONMENT"] = "testing"
-    from lingyi.config import get_settings
-    get_settings.cache_clear()
-    settings = get_settings()
-    yield settings
-    os.environ.pop("ENVIRONMENT", None)
-    get_settings.cache_clear()
+    """返回测试用 Settings（不依赖环境变量，不污染全局缓存）。"""
+    from lingyi.config import Settings
+    return Settings(_env_file=None)

@@ -8,6 +8,8 @@
 import logging
 from typing import Any
 
+from langchain_core.messages import BaseMessage
+
 from lingyi.agent.skills.base import BaseSkill
 
 logger = logging.getLogger(__name__)
@@ -31,15 +33,8 @@ class DiagnosisSkill(BaseSkill):
         super().__init__(llm=llm)
         self.max_history = max_history
 
-    def build_messages(self, state: dict[str, Any]) -> list[dict[str, str]]:
+    def build_messages(self, state: dict[str, Any]) -> list[BaseMessage]:
         """构建辨证消息列表，注入症状、画像、RAG 文献等上下文。"""
-        messages: list[dict[str, str]] = []
-
-        # System prompt
-        if self.system_prompt:
-            messages.append({"role": "system", "content": self.system_prompt})
-
-        # 注入临床参考背景
         context_parts: list[str] = []
 
         # 患者画像
@@ -73,20 +68,8 @@ class DiagnosisSkill(BaseSkill):
         if summary:
             context_parts.append(f"病历摘要: {summary}")
 
-        if context_parts:
-            messages.append({"role": "system", "content": "\n\n".join(context_parts)})
-
-        # 对话历史
-        history = state.get("messages", [])
-        recent = history[-self.max_history * 2:] if history else []
-        for msg in recent:
-            role = getattr(msg, "type", "user")
-            content = getattr(msg, "content", "")
-            if role in ("human", "user"):
-                messages.append({"role": "user", "content": content})
-            elif role in ("ai", "assistant"):
-                messages.append({"role": "assistant", "content": content})
-
+        messages = self._build_system_messages(self.system_prompt, context_parts)
+        messages.extend(self._history_to_messages(state.get("messages", []), self.max_history))
         return messages
 
     async def execute(self, state: dict[str, Any]) -> dict[str, Any]:

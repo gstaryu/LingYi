@@ -1,17 +1,22 @@
 """
-SQLite 存储实现 — 用户、画像、线程管理的异步 SQLite 实现。
+SQLite 存储实现 - 用户、画像、线程管理的异步 SQLite 实现。
 
 设计原则:
 - 使用 aiosqlite 实现全异步操作
 - 密码哈希使用 bcrypt（比 SHA-256 更安全）
-- 建表 SQL 作为类常量，便于维护
+- 连接/事务逻辑集中在 SQLiteBase，单一 SQLiteStorage 实现三个 ABC，共享一个连接
 - 所有异常统一抛出 StorageError
+
+注: 不再拆分为 SQLiteUserStore/SQLiteProfileStore/SQLiteThreadStore 三个独立类--
+它们共享同一 DB 文件与连接，拆分反而引入了"仅靠多继承 MRO 才能用 _transaction"的脆弱耦合。
+单一 SQLiteStorage 高内聚地承载同一数据库的全部 CRUD，接口契约仍由 Base*Store ABC 保障。
 """
 
 import json
 import logging
 import os
 from contextlib import asynccontextmanager
+from typing import Any
 
 import aiosqlite
 import bcrypt
@@ -56,22 +61,27 @@ CREATE TABLE IF NOT EXISTS threads (
 """
 
 
-class SQLiteUserStore(BaseUserStore):
-    """基于 SQLite 的用户管理实现。"""
+class SQLiteBase:
+    """
+    SQLite 连接与事务管理公共基类。
+
+    持有单一持久连接（懒初始化、复用），提供事务上下文与关闭方法。
+    所有存储实现共享此基类，避免连接管理代码重复。
+    """
 
     def __init__(self, db_path: str):
         """
-        初始化 SQLite 用户存储。
+        初始化存储。
 
         Args:
             db_path: SQLite 数据库文件路径
         """
         self._db_path = db_path
-        self._conn = None  # 持久连接，懒初始化
-        os.makedirs(os.path.dirname(db_path), exist_ok=True)
-        logger.info("SQLiteUserStore 初始化: db_path=%s", db_path)
+        self._conn: aiosqlite.Connection | None = None  # 持久连接，懒初始化
+        os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
+        logger.info("SQLiteBase 初始化: db_path=%s", db_path)
 
-    async def _get_conn(self):
+    async def _get_conn(self) -> aiosqlite.Connection:
         """获取持久数据库连接（懒初始化，复用同一连接）。"""
         if self._conn is None:
             self._conn = await aiosqlite.connect(self._db_path)
@@ -82,7 +92,7 @@ class SQLiteUserStore(BaseUserStore):
 
     @asynccontextmanager
     async def _transaction(self):
-        """获取数据库事务（上下文管理器，自动提交）。"""
+        """获取数据库事务（上下文管理器，自动提交/回滚）。"""
         conn = await self._get_conn()
         try:
             yield conn
@@ -98,8 +108,22 @@ class SQLiteUserStore(BaseUserStore):
             self._conn = None
             logger.debug("SQLite 持久连接已关闭")
 
+
+class SQLiteStorage(SQLiteBase, BaseUserStore, BaseProfileStore, BaseThreadStore):
+    """
+    统一 SQLite 存储 - 实现用户、画像、线程三套接口，共享同一个数据库连接。
+
+    通过 SQLiteBase 复用连接/事务逻辑；通过三个 Base*Store ABC 保障接口契约。
+    """
+
+    def __init__(self, db_path: str):
+        super().__init__(db_path)
+        logger.info("SQLiteStorage 初始化完成: %s", db_path)
+
+    # ==================== 建表 ====================
+
     async def init_db(self) -> None:
-        """初始化数据库表结构。"""
+        """初始化数据库表结构（幂等）。"""
         try:
             async with self._transaction() as conn:
                 await conn.execute(_CREATE_USERS_TABLE)
@@ -108,6 +132,8 @@ class SQLiteUserStore(BaseUserStore):
             logger.info("数据库初始化完成: %s", self._db_path)
         except Exception as e:
             raise StorageError(f"数据库初始化失败: {e}") from e
+
+    # ==================== 用户管理（BaseUserStore）====================
 
     async def create_user(self, username: str, password: str) -> bool:
         """创建新用户，密码使用 bcrypt 哈希存储。"""
@@ -150,12 +176,7 @@ class SQLiteUserStore(BaseUserStore):
         except Exception as e:
             raise StorageError(f"用户验证失败: {e}") from e
 
-
-class SQLiteProfileStore(BaseProfileStore):
-    """基于 SQLite 的患者画像管理实现。"""
-
-    def __init__(self, db_path: str):
-        self._db_path = db_path
+    # ==================== 画像管理（BaseProfileStore）====================
 
     async def get_profile(self, patient_id: str) -> UserProfile:
         """获取患者画像。不存在时返回默认画像。"""
@@ -177,8 +198,8 @@ class SQLiteProfileStore(BaseProfileStore):
 
         return UserProfile(patient_id=patient_id)
 
-    async def update_profile(self, patient_id: str, data: dict) -> None:
-        """更新患者画像（upsert 语义）。"""
+    async def update_profile(self, patient_id: str, data: dict[str, Any]) -> None:
+        """更新患者画像（upsert 语义）。new_record 追加到 past_history（最多 10 条）。"""
         try:
             current = await self.get_profile(patient_id)
             new_history = current.past_history.copy()
@@ -210,7 +231,7 @@ class SQLiteProfileStore(BaseProfileStore):
             raise StorageError(f"更新画像失败: {e}") from e
 
     async def list_profiles(self) -> list[dict[str, str]]:
-        """列出所有患者画像。"""
+        """列出所有患者画像（按最后更新时间降序）。"""
         try:
             async with self._transaction() as conn:
                 cursor = await conn.execute(
@@ -222,12 +243,7 @@ class SQLiteProfileStore(BaseProfileStore):
             logger.warning("获取画像列表失败: %s", e)
             return []
 
-
-class SQLiteThreadStore(BaseThreadStore):
-    """基于 SQLite 的会话线程管理实现。"""
-
-    def __init__(self, db_path: str):
-        self._db_path = db_path
+    # ==================== 线程管理（BaseThreadStore）====================
 
     async def add_thread(self, username: str, thread_id: str) -> None:
         """创建新会话线程。"""
@@ -241,7 +257,7 @@ class SQLiteThreadStore(BaseThreadStore):
             logger.warning("创建线程失败: %s", e)
 
     async def get_threads(self, username: str) -> list[ThreadInfo]:
-        """获取用户的所有会话线程。"""
+        """获取用户的所有会话线程（按创建时间降序）。"""
         try:
             async with self._transaction() as conn:
                 cursor = await conn.execute(
@@ -280,21 +296,3 @@ class SQLiteThreadStore(BaseThreadStore):
                 await conn.execute("DELETE FROM threads WHERE thread_id = ?", (thread_id,))
         except Exception as e:
             logger.warning("删除线程失败: %s", e)
-
-
-class SQLiteStorage(SQLiteUserStore, SQLiteProfileStore, SQLiteThreadStore):
-    """
-    统一存储门面 — 同时实现用户、画像、线程三个接口。
-
-    内部共享同一个 SQLite 数据库文件。
-    """
-
-    def __init__(self, db_path: str):
-        """
-        初始化统一存储。
-
-        Args:
-            db_path: SQLite 数据库文件路径
-        """
-        super().__init__(db_path)
-        logger.info("SQLiteStorage 初始化完成: %s", db_path)

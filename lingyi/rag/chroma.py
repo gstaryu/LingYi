@@ -59,20 +59,17 @@ class ChromaRAGClient(BaseRAGClient):
         logger.info("ChromaDB 连接完成: %s", self._collection_name)
 
     async def search(self, query: str, top_k: int = 3) -> list[RAGResult]:
-        """执行向量检索。"""
-        results = await self.hybrid_search(query, n_results=top_k)
-        return [
-            RAGResult(
-                content=r["content"],
-                source=r.get("source", ""),
-                score=r.get("score", 0.0),
-                metadata=r.get("metadata", {}),
-            )
-            for r in results
-        ]
+        """执行向量检索（语义等同 hybrid_search，仅截取 top_k）。"""
+        return await self.hybrid_search(query, n_results=top_k)
 
-    async def hybrid_search(self, query: str, n_results: int = 10) -> list[dict[str, Any]]:
-        """执行混合检索（向量 + 关键词）。"""
+    async def hybrid_search(self, query: str, n_results: int = 10) -> list[RAGResult]:
+        """
+        执行检索。
+
+        当前实现为纯向量检索（有 embedding 时）或纯文本检索（无 embedding 时）。
+        真正的"向量+关键词"混合检索为后续增强项；接口名沿用 hybrid_search 以与
+        BaseRAGClient 契约一致，避免破坏调用方。
+        """
         self._ensure_client()
 
         # 获取查询向量
@@ -95,8 +92,8 @@ class ChromaRAGClient(BaseRAGClient):
         query: str,
         query_embedding: list[float] | None,
         n_results: int,
-    ) -> list[dict[str, Any]]:
-        """同步执行 ChromaDB 查询（在线程池中运行）。"""
+    ) -> list[RAGResult]:
+        """同步执行 ChromaDB 查询（在线程池中运行），返回 RAGResult 列表。"""
         try:
             kwargs: dict[str, Any] = {"n_results": n_results}
 
@@ -112,17 +109,19 @@ class ChromaRAGClient(BaseRAGClient):
             metadatas = results.get("metadatas", [[]])[0]
             distances = results.get("distances", [[]])[0]
 
-            parsed = []
+            parsed: list[RAGResult] = []
             for doc, meta, dist in zip(documents, metadatas, distances):
-                # ChromaDB cosine distance: 0 = identical, 2 = opposite
-                # 转换为 score: 1 - dist/2
-                score = max(0, 1 - dist / 2) if dist is not None else 0.0
-                parsed.append({
-                    "content": doc,
-                    "source": meta.get("book", "") if meta else "",
-                    "score": score,
-                    "metadata": meta or {},
-                })
+                # ChromaDB cosine 距离 = 1 - 余弦相似度，范围 [0,2]（0=相同，2=相反）
+                # 转换为相关性分数 [0,1]：score = max(0, 1 - dist)（正交=0，相反=0）
+                score = max(0.0, 1 - dist) if dist is not None else 0.0
+                parsed.append(
+                    RAGResult(
+                        content=doc,
+                        source=meta.get("book", "") if meta else "",
+                        score=score,
+                        metadata=meta or {},
+                    )
+                )
 
             return parsed
 

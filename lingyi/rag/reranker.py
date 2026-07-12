@@ -10,12 +10,12 @@ import asyncio
 import logging
 from typing import Any
 
-from lingyi.rag.base import RAGResult
+from lingyi.rag.base import BaseReranker, RAGResult
 
 logger = logging.getLogger(__name__)
 
 
-class MockReranker:
+class MockReranker(BaseReranker):
     """Mock 重排器 — 返回原始顺序，用于测试。"""
 
     async def rerank(
@@ -25,7 +25,7 @@ class MockReranker:
         return documents[:top_k]
 
 
-class CrossEncoderReranker:
+class CrossEncoderReranker(BaseReranker):
     """
     Cross-Encoder 重排器。
 

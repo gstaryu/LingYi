@@ -44,12 +44,13 @@ class DashScopeLLM(BaseLLM):
         """
         self._model_name = model_name
         self._temperature = temperature
+        self._max_tokens = 8192
         self._client = ChatOpenAI(
             api_key=api_key,
             base_url=base_url,
             model=model_name,
             temperature=temperature,
-            max_tokens=2048,
+            max_tokens=self._max_tokens,
             timeout=timeout,
             max_retries=max_retries,
         )
@@ -59,7 +60,7 @@ class DashScopeLLM(BaseLLM):
         self,
         messages: list,
         temperature: float = 0.7,
-        max_tokens: int = 2048,
+        max_tokens: int = 8192,
     ) -> str:
         """
         异步调用 DashScope LLM。
@@ -87,15 +88,24 @@ class DashScopeLLM(BaseLLM):
                 else:
                     lc_messages.append(HumanMessage(content=content))
 
-        # 动态调整参数
-        client = self._client
-        if temperature != self._temperature or max_tokens != 2048:
-            client = self._client.model_copy(
-                update={"temperature": temperature, "max_tokens": max_tokens}
-            )
+        # 仅当请求参数与默认配置不同时，绑定临时参数（LangChain 惯用 bind()，
+        # 避免每次调用都 model_copy，且消除原先与魔数 2048 比较的错误条件）
+        if temperature != self._temperature or max_tokens != self._max_tokens:
+            client = self._client.bind(temperature=temperature, max_tokens=max_tokens)
+        else:
+            client = self._client
 
         response = await client.ainvoke(lc_messages)
         return response.content
+
+    def with_structured_output(self, schema):
+        """
+        返回结构化输出 Runnable（ainvoke 返回 Pydantic 实例）。
+
+        DashScope 的 OpenAI 兼容模式对 Qwen 系列支持 function calling，
+        故用 method="function_calling"（比 json_schema 兼容性更好）。
+        """
+        return self._client.with_structured_output(schema, method="function_calling")
 
 
 class DashScopeEmbedding(BaseEmbedding):

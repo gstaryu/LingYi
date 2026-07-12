@@ -1,93 +1,95 @@
 """
-FastAPI 依赖注入 — 创建和管理 Agent、Storage、RAG 等实例。
+FastAPI 依赖注入 - 基于 app.state 的实例共享 + JWT 认证。
 
-使用 FastAPI 的 Depends 机制，在请求级别注入依赖。
+设计原则:
+- 不使用模块级全局单例（原 _agent_instance 等导致测试必须 reset_instances、无法多实例并行）
+- 重型实例在 lifespan 中创建并存入 app.state，请求级通过 Depends 读取
+- get_current_user 解码 Bearer JWT，返回用户名，保护需认证的路由
+- 测试通过 app.dependency_overrides 注入桩实例，无需真实 API
 """
 
 import logging
 from typing import Any
 
+import jwt
+from fastapi import Depends, HTTPException, Request, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+
 from lingyi.config import Settings, get_settings
 
 logger = logging.getLogger(__name__)
 
-# 全局缓存的实例（应用生命周期内只创建一次）
-_agent_instance: Any = None
-_storage_instance: Any = None
-_rag_client_instance: Any = None
-_safety_engine_instance: Any = None
+# Bearer Token 提取器（auto_error=False 以便自定义 401 响应）
+_bearer = HTTPBearer(auto_error=False)
 
 
-def get_storage(settings: Settings | None = None):
-    """获取存储实例。"""
-    global _storage_instance
-    if _storage_instance is None:
-        from lingyi.storage.sqlite import SQLiteStorage
-        _storage_instance = SQLiteStorage(settings.db_path if settings else get_settings().db_path)
-    return _storage_instance
+def get_settings_dep() -> Settings:
+    """FastAPI 依赖入口：获取全局配置。"""
+    return get_settings()
 
 
-def get_safety_engine():
-    """获取安全引擎实例。"""
-    global _safety_engine_instance
-    if _safety_engine_instance is None:
-        from lingyi.safety.rules import SafetyEngine
-        _safety_engine_instance = SafetyEngine()
-    return _safety_engine_instance
+def get_storage(request: Request) -> Any:
+    """从 app.state 获取存储实例（lifespan 中创建）。"""
+    return request.app.state.storage
 
 
-def get_rag_client(settings: Settings | None = None):
-    """获取 RAG 客户端实例。"""
-    global _rag_client_instance
-    if _rag_client_instance is not None:
-        return _rag_client_instance
+def get_safety_engine(request: Request) -> Any:
+    """从 app.state 获取安全引擎实例。"""
+    return request.app.state.safety_engine
 
-    s = settings or get_settings()
-    if s.rag_mode == "chroma":
-        from lingyi.rag.chroma import ChromaRAGClient
-        from lingyi.models.factory import create_embeddings
-        embeddings = create_embeddings(s)
-        _rag_client_instance = ChromaRAGClient(
-            chroma_db_dir=s.chroma_db_dir,
-            embedding_model=embeddings,
+
+def get_rag_client(request: Request) -> Any:
+    """从 app.state 获取 RAG 客户端实例。"""
+    return request.app.state.rag_client
+
+
+def get_agent(request: Request) -> Any:
+    """从 app.state 获取已编译的 Agent 图。"""
+    agent = request.app.state.agent
+    if agent is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Agent 未初始化（未配置 API Key 或正在测试中）",
         )
-    else:
-        from lingyi.rag.mock import MockRAGClient
-        import os
-        mock_data_path = os.path.join(s.storage_dir, "mock_rag_data.json")
-        _rag_client_instance = MockRAGClient(data_path=mock_data_path)
-    return _rag_client_instance
+    return agent
 
 
-def get_agent(settings: Settings | None = None):
-    """获取 Agent 实例。"""
-    global _agent_instance
-    if _agent_instance is not None:
-        return _agent_instance
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer),
+) -> str:
+    """
+    解码 Bearer JWT，返回用户名。
 
-    from lingyi.models.factory import create_llm
-    from lingyi.agent.graph import create_agent
+    Returns:
+        认证用户的用户名
 
-    s = settings or get_settings()
-    llm = create_llm(s)
-    storage = get_storage(s)
-    rag_client = get_rag_client(s)
-    safety_engine = get_safety_engine()
+    Raises:
+        HTTPException 401 - 未提供凭据或 Token 无效
+    """
+    if credentials is None or not credentials.credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="未提供认证凭据",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    settings = get_settings()
+    try:
+        payload = jwt.decode(
+            credentials.credentials,
+            settings.jwt_secret_key,
+            algorithms=[settings.jwt_algorithm],
+        )
+    except jwt.PyJWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token 验证失败",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
-    _agent_instance = create_agent(
-        llm=llm,
-        rag_client=rag_client,
-        storage=storage,
-        safety_engine=safety_engine,
-        settings=s,
-    )
-    return _agent_instance
-
-
-def reset_instances():
-    """重置所有缓存实例（用于测试）。"""
-    global _agent_instance, _storage_instance, _rag_client_instance, _safety_engine_instance
-    _agent_instance = None
-    _storage_instance = None
-    _rag_client_instance = None
-    _safety_engine_instance = None
+    username = payload.get("sub")
+    if not username:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token 中缺少用户信息",
+        )
+    return username

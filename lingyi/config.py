@@ -159,6 +159,11 @@ class Settings(BaseSettings):
         return os.path.join(self.storage_dir, "chunks")
 
     @property
+    def uploads_dir(self) -> str:
+        """用户上传文件目录（病历等）。"""
+        return os.path.join(self.storage_dir, "uploads")
+
+    @property
     def hf_endpoint(self) -> str:
         """HuggingFace 镜像地址（解决国内下载缓慢问题）。"""
         return os.getenv("HF_ENDPOINT", "https://hf-mirror.com")
