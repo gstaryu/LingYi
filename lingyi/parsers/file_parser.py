@@ -2,7 +2,7 @@
 文件解析器 - 将用户上传的 PDF/DOCX/TXT 文件解析为纯文本。
 
 设计原则:
-- 同步解析库（PyPDF2、python-docx）用 asyncio.to_thread 包装为异步，不阻塞事件循环
+- 同步解析库（pypdf、python-docx）用 asyncio.to_thread 包装为异步，不阻塞事件循环
 - 不支持的类型返回空字符串并记录警告，不抛异常中断图执行
 - 解析失败时记录错误并返回空字符串，由调用方决定如何处理
 """
@@ -55,8 +55,8 @@ class FileParser:
 
     @staticmethod
     def _parse_pdf(file_path: str) -> str:
-        """解析 PDF（使用 PyPDF2）。"""
-        from PyPDF2 import PdfReader
+        """解析 PDF（使用 pypdf）。"""
+        from pypdf import PdfReader
 
         reader = PdfReader(file_path)
         pages = [page.extract_text() or "" for page in reader.pages]

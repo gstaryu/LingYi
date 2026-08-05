@@ -42,8 +42,8 @@ dependencies = [
     "sentence-transformers>=3.0",
     "langchain-huggingface>=0.1",
 
-    # 文件解析
-    "pypdf2>=3.0",
+    # 文件解析（pypdf 是 PyPDF2 的维护后继版，API 兼容）
+    "pypdf>=4.0",
     "python-docx>=1.0",
 
     # 工具

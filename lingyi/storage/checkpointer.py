@@ -35,3 +35,20 @@ def create_checkpointer(db_path: str):
     # 连接会在首次使用时懒启动
     conn = aiosqlite.connect(db_path)
     return AsyncSqliteSaver(conn)
+
+
+async def close_checkpointer(checkpointer) -> None:
+    """
+    关闭 checkpointer 底层的 aiosqlite 连接（best-effort）。
+
+    AsyncSqliteSaver 本身无 close 方法，需手动关闭其持有的 conn。
+    连接为懒创建（首次 aput/aget 时才真正连接），未连接时 close 可能无操作或报错，
+    故包裹 try/except 不影响正常关闭流程。
+    """
+    try:
+        conn = getattr(checkpointer, "conn", None)
+        if conn is not None:
+            await conn.close()
+        logger.info("LangGraph 检查点连接已关闭")
+    except Exception as e:
+        logger.warning("关闭检查点连接失败: %s", e)

@@ -23,7 +23,8 @@ from lingyi.agent.skills.base import BaseSkill
 logger = logging.getLogger(__name__)
 
 # 画像提取超时（秒）- 超时则跳过本次写入，不阻塞响应过久
-DEFAULT_EXTRACT_TIMEOUT = 15
+# fire-and-forget 后台任务，适当放宽以减少跳过（不影响用户响应）
+DEFAULT_EXTRACT_TIMEOUT = 25
 
 
 class ProfileWriterSkill(BaseSkill):
@@ -120,7 +121,9 @@ class ProfileWriterSkill(BaseSkill):
                     "你是一个医疗信息提取助手。从以下对话中提取患者的关键信息。\n"
                     "请以 JSON 格式输出：\n"
                     '{"constitution": "体质类型", "allergies": "过敏史", "new_record": "本次诊疗摘要"}\n'
-                    "如果某项信息未提及，使用默认值（体质: 未知, 过敏: 无, 摘要: 空字符串）。"
+                    "重要：如果某项信息未提及，对应字段留空字符串（体质和过敏原**不要**写'未知'或'无'）。\n"
+                    "过敏原应列出具体过敏物（如'青霉素、海鲜'）；体质用具体证型（如'阳虚体质'、'阴虚体质'）。\n"
+                    "存储层会自动合并：过敏原只增不减，体质更新时保留历史。"
                 )
             ),
             HumanMessage(content=f"对话内容：\n{conversation}"),

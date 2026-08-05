@@ -28,6 +28,9 @@ class UserProfile:
     past_history: list[str] = field(default_factory=list)
     """既往有效处方记录（最多保留 10 条）。"""
 
+    constitution_history: list[str] = field(default_factory=list)
+    """体质变更历史（旧体质值按时间追加，便于追溯；空表示从未变更）。"""
+
 
 @dataclass
 class ThreadInfo:

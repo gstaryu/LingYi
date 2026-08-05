@@ -20,8 +20,12 @@ venv/
 
 # 运行时数据
 storage/*.db
+storage/*.db-shm
+storage/*.db-wal
 storage/chroma_db/
+storage/chroma_smoke/
 storage/chunks/
+storage/uploads/
 storage/temp_uploads/
 storage/test_report.txt
 storage/mock_rag_data.json
@@ -36,3 +40,16 @@ bash.exe.stackdump
 
 # 模型缓存
 .cache/
+
+.claude/
+
+# 开发产物：项目指令与测试用例不提交（本地保留）
+CLAUDE.md
+tests/
+
+prompt.md
+
+# 历史归档文档（本地保留，不提交）
+docs/history/
+
+.docs/history/

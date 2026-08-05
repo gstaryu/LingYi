@@ -10,9 +10,9 @@ from pydantic import BaseModel, Field
 class ChatRequest(BaseModel):
     """聊天请求。"""
 
-    message: str = Field(..., description="用户消息内容")
+    message: str = Field(..., max_length=10000, description="用户消息内容")
     thread_id: str = Field(default="", description="会话线程 ID（为空时自动创建）")
-    files: list[str] = Field(default_factory=list, description="上传的文件路径列表")
+    files: list[str] = Field(default_factory=list, max_length=10, description="上传的文件路径列表")
 
 
 class ChatResponse(BaseModel):
@@ -29,7 +29,7 @@ class ChatResponse(BaseModel):
 class ThreadCreate(BaseModel):
     """创建线程请求。"""
 
-    title: str = Field(default="新对话", description="线程标题")
+    title: str = Field(default="新对话", max_length=100, description="线程标题")
 
 
 class ThreadResponse(BaseModel):
@@ -43,7 +43,7 @@ class ThreadResponse(BaseModel):
 class ThreadRename(BaseModel):
     """重命名线程请求。"""
 
-    new_title: str = Field(..., description="新标题")
+    new_title: str = Field(..., max_length=100, description="新标题")
 
 
 # ==================== 用户 ====================
