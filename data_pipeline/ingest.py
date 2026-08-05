@@ -10,6 +10,7 @@ TCM 数据入库脚本 — 读取古籍文本，切分为 Chunk，输出 JSON �
 """
 
 import argparse
+import asyncio
 import json
 import logging
 import os
@@ -114,6 +115,43 @@ def generate_mock_data(all_chunks: dict[str, list[Chunk]], output_path: str) -> 
     logger.info("Mock 数据已生成: %s", output_path)
 
 
+async def ingest_to_chroma(all_chunks: dict[str, list[Chunk]], settings) -> int:
+    """
+    将切分结果批量嵌入并写入 ChromaDB。
+
+    使用 settings 中的 embedding 配置创建嵌入模型与 ChromaRAGClient，
+    分批 add_documents（每批 BATCH_SIZE 条），确保入库与查询嵌入空间一致。
+    """
+    from lingyi.models.factory import create_embeddings
+    from lingyi.rag.chroma import ChromaRAGClient
+    from tqdm import tqdm
+
+    BATCH_SIZE = 64
+    embedder = create_embeddings(settings)
+    client = ChromaRAGClient(
+        chroma_db_dir=settings.chroma_db_dir,
+        embedding_model=embedder,
+    )
+
+    total = 0
+    for book_name, chunks in all_chunks.items():
+        docs = [
+            {"content": c.content, "metadata": {"book": book_name, **c.metadata}}
+            for c in chunks
+        ]
+        # 分批入库，避免单批过大撑爆内存/embedding 请求
+        for i in tqdm(
+            range(0, len(docs), BATCH_SIZE),
+            desc=book_name,
+            unit="batch",
+        ):
+            batch = docs[i : i + BATCH_SIZE]
+            n = await client.add_documents(batch)
+            total += n
+        logger.info("%s: 入库 %d 条", book_name, len(docs))
+    return total
+
+
 def main():
     """主入口。"""
     logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -136,7 +174,12 @@ def main():
         generate_mock_data(all_chunks, mock_path)
         print(f"\nMock 数据已保存到: {mock_path}")
     elif args.mode == "chroma":
-        print("ChromaDB 入库需通过 lingyi/rag/chroma.py 的 add_documents() 接口")
+        from lingyi.config import get_settings
+
+        settings = get_settings()
+        print(f"Embedding 模型: {settings.embedding_model_name} ({settings.embedding_mode})")
+        total = asyncio.run(ingest_to_chroma(all_chunks, settings))
+        print(f"\nChromaDB 入库完成: 共 {total} 条文档 -> {settings.chroma_db_dir}")
 
 
 if __name__ == "__main__":

@@ -8,31 +8,43 @@ LangGraph 图编排 — 灵医诊疗工作流的核心编排器。
 """
 
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.graph import END, START, StateGraph
 
 from lingyi.agent.state import AgentState
+
+if TYPE_CHECKING:
+    # 仅用于类型标注，避免运行时循环导入
+    from lingyi.config import Settings
+    from lingyi.models.base import BaseLLM
+    from lingyi.parsers.file_parser import FileParser
+    from lingyi.rag.base import BaseRAGClient
+    from lingyi.safety.rules import SafetyEngine
+    from lingyi.storage.base import BaseProfileStore
 
 logger = logging.getLogger(__name__)
 
 
 def create_agent(
-    llm: Any,
-    rag_client: Any,
-    storage: Any,
-    safety_engine: Any,
-    file_parser: Any = None,
-    settings: Any = None,
-) -> Any:
+    llm: "BaseLLM",
+    rag_client: "BaseRAGClient",
+    storage: "BaseProfileStore",
+    safety_engine: "SafetyEngine",
+    checkpointer: BaseCheckpointSaver,
+    file_parser: "FileParser | None" = None,
+    settings: "Settings | None" = None,
+) -> tuple[Any, Any]:
     """
     创建灵医诊疗 Agent 图。
 
     Args:
         llm: BaseLLM 实例
         rag_client: BaseRAGClient 实例
-        storage: SQLiteStorage 实例
+        storage: 实现 BaseProfileStore 的存储实例（如 SQLiteStorage）
         safety_engine: SafetyEngine 实例
+        checkpointer: LangGraph 检查点（由 lifespan 创建并传入，便于统一关闭）
         file_parser: FileParser 实例（可选）
         settings: Settings 实例（可选）
 
@@ -159,11 +171,7 @@ def create_agent(
     workflow.add_edge("writer", END)
 
     # ==================== 编译 ====================
-    from lingyi.storage.checkpointer import create_checkpointer
-
-    db_path = settings.db_path if settings else "storage/checkpoints.db"
-    checkpointer = create_checkpointer(db_path)
-
+    # checkpointer 由调用方（lifespan）创建并传入，便于统一管理生命周期与关闭
     compiled = workflow.compile(checkpointer=checkpointer)
     logger.info("Agent 图编译完成")
     # 返回 writer 引用供 lifespan 在关闭时 flush 待完成的画像写入

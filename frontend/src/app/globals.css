@@ -9,7 +9,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-serif, var(--font-sans));
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,72 +49,76 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.52 0.14 165);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.60 0.13 165);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  /* 系统中文衬线栈（标题用，避免加载大体积 CJK webfont；设备自带宋体/思源宋体） */
+  --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "SimSun", serif;
+  /* 灵医 TCM 设计系统 - 本草绿(主) / 朱砂(强调) / 宣纸(底) / 墨(文) */
+  --background: oklch(0.97 0.006 85); /* 宣纸 rice-paper */
+  --foreground: oklch(0.24 0.012 55); /* 墨 ink */
+  --card: oklch(0.99 0.004 85);
+  --card-foreground: oklch(0.24 0.012 55);
+  --popover: oklch(0.99 0.004 85);
+  --popover-foreground: oklch(0.24 0.012 55);
+  --primary: oklch(0.46 0.085 155); /* 本草 herbal green */
+  --primary-foreground: oklch(0.98 0.006 85);
+  --secondary: oklch(0.93 0.012 85);
+  --secondary-foreground: oklch(0.30 0.012 55);
+  --muted: oklch(0.95 0.008 85);
+  --muted-foreground: oklch(0.52 0.012 60);
+  --accent: oklch(0.50 0.155 32); /* 朱砂 cinnabar */
+  --accent-foreground: oklch(0.98 0.006 85);
+  --destructive: oklch(0.54 0.20 25);
+  --border: oklch(0.89 0.012 80);
+  --input: oklch(0.89 0.012 80);
+  --ring: oklch(0.46 0.085 155);
+  --chart-1: oklch(0.55 0.10 155); /* 本草绿 */
+  --chart-2: oklch(0.58 0.15 35); /* 朱砂 */
+  --chart-3: oklch(0.70 0.12 75); /* 姜黄 */
+  --chart-4: oklch(0.40 0.08 160); /* 深绿 */
+  --chart-5: oklch(0.60 0.08 50); /* 陶土 */
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.52 0.14 165);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: oklch(0.96 0.008 85);
+  --sidebar-foreground: oklch(0.24 0.012 55);
+  --sidebar-primary: oklch(0.46 0.085 155);
+  --sidebar-primary-foreground: oklch(0.98 0.006 85);
+  --sidebar-accent: oklch(0.93 0.02 40);
+  --sidebar-accent-foreground: oklch(0.30 0.012 55);
+  --sidebar-border: oklch(0.89 0.012 80);
+  --sidebar-ring: oklch(0.46 0.085 155);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
+  /* 暗色模式 - 深墨底 + 提亮的本草绿/朱砂 */
+  --background: oklch(0.18 0.008 60);
+  --foreground: oklch(0.93 0.008 85);
+  --card: oklch(0.22 0.008 60);
+  --card-foreground: oklch(0.93 0.008 85);
+  --popover: oklch(0.22 0.008 60);
+  --popover-foreground: oklch(0.93 0.008 85);
+  --primary: oklch(0.68 0.10 155);
+  --primary-foreground: oklch(0.18 0.008 60);
+  --secondary: oklch(0.26 0.008 60);
+  --secondary-foreground: oklch(0.93 0.008 85);
+  --muted: oklch(0.26 0.008 60);
+  --muted-foreground: oklch(0.68 0.01 70);
+  --accent: oklch(0.65 0.15 35);
+  --accent-foreground: oklch(0.18 0.008 60);
+  --destructive: oklch(0.65 0.18 25);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.68 0.10 155);
+  --chart-1: oklch(0.65 0.10 155);
+  --chart-2: oklch(0.65 0.15 35);
+  --chart-3: oklch(0.75 0.12 75);
+  --chart-4: oklch(0.55 0.08 160);
+  --chart-5: oklch(0.68 0.08 50);
+  --sidebar: oklch(0.20 0.008 60);
+  --sidebar-foreground: oklch(0.93 0.008 85);
+  --sidebar-primary: oklch(0.68 0.10 155);
+  --sidebar-primary-foreground: oklch(0.18 0.008 60);
+  --sidebar-accent: oklch(0.28 0.02 40);
+  --sidebar-accent-foreground: oklch(0.93 0.008 85);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-ring: oklch(0.68 0.10 155);
 }
 
 @layer base {
@@ -126,5 +130,8 @@
   }
   html {
     @apply font-sans;
+  }
+  h1, h2, h3, h4 {
+    @apply font-heading;
   }
 }

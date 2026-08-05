@@ -5,16 +5,24 @@ import logging
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse
 from langchain_core.messages import AIMessage, AIMessageChunk, BaseMessage, HumanMessage
 from pydantic import BaseModel
 
-from lingyi.api.deps import get_agent, get_current_user, get_storage
+from lingyi.api.deps import decode_access_token, get_agent, get_current_user, get_storage
 from lingyi.api.schemas import ChatRequest, ChatResponse
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+# 仅推送 diagnosis/treatment 节点的 LLM token（用户可见的理法方药）；
+# 过滤 safety_guard/inquiry/rag_search/profile_writer 等内部 LLM 调用（返回 JSON/结构化输出，不应展示）。
+# SSE 与 WS 共用此过滤，避免 WS 泄漏内部 token 造成顺序错乱。
+_STREAM_NODES = {"diagnosis", "treatment"}
+
+# 单轮响应用时告警阈值（秒）
+_SLOW_THRESHOLD = 30.0
 
 
 class MessageItem(BaseModel):
@@ -64,20 +72,30 @@ async def chat(
 
     # 流式模式 - 边收边发，前端实时显示
     if stream:
-        # 仅推送 diagnosis/treatment 节点的 LLM token（用户可见的理法方药）；
-        # 过滤掉 safety_guard/inquiry/profile_writer 等内部 LLM 调用（返回 JSON/结构化输出，不应展示）
-        _STREAM_NODES = {"diagnosis", "treatment"}
+        import time
 
         async def event_generator():
+            t_start = time.perf_counter()
+            seq = 0
             try:
                 async for chunk in agent.astream(state_input, config=config, stream_mode="messages"):
                     msg, metadata = chunk
                     node = metadata.get("langgraph_node", "") if isinstance(metadata, dict) else ""
+                    step = metadata.get("langgraph_step", "") if isinstance(metadata, dict) else ""
                     if node not in _STREAM_NODES:
                         continue
                     if isinstance(msg, AIMessageChunk) and msg.content:
+                        seq += 1
+                        logger.debug(
+                            "SSE token: node=%s step=%s seq=%d len=%d", node, step, seq, len(msg.content)
+                        )
                         yield f"data: {json.dumps({'token': msg.content}, ensure_ascii=False)}\n\n"
-                yield f"data: {json.dumps({'done': True, 'thread_id': thread_id}, ensure_ascii=False)}\n\n"
+                elapsed_ms = int((time.perf_counter() - t_start) * 1000)
+                if elapsed_ms > _SLOW_THRESHOLD * 1000:
+                    logger.warning("慢响应: thread=%s elapsed=%dms", thread_id, elapsed_ms)
+                else:
+                    logger.info("流式完成: thread=%s elapsed=%dms", thread_id, elapsed_ms)
+                yield f"data: {json.dumps({'done': True, 'thread_id': thread_id, 'elapsed_ms': elapsed_ms}, ensure_ascii=False)}\n\n"
             except Exception as e:
                 logger.error("流式聊天失败: %s", e, exc_info=True)
                 yield f"data: {json.dumps({'error': str(e)}, ensure_ascii=False)}\n\n"
@@ -108,10 +126,19 @@ async def websocket_chat(websocket: WebSocket):
     WebSocket 聊天端点 - 使用 graph.astream 流式推送 token。
 
     遵循 LangGraph 流式接口（stream_mode="messages"），不使用 ainvoke 阻塞等待。
-    WS 鉴权（query token）为后续增强；当前以 default_user 记录线程归属。
+    鉴权：通过 query 参数 ?token=<JWT> 传入，复用 decode_access_token 校验，
+    拒绝匿名连接（不再使用 default_user）。
     """
+    # WS 无法直接用 Depends，从 query 参数取 token 并校验
+    token = websocket.query_params.get("token")
+    try:
+        username = decode_access_token(token)
+    except HTTPException:
+        await websocket.close(code=4401, reason="未认证或 token 无效")
+        return
+
     await websocket.accept()
-    logger.info("WebSocket 连接建立")
+    logger.info("WebSocket 连接建立: user=%s", username)
 
     try:
         while True:
@@ -122,36 +149,49 @@ async def websocket_chat(websocket: WebSocket):
             if not message:
                 continue
 
-            # WS 无法直接用 Depends，从 app.state 读取实例
+            # 从 app.state 读取实例
             agent = websocket.app.state.agent
             storage = websocket.app.state.storage
             if agent is None:
                 await websocket.send_json({"type": "error", "message": "Agent 未初始化"})
                 continue
 
-            await storage.add_thread("default_user", thread_id)
+            await storage.add_thread(username, thread_id)
             state_input = {
                 "messages": [HumanMessage(content=message)],
                 "thread_id": thread_id,
-                "username": "default_user",
+                "username": username,
                 "intent_type": "chat",
             }
             config = {"configurable": {"thread_id": thread_id}}
 
             try:
-                logger.info("Agent 流式处理: %s (thread=%s)", message[:30], thread_id)
-                async for chunk in agent.astream(state_input, config=config, stream_mode="messages"):
-                    msg, _meta = chunk
+                import time
+
+                t_start = time.perf_counter()
+                logger.info(
+                    "Agent 流式处理: %s (thread=%s, user=%s)", message[:30], thread_id, username
+                )
+                async for chunk in agent.astream(
+                    state_input, config=config, stream_mode="messages"
+                ):
+                    msg, meta = chunk
+                    node = meta.get("langgraph_node", "") if isinstance(meta, dict) else ""
+                    if node not in _STREAM_NODES:
+                        continue
                     if isinstance(msg, AIMessageChunk) and msg.content:
                         await websocket.send_json({"type": "token", "content": msg.content})
-                await websocket.send_json({"type": "done", "thread_id": thread_id})
-                logger.info("Agent 流式完成: thread=%s", thread_id)
+                elapsed_ms = int((time.perf_counter() - t_start) * 1000)
+                await websocket.send_json(
+                    {"type": "done", "thread_id": thread_id, "elapsed_ms": elapsed_ms}
+                )
+                logger.info("Agent 流式完成: thread=%s elapsed=%dms", thread_id, elapsed_ms)
             except Exception as e:
                 logger.error("Agent 流式失败: %s", e, exc_info=True)
                 await websocket.send_json({"type": "error", "message": str(e)})
 
     except WebSocketDisconnect:
-        logger.info("WebSocket 连接断开")
+        logger.info("WebSocket 连接断开: user=%s", username)
 
 
 @router.get("/threads/{thread_id}/messages", response_model=list[MessageItem])

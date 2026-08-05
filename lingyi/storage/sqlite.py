@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS profiles (
     constitution TEXT DEFAULT '未知',
     allergies TEXT DEFAULT '无',
     past_history TEXT DEFAULT '[]',
+    constitution_history TEXT DEFAULT '[]',
     last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
 """
@@ -123,15 +124,28 @@ class SQLiteStorage(SQLiteBase, BaseUserStore, BaseProfileStore, BaseThreadStore
     # ==================== 建表 ====================
 
     async def init_db(self) -> None:
-        """初始化数据库表结构（幂等）。"""
+        """初始化数据库表结构（幂等；含列迁移）。"""
         try:
             async with self._transaction() as conn:
                 await conn.execute(_CREATE_USERS_TABLE)
                 await conn.execute(_CREATE_PROFILES_TABLE)
                 await conn.execute(_CREATE_THREADS_TABLE)
+                # 迁移：为旧库的 profiles 表补充 constitution_history 列（幂等）
+                await self._migrate_profiles_columns(conn)
             logger.info("数据库初始化完成: %s", self._db_path)
         except Exception as e:
             raise StorageError(f"数据库初始化失败: {e}") from e
+
+    @staticmethod
+    async def _migrate_profiles_columns(conn) -> None:
+        """幂等补列：检查 profiles 表是否缺少 constitution_history，缺则 ALTER ADD。"""
+        cursor = await conn.execute("PRAGMA table_info(profiles)")
+        columns = {row["name"] for row in await cursor.fetchall()}
+        if "constitution_history" not in columns:
+            await conn.execute(
+                "ALTER TABLE profiles ADD COLUMN constitution_history TEXT DEFAULT '[]'"
+            )
+            logger.info("迁移：profiles 表新增 constitution_history 列")
 
     # ==================== 用户管理（BaseUserStore）====================
 
@@ -187,11 +201,14 @@ class SQLiteStorage(SQLiteBase, BaseUserStore, BaseProfileStore, BaseThreadStore
                 )
                 row = await cursor.fetchone()
                 if row:
+                    # constitution_history 可能在旧库迁移前不存在，安全访问
+                    ch_raw = row["constitution_history"] if "constitution_history" in row.keys() else None
                     return UserProfile(
                         patient_id=patient_id,
                         constitution=row["constitution"] or "未知",
                         allergies=row["allergies"] or "无",
                         past_history=json.loads(row["past_history"]) if row["past_history"] else [],
+                        constitution_history=json.loads(ch_raw) if ch_raw else [],
                     )
         except Exception as e:
             logger.warning("读取画像失败: %s", e)
@@ -199,36 +216,87 @@ class SQLiteStorage(SQLiteBase, BaseUserStore, BaseProfileStore, BaseThreadStore
         return UserProfile(patient_id=patient_id)
 
     async def update_profile(self, patient_id: str, data: dict[str, Any]) -> None:
-        """更新患者画像（upsert 语义）。new_record 追加到 past_history（最多 10 条）。"""
+        """
+        更新患者画像（合并语义）。
+
+        - allergies: 提取值非"无"/空时与现有取并集去重；为"无"/空时保留现有（永不覆盖）。
+          过敏原为医学安全数据，只增不减。
+        - constitution: 提取值非"未知"/空且与现值不同时更新，旧值追加到 constitution_history；
+          为"未知"/空时保留现有。
+        - new_record: 追加到 past_history（最多 10 条）。
+        """
         try:
             current = await self.get_profile(patient_id)
-            new_history = current.past_history.copy()
 
+            # --- 过敏原：合并去重，永不回退为"无" ---
+            merged_allergies = self._merge_allergies(
+                current.allergies, (data.get("allergies") or "").strip()
+            )
+
+            # --- 体质：新值有效且不同才更新，旧值入历史 ---
+            raw_constitution = (data.get("constitution") or "").strip()
+            new_constitution = current.constitution
+            new_constitution_history = list(current.constitution_history)
+            if (
+                raw_constitution
+                and raw_constitution != "未知"
+                and raw_constitution != current.constitution
+            ):
+                if current.constitution and current.constitution != "未知":
+                    new_constitution_history.append(current.constitution)
+                new_constitution = raw_constitution
+
+            # --- 诊疗记录：追加 ---
+            past_history = list(current.past_history)
             if data.get("new_record"):
-                new_history.append(data["new_record"])
-                new_history = new_history[-10:]
+                past_history.append(data["new_record"])
+                past_history = past_history[-10:]
 
             async with self._transaction() as conn:
                 await conn.execute(
                     """
-                    INSERT INTO profiles (patient_id, constitution, allergies, past_history, last_update)
-                    VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+                    INSERT INTO profiles
+                        (patient_id, constitution, allergies, past_history, constitution_history, last_update)
+                    VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
                     ON CONFLICT(patient_id) DO UPDATE SET
                         constitution = excluded.constitution,
                         allergies = excluded.allergies,
                         past_history = excluded.past_history,
+                        constitution_history = excluded.constitution_history,
                         last_update = CURRENT_TIMESTAMP
                     """,
                     (
                         patient_id,
-                        data.get("constitution", current.constitution),
-                        data.get("allergies", current.allergies),
-                        json.dumps(new_history, ensure_ascii=False),
+                        new_constitution,
+                        merged_allergies,
+                        json.dumps(past_history, ensure_ascii=False),
+                        json.dumps(new_constitution_history, ensure_ascii=False),
                     ),
                 )
-            logger.info("画像已更新: %s", patient_id)
+            logger.info(
+                "画像已更新: %s (体质=%s, 过敏=%s)", patient_id, new_constitution, merged_allergies
+            )
         except Exception as e:
             raise StorageError(f"更新画像失败: {e}") from e
+
+    @staticmethod
+    def _merge_allergies(existing: str, new: str) -> str:
+        """合并过敏原：现有与新增取并集去重；空/无 不覆盖现有。"""
+        import re
+
+        def parse(s: str) -> list[str]:
+            if not s or s.strip() in ("", "无", "未知"):
+                return []
+            parts = re.split(r"[、，,；;]\s*", s.strip())
+            return [p.strip() for p in parts if p.strip() and p.strip() not in ("无", "未知")]
+
+        items: list[str] = []
+        seen: set[str] = set()
+        for item in parse(existing) + parse(new):
+            if item not in seen:
+                seen.add(item)
+                items.append(item)
+        return "、".join(items) if items else "无"
 
     async def list_profiles(self) -> list[dict[str, str]]:
         """列出所有患者画像（按最后更新时间降序）。"""

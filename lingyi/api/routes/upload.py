@@ -54,8 +54,9 @@ async def upload_file(
     user_dir = os.path.join(settings.uploads_dir, username)
     os.makedirs(user_dir, exist_ok=True)
 
-    # 用 uuid 前缀防重名，保留原始扩展名
-    safe_name = f"{uuid.uuid4().hex}_{file.filename}"
+    # 防路径穿越：保存名只用 uuid + 已校验的扩展名，不含用户提供的文件名
+    # （原 file.filename 可能含 ../ 等路径片段，拼接到 user_dir 会逃逸目录）
+    safe_name = f"{uuid.uuid4().hex}{ext}"
     save_path = os.path.join(user_dir, safe_name)
     with open(save_path, "wb") as f:
         f.write(content)

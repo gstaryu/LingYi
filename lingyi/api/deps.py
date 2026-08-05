@@ -54,19 +54,16 @@ def get_agent(request: Request) -> Any:
     return agent
 
 
-def get_current_user(
-    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer),
-) -> str:
+def decode_access_token(token: str | None) -> str:
     """
-    解码 Bearer JWT，返回用户名。
+    解码 JWT token，返回用户名。无效或缺失则抛 HTTPException 401。
 
-    Returns:
-        认证用户的用户名
+    供 HTTP Bearer 依赖与 WebSocket query-param 鉴权共用，避免逻辑重复。
 
     Raises:
         HTTPException 401 - 未提供凭据或 Token 无效
     """
-    if credentials is None or not credentials.credentials:
+    if not token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="未提供认证凭据",
@@ -75,7 +72,7 @@ def get_current_user(
     settings = get_settings()
     try:
         payload = jwt.decode(
-            credentials.credentials,
+            token,
             settings.jwt_secret_key,
             algorithms=[settings.jwt_algorithm],
         )
@@ -93,3 +90,18 @@ def get_current_user(
             detail="Token 中缺少用户信息",
         )
     return username
+
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer),
+) -> str:
+    """
+    解码 Bearer JWT，返回用户名（FastAPI 依赖入口）。
+
+    Returns:
+        认证用户的用户名
+
+    Raises:
+        HTTPException 401 - 未提供凭据或 Token 无效
+    """
+    return decode_access_token(credentials.credentials if credentials else None)

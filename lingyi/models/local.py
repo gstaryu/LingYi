@@ -18,14 +18,19 @@ class LocalEmbedding(BaseEmbedding):
     本地 HuggingFace Embedding 模型。
 
     使用 sentence-transformers 加载模型，支持 CUDA/CPU 自动回退。
-    默认使用 BAAI/bge-m3 模型。
+    默认使用 Qwen3-Embedding-0.6B（1024 维，instruction-aware）。
+
+    Qwen3-Embedding 等 instruction-aware 模型要求查询侧使用 prompt_name="query"
+    （自动套用 "Instruct: {task}\\nQuery: " 模板），文档侧不加 prompt。
+    通过 query_prompt_name 参数控制；BGE-M3 等非 instruction 模型传 None。
     """
 
     def __init__(
         self,
-        model_name: str = "BAAI/bge-m3",
+        model_name: str = "Qwen/Qwen3-Embedding-0.6B",
         device: str = "cuda",
         hf_endpoint: str = "https://hf-mirror.com",
+        query_prompt_name: str | None = None,
     ):
         """
         初始化本地 Embedding 模型。
@@ -34,13 +39,21 @@ class LocalEmbedding(BaseEmbedding):
             model_name: HuggingFace 模型名称
             device: 计算设备（cuda / cpu）
             hf_endpoint: HuggingFace 镜像地址
+            query_prompt_name: 查询嵌入的 prompt 名称（Qwen3-Embedding 用 "query"）；
+                非 instruction 模型（如 BGE-M3）传 None
         """
         self._model_name = model_name
         self._device = device
         self._hf_endpoint = hf_endpoint
+        self._query_prompt_name = query_prompt_name
         self._model = None
 
-        logger.info("LocalEmbedding 初始化: model=%s, device=%s", model_name, device)
+        logger.info(
+            "LocalEmbedding 初始化: model=%s, device=%s, query_prompt=%s",
+            model_name,
+            device,
+            query_prompt_name or "(none)",
+        )
 
     def _ensure_model(self):
         """延迟加载模型（首次调用时才加载，避免启动时占用显存）。"""
@@ -78,8 +91,22 @@ class LocalEmbedding(BaseEmbedding):
         return embeddings.tolist()
 
     async def aembed_query(self, text: str) -> list[float]:
-        """异步嵌入查询文本。"""
+        """
+        异步嵌入查询文本。
+
+        对于 instruction-aware 模型（Qwen3-Embedding），使用 prompt_name="query"
+        套用查询指令模板；普通模型（BGE-M3）直接编码。
+        """
         self._ensure_model()
         loop = asyncio.get_running_loop()
-        embedding = await loop.run_in_executor(None, self._model.encode, [text])
+        if self._query_prompt_name:
+            # prompt_name 需作为关键字参数传入，用 partial 绑定后在线程池执行
+            import functools
+
+            encode_fn = functools.partial(
+                self._model.encode, prompt_name=self._query_prompt_name
+            )
+            embedding = await loop.run_in_executor(None, encode_fn, [text])
+        else:
+            embedding = await loop.run_in_executor(None, self._model.encode, [text])
         return embedding[0].tolist()

@@ -79,11 +79,19 @@ class Settings(BaseSettings):
     # ==================== Embedding 配置 ====================
     embedding_mode: str = Field(
         default="local",
-        description="Embedding 模式: local（HuggingFace BGE-M3）/ online（DashScope API）",
+        description="Embedding 模式: local（本地 HuggingFace，默认 Qwen3-Embedding-0.6B）/ online（DashScope API）",
     )
     embedding_model_name: str = Field(
-        default="BAAI/bge-m3",
-        description="Embedding 模型名称",
+        default="Qwen/Qwen3-Embedding-0.6B",
+        description="本地 Embedding 模型名称（HuggingFace）。默认 Qwen3-Embedding-0.6B（1024 维，instruction-aware）",
+    )
+    embedding_online_model_name: str = Field(
+        default="text-embedding-v4",
+        description="online 模式下的 DashScope Embedding 模型名（text-embedding-v3 / v4）",
+    )
+    embedding_query_prompt_name: str = Field(
+        default="",
+        description="查询嵌入的 sentence-transformers prompt 名称；Qwen3-Embedding 需 'query'。留空则按模型名自动检测",
     )
     embedding_device: str = Field(
         default="cuda",
@@ -137,6 +145,12 @@ class Settings(BaseSettings):
     jwt_algorithm: str = Field(default="HS256", description="JWT 签名算法")
     jwt_expire_minutes: int = Field(default=1440, description="JWT Token 有效期（分钟）")
 
+    # ==================== CORS 配置 ====================
+    cors_origins: str = Field(
+        default="http://localhost:3000,http://localhost:8501",
+        description="允许的 CORS 来源（逗号分隔）；生产环境通过环境变量设置",
+    )
+
     # ==================== 便捷属性 ====================
     @property
     def effective_api_key(self) -> str:
@@ -147,6 +161,11 @@ class Settings(BaseSettings):
     def db_path(self) -> str:
         """SQLite 数据库文件路径。"""
         return os.path.join(self.storage_dir, "patient_profiles.db")
+
+    @property
+    def checkpoints_db_path(self) -> str:
+        """LangGraph 检查点 SQLite 文件路径（与业务库分离）。"""
+        return os.path.join(self.storage_dir, "checkpoints.db")
 
     @property
     def chroma_db_dir(self) -> str:

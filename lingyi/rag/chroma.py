@@ -130,23 +130,42 @@ class ChromaRAGClient(BaseRAGClient):
             return []
 
     async def add_documents(self, documents: list[dict[str, Any]]) -> int:
-        """添加文档到 ChromaDB。"""
+        """
+        添加文档到 ChromaDB。
+
+        若注入了 embedding_model，则用其生成向量并显式传入 ChromaDB，
+        确保入库与查询使用同一嵌入空间（否则 ChromaDB 会用其默认 MiniLM 嵌入，
+        与查询时的 embedding_model 空间不一致，导致检索失效）。
+        """
         self._ensure_client()
 
         if not documents:
             return 0
 
+        contents = [doc.get("content", "") for doc in documents]
+
+        # 用注入的 embedding 模型生成向量（与查询侧一致）；无模型时回退 ChromaDB 默认嵌入
+        embeddings: list[list[float]] | None = None
+        if self._embedding_model:
+            embeddings = await self._embedding_model.aembed_documents(contents)
+        else:
+            logger.warning("未注入 embedding 模型，回退 ChromaDB 默认嵌入（与查询嵌入空间可能不一致）")
+
         loop = asyncio.get_running_loop()
         count = await loop.run_in_executor(
             None,
-            lambda: self._batch_add(documents),
+            lambda: self._batch_add(documents, embeddings),
         )
 
         logger.info("ChromaDB 添加 %d 条文档", count)
         return count
 
-    def _batch_add(self, documents: list[dict[str, Any]]) -> int:
-        """批量添加文档（在线程池中运行）。"""
+    def _batch_add(
+        self,
+        documents: list[dict[str, Any]],
+        embeddings: list[list[float]] | None = None,
+    ) -> int:
+        """批量添加文档（在线程池中运行）。embeddings 由外部异步生成后传入。"""
         import hashlib
 
         ids = []
@@ -162,11 +181,14 @@ class ChromaRAGClient(BaseRAGClient):
             metadatas.append(metadata)
 
         try:
-            self._collection.upsert(
-                ids=ids,
-                documents=contents,
-                metadatas=metadatas,
-            )
+            kwargs: dict[str, Any] = {
+                "ids": ids,
+                "documents": contents,
+                "metadatas": metadatas,
+            }
+            if embeddings is not None:
+                kwargs["embeddings"] = embeddings
+            self._collection.upsert(**kwargs)
             return len(documents)
         except Exception as e:
             logger.error("ChromaDB 批量添加失败: %s", e)

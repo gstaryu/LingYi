@@ -56,6 +56,11 @@ async def lifespan(app: FastAPI):
     # rag client（mock 模式无 API 依赖；chroma 模式需 embedding）
     app.state.rag_client = _create_rag_client(settings)
 
+    # checkpointer（LangGraph 状态持久化，与业务库分离；由 lifespan 统一创建与关闭）
+    from lingyi.storage.checkpointer import close_checkpointer, create_checkpointer
+
+    app.state.checkpointer = create_checkpointer(settings.checkpoints_db_path)
+
     # agent（需 LLM；未配置 API Key 时跳过，测试可用 dependency_overrides 注入桩）
     app.state.profile_writer = None
     if settings.effective_api_key:
@@ -69,6 +74,7 @@ async def lifespan(app: FastAPI):
             rag_client=app.state.rag_client,
             storage=storage,
             safety_engine=app.state.safety_engine,
+            checkpointer=app.state.checkpointer,
             file_parser=FileParser(),
             settings=settings,
         )
@@ -83,6 +89,7 @@ async def lifespan(app: FastAPI):
     # flush 待完成的画像写入（ProfileWriterSkill 后台任务），再关闭持久连接
     if app.state.profile_writer is not None:
         await app.state.profile_writer.flush()
+    await close_checkpointer(app.state.checkpointer)
     await storage.close()
     logger.info("灵医 API 关闭")
 
@@ -101,10 +108,12 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
-    # CORS 配置
+    # CORS 配置（白名单，避免 allow_origins=* 与 allow_credentials=True 冲突）
+    settings = get_settings()
+    origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
