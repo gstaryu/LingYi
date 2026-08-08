@@ -21,6 +21,7 @@ from lingyi.tools.schemas import (
     GetPatientProfileInput,
     LookupHerbInput,
     SavePatientProfileInput,
+    SearchHerbsInput,
     SearchFormulasInput,
     SearchTcmClassicsInput,
 )
@@ -124,6 +125,18 @@ def create_tools(
         args_schema=SearchFormulasInput,
     )
 
+    # ---------- 3.5 search_herbs ----------
+    async def _search_herbs(query: str) -> list[dict]:
+        herbs = await storage.search_herbs(query)
+        return [_herb_to_dict(h) for h in herbs]
+
+    search_herbs = StructuredTool.from_function(
+        coroutine=_search_herbs,
+        name="search_herbs",
+        description="按关键词（症状/功效/药名）模糊搜索本草，返回药材列表（性味、归经、功效、用量、禁忌）。",
+        args_schema=SearchHerbsInput,
+    )
+
     # ---------- 4. check_herb_safety ----------
     async def _check_herb_safety(herbs: list[str]) -> dict:
         # 十八反/十九畏 配伍禁忌（SafetyEngine 物理规则引擎）
@@ -183,6 +196,7 @@ def create_tools(
         search_tcm_classics,
         lookup_herb,
         search_formulas,
+        search_herbs,
         check_herb_safety,
         get_patient_profile,
         save_patient_profile,

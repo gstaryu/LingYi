@@ -28,6 +28,22 @@ class SpecialistBencao(SpecialistBase):
     )
     SPECIALIST_NAME = "本草"
 
+    async def prefetch(self, state: dict[str, Any]) -> str:
+        """预取与症状相关的本草数据（直接调用工具，不经 LLM）。
+
+        按每个症状关键词分别搜索本草库，合并结果，使本草专家基于结构化数据
+        （性味/归经/功效/用量/禁忌）而非纯 LLM 记忆作答。
+        """
+        symptoms = state.get("symptoms", [])
+        if not symptoms:
+            return ""
+        parts = []
+        for symptom in symptoms[:3]:  # 最多查 3 个症状关键词
+            data = await self._call_tool("search_herbs", {"query": symptom})
+            if data and data != "[]" and len(data) > 2:
+                parts.append(f"[症状「{symptom}」相关药材]\n{data}")
+        return "\n\n".join(parts)
+
     def _parse_note(self, content: str) -> dict[str, Any]:
         """解析本草笔记。"""
         data = self._parse_json(content)
