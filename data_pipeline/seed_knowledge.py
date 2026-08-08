@@ -755,36 +755,7 @@ FORMULAS: list[Formula] = [
 
 # ==================== 禁忌数据 ====================
 
-# 妊娠禁用药（经典禁用药——药性猛烈，孕妇禁用）
-PREGNANCY_PROHIBITED: list[str] = [
-    "芫花", "甘遂", "大戟", "巴豆", "牵牛子", "商陆", "麝香",
-    "三棱", "莪术", "水蛭", "虻虫", "斑蝥",
-]
-
-# 妊娠慎用药（药性偏烈，孕妇慎用）
-PREGNANCY_CAUTION: list[str] = [
-    "附子", "干姜", "枳实", "桃仁", "红花", "大黄", "芒硝",
-    "半夏", "牛膝", "牡丹皮", "桂枝", "麻黄",
-]
-
 CONTRAINDICATIONS: list[Contraindication] = []
-
-# 构建妊娠禁忌条目
-for herb_name in PREGNANCY_PROHIBITED:
-    CONTRAINDICATIONS.append(Contraindication(
-        herb=herb_name,
-        type="妊娠",
-        detail=f"{herb_name}药性猛烈，孕妇禁用，可致堕胎或伤胎",
-        severity="禁用",
-    ))
-
-for herb_name in PREGNANCY_CAUTION:
-    CONTRAINDICATIONS.append(Contraindication(
-        herb=herb_name,
-        type="妊娠",
-        detail=f"{herb_name}孕妇慎用，确有需要时须严格控量",
-        severity="慎用",
-    ))
 
 # 体质/证候禁忌条目
 CONTRAINDICATIONS.extend([

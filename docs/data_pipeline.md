@@ -105,7 +105,7 @@ python -m data_pipeline.seed_knowledge --db-path /tmp/test.db
 |---|---|---|
 | 本草（Herbs） | 33 味 | 《神农本草经》、《中药学》教材 |
 | 方剂（Formulas） | 22 首 | 《伤寒论》、《金匮要略》 |
-| 禁忌（Contraindications） | 38 条 | 十八反/十九畏 + 妊娠禁忌 + 体质禁忌 |
+| 禁忌（Contraindications） | 14 条 | 十八反/十九畏配伍 + 体质禁忌 |
 
 ### 数据模型
 
@@ -137,17 +137,16 @@ python -m data_pipeline.seed_knowledge --db-path /tmp/test.db
 | 字段 | 类型 | 说明 |
 |---|---|---|
 | `herb` | `str` | 药材名 |
-| `type` | `str` | 类型: 妊娠 / 体质 / 配伍 |
+| `type` | `str` | 类型: 体质 / 配伍 |
 | `detail` | `str` | 详细说明 |
 | `severity` | `str` | 严重程度: 禁用 / 慎用 |
 
 ### 禁忌数据构成
 
-38 条禁忌由三部分组成：
+14 条禁忌由两部分组成：
 
 | 类型 | 数量 | 说明 |
 |---|---|---|
-| 妊娠禁忌 | 24 | 禁用 12 + 慎用 12 |
 | 体质/证候禁忌 | 6 | 人参、麻黄、大黄、石膏、黄连、熟地黄 |
 | 配伍禁忌 | 8 | 十八反/十九畏关键药对 |
 

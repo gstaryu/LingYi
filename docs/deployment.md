@@ -140,26 +140,31 @@ WEB_SEARCH_ENABLED=true
 
 ## 启动
 
-### 后端
+### 后端 + 前端（一键启动）
 
-**方式一：开发脚本（推荐，UTF-8 安全）**
+**方式一：一键启动脚本（推荐）**
 
 ```powershell
-.\scripts\dev_backend.ps1
+.\start.ps1
 ```
 
-`scripts/dev_backend.ps1` 脚本：
-- 设置 `PYTHONUTF8=1`（Python 强制 UTF-8 模式）
-- 设置 `AGENT_MODE=multiagent`（多智能体模式）
+`start.ps1` 同时启动前后端，各开一个窗口：
+- 设置 `PYTHONUTF8=1`（Python 强制 UTF-8，中文日志不乱码）
+- 设置 `AGENT_MODE=multiagent`（多智能体会诊模式）
 - 切换 Windows 控制台代码页为 UTF-8（65001）
-- 激活 conda 环境
-- 启动 `uvicorn lingyi.api.app:app --port 8000 --log-level info`
+- 激活 conda 环境，启动后端 `uvicorn lingyi.api.app:app --port 8000`
+- 启动前端 `npm run dev`（:3000）
+- Linux/macOS 用 `./start.sh`
 
-**方式二：直接启动**
+**方式二：分别启动**
 
 ```bash
+# 后端
 conda activate lingyi
 uvicorn lingyi.api.app:app --reload --port 8000
+
+# 前端（另一终端）
+cd frontend && npm run dev
 ```
 
 ### 前端

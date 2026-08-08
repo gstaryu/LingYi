@@ -12,7 +12,7 @@
 - **RAG 经典检索**：ChromaDB 向量检索 + BM25 字符级检索的 RRF 混合融合，支持 Qwen3-Embedding 与可选 CrossEncoder 重排。
 - **画像记忆**：SQLite 持久化用户体质、过敏史、诊疗记录；每轮回话自动加载画像，会诊结束写入更新。
 - **MCP 双向**：既作为 MCP 服务端暴露 5 只读工具，又可作为消费者复用外部 MCP（如 web_search）。
-- **结构化知识库**：本草 / 方剂 / 禁忌三库（33 本草 / 22 方剂 / 38 禁忌），幂等种子脚本一键入库。
+- **结构化知识库**：本草 / 方剂 / 禁忌三库（33 本草 / 22 方剂 / 14 禁忌），幂等种子脚本一键入库。
 - **流式前端**：Next.js + React，SSE 流式输出，会诊阶段时间线、处方卡片、过敏史编辑。
 
 ---
@@ -110,9 +110,9 @@ python -m data_pipeline.ingest --mode chroma
 ### 4. 启动服务
 
 ```bash
-# 后端（UTF-8 安全启动脚本）
-./scripts/dev_backend.ps1
-# 或
+# 一键启动（后端 + 前端，推荐）
+.\start.ps1
+# 或仅后端
 uvicorn lingyi.api.app:app --reload --port 8000
 
 # 前端
