@@ -14,6 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from lingyi.config import get_settings
 from lingyi.logging import setup_logging
+from lingyi.tracing import setup_tracing
 
 logger = logging.getLogger(__name__)
 
@@ -34,11 +35,23 @@ def _create_rag_client(settings):
     return MockRAGClient(data_path=mock_data_path)
 
 
+def _create_reranker(settings):
+    """根据配置创建重排器（mock 模式用 MockReranker，chroma 模式用 CrossEncoderReranker 延迟加载）。"""
+    if settings.rag_mode == "chroma":
+        from lingyi.rag.reranker import CrossEncoderReranker
+
+        return CrossEncoderReranker(model_name=settings.rerank_model_name)
+    from lingyi.rag.reranker import MockReranker
+
+    return MockReranker()
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """应用生命周期：启动创建实例并存入 app.state，关闭释放连接。"""
     settings = get_settings()
     setup_logging(settings.log_level)
+    setup_tracing(settings)
     logger.info("灵医 API 启动中... 环境: %s, RAG 模式: %s", settings.environment, settings.rag_mode)
 
     # storage（始终创建，无 API 依赖）
@@ -56,6 +69,9 @@ async def lifespan(app: FastAPI):
     # rag client（mock 模式无 API 依赖；chroma 模式需 embedding）
     app.state.rag_client = _create_rag_client(settings)
 
+    # reranker（精排；chroma 模式延迟加载 CrossEncoder，mock 模式用 MockReranker）
+    app.state.reranker = _create_reranker(settings)
+
     # checkpointer（LangGraph 状态持久化，与业务库分离；由 lifespan 统一创建与关闭）
     from lingyi.storage.checkpointer import close_checkpointer, create_checkpointer
 
@@ -63,21 +79,60 @@ async def lifespan(app: FastAPI):
 
     # agent（需 LLM；未配置 API Key 时跳过，测试可用 dependency_overrides 注入桩）
     app.state.profile_writer = None
+    app.state.tools = None
+    app.state.web_search_tool = None
     if settings.effective_api_key:
-        from lingyi.agent.graph import create_agent
         from lingyi.models.factory import create_llm
         from lingyi.parsers.file_parser import FileParser
+        from lingyi.tools.factory import create_tools
+        from lingyi.tools.web_search import build_web_search_tool
 
         llm = create_llm(settings)
-        app.state.agent, app.state.profile_writer = create_agent(
-            llm=llm,
+        file_parser = FileParser()
+
+        # 构建 web_search 工具（可选，MCP 不可用时返回 None）
+        web_search_tool = await build_web_search_tool(settings)
+        app.state.web_search_tool = web_search_tool
+
+        # 构建完整工具集（create_tools 根据 web_search_client 是否为 None 决定附加）
+        tools = create_tools(
             rag_client=app.state.rag_client,
             storage=storage,
             safety_engine=app.state.safety_engine,
-            checkpointer=app.state.checkpointer,
-            file_parser=FileParser(),
-            settings=settings,
+            web_search_client=web_search_tool,
         )
+        app.state.tools = tools
+
+        # AGENT_MODE 切换: workflow（默认单 Agent）/ multiagent（多智能体会诊）
+        if settings.agent_mode == "multiagent":
+            from lingyi.agent.graph_multiagent import create_multiagent_agent
+
+            app.state.agent, app.state.profile_writer = create_multiagent_agent(
+                llm=llm,
+                rag_client=app.state.rag_client,
+                storage=storage,
+                safety_engine=app.state.safety_engine,
+                checkpointer=app.state.checkpointer,
+                tools=tools,
+                web_search_tool=web_search_tool,
+                settings=settings,
+                file_parser=file_parser,
+            )
+            logger.info("Agent 模式: multiagent（多智能体会诊）")
+        else:
+            from lingyi.agent.graph import create_agent
+
+            app.state.agent, app.state.profile_writer = create_agent(
+                llm=llm,
+                rag_client=app.state.rag_client,
+                storage=storage,
+                safety_engine=app.state.safety_engine,
+                checkpointer=app.state.checkpointer,
+                reranker=app.state.reranker,
+                file_parser=file_parser,
+                settings=settings,
+            )
+            logger.info("Agent 模式: workflow（单 Agent 工作流）")
     else:
         logger.warning(
             "未配置 API Key，跳过 Agent 创建（认证接口返回 503；测试可用 dependency_overrides 注入）"
@@ -89,6 +144,14 @@ async def lifespan(app: FastAPI):
     # flush 待完成的画像写入（ProfileWriterSkill 后台任务），再关闭持久连接
     if app.state.profile_writer is not None:
         await app.state.profile_writer.flush()
+    # 关闭 web_search MCP 子进程（如有）
+    web_search_tool = getattr(app.state, "web_search_tool", None)
+    if web_search_tool is not None:
+        from lingyi.tools.web_search import _safe_close_client
+
+        mcp_client = getattr(web_search_tool, "mcp_client", None)
+        if mcp_client is not None:
+            await _safe_close_client(mcp_client)
     await close_checkpointer(app.state.checkpointer)
     await storage.close()
     logger.info("灵医 API 关闭")

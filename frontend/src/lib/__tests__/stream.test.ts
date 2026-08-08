@@ -55,6 +55,50 @@ describe("streamChat (SSE 解析)", () => {
     expect(events[0]).toEqual({ type: "error", message: "处理失败" });
   });
 
+  it("解析 stage 阶段进度事件", async () => {
+    const events: ChatStreamEvent[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        body: makeSSEStream([
+          { type: "stage", stage: "bianzheng", label: "辨证", status: "start" },
+          { type: "stage", stage: "bianzheng", label: "辨证", status: "done" },
+        ]),
+      })
+    );
+    await streamChat({ message: "hi" }, { onEvent: (e) => events.push(e) });
+    expect(events.map((e) => e.type)).toEqual(["stage", "stage"]);
+    expect(events[0]).toEqual({
+      type: "stage",
+      stage: "bianzheng",
+      label: "辨证",
+      status: "start",
+    });
+    expect((events[1] as { status: string }).status).toBe("done");
+  });
+
+  it("done 事件携带 notes 会诊笔记", async () => {
+    const events: ChatStreamEvent[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        body: makeSSEStream([
+          { done: true, thread_id: "t-9", notes: [{ specialist: "辨证", syndrome: "脾胃虚寒" }] },
+        ]),
+      })
+    );
+    await streamChat({ message: "hi" }, { onEvent: (e) => events.push(e) });
+    const done = events[0] as { type: string; thread_id: string; notes?: unknown[] };
+    expect(done.type).toBe("done");
+    expect(done.thread_id).toBe("t-9");
+    expect(Array.isArray(done.notes)).toBe(true);
+    expect((done.notes as [{ specialist: string }])[0].specialist).toBe("辨证");
+  });
+
   it("请求失败时触发 onError", async () => {
     let errMsg = "";
     vi.stubGlobal(

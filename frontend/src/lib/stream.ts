@@ -70,10 +70,22 @@ export async function streamChat(req: ChatRequest, opts: StreamOptions): Promise
         if (!dataLine) continue;
         try {
           const parsed = JSON.parse(dataLine);
-          if (parsed.token) {
+          if (parsed.type === "stage") {
+            opts.onEvent({
+              type: "stage",
+              stage: parsed.stage ?? "",
+              label: parsed.label ?? "",
+              status: parsed.status === "done" ? "done" : "start",
+            });
+          } else if (parsed.token !== undefined) {
             opts.onEvent({ type: "token", content: parsed.token });
           } else if (parsed.done) {
-            opts.onEvent({ type: "done", thread_id: parsed.thread_id ?? "" });
+            opts.onEvent({
+              type: "done",
+              thread_id: parsed.thread_id ?? "",
+              notes: Array.isArray(parsed.notes) ? parsed.notes : undefined,
+              diagnosis: typeof parsed.diagnosis === "string" ? parsed.diagnosis : undefined,
+            });
           } else if (parsed.error) {
             opts.onEvent({ type: "error", message: parsed.error });
           }

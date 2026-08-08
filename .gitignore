@@ -53,3 +53,11 @@ prompt.md
 docs/history/
 
 .docs/history/
+
+# 测试/运行时产物
+storage/shots/
+storage/e2e_*.txt
+storage/e2e_backend.log
+storage/test_ckpt.db
+storage/__pycache__/
+*.log

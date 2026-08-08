@@ -16,9 +16,21 @@ def setup_logging(level: str = "INFO") -> None:
     """
     配置全局日志。
 
+    在 Windows 上，控制台默认编码（cp936）会将 UTF-8 中文输出为乱码
+    （如「本草」显示为「鏈崏」）。因此在添加 StreamHandler 之前，先将
+    stdout/stderr 重新配置为 UTF-8 编码，确保中文日志正确显示。
+
     Args:
         level: 日志级别，可选 DEBUG / INFO / WARNING / ERROR / CRITICAL
     """
+    # Windows 控制台 UTF-8 修复：在添加 StreamHandler 前重配置 stdout/stderr
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        # 某些环境（如重定向到文件）不支持 reconfigure，忽略
+        pass
+
     # 清除已有 handler，避免重复输出
     root = logging.getLogger()
     root.handlers.clear()

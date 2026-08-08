@@ -32,6 +32,7 @@ import {
   Leaf,
   HeartPulse,
 } from "lucide-react";
+import type { ProfileUpdate } from "@/lib/types";
 
 /** 应用外壳：路由守卫 + 侧边栏（会话/画像）+ 主区域。 */
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -115,6 +116,18 @@ function SidebarContent({
   const [renaming, setRenaming] = useState<{ id: string; title: string } | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState("");
+  const [editingAllergies, setEditingAllergies] = useState(false);
+  const [allergyInput, setAllergyInput] = useState("");
+
+  const updateProfileMut = useMutation({
+    mutationFn: ({ user, data }: { user: string; data: ProfileUpdate }) =>
+      api.updateProfile(user, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["profile", username] });
+      toast.success("过敏史已更新");
+    },
+    onError: (e) => toast.error(e instanceof ApiError ? e.message : "更新失败"),
+  });
 
   return (
     <div className="flex h-full flex-col">
@@ -195,9 +208,22 @@ function SidebarContent({
             <dt className="text-muted-foreground">体质</dt>
             <dd>{profile?.constitution ?? "未知"}</dd>
           </div>
-          <div className="flex justify-between">
-            <dt className="text-muted-foreground">过敏史</dt>
-            <dd className="text-right">{profile?.allergies ?? "无"}</dd>
+          <div className="flex items-center justify-between gap-1">
+            <dt className="shrink-0 text-muted-foreground">过敏史</dt>
+            <dd className="flex min-w-0 items-center gap-1 text-right">
+              <span className="min-w-0 truncate">{profile?.allergies ?? "无"}</span>
+              <button
+                className="shrink-0 rounded p-0.5 text-muted-foreground hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                onClick={() => {
+                  setAllergyInput(profile?.allergies ?? "无");
+                  setEditingAllergies(true);
+                }}
+                aria-label="编辑过敏史"
+                title="编辑过敏史"
+              >
+                <Pencil className="h-3 w-3" />
+              </button>
+            </dd>
           </div>
         </dl>
       </div>
@@ -263,6 +289,40 @@ function SidebarContent({
               }}
             >
               删除
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 编辑过敏史 */}
+      <Dialog open={editingAllergies} onOpenChange={(o) => !o && setEditingAllergies(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>编辑过敏史</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            输入您的过敏药物或食物，用顿号分隔（如"青霉素、海鲜"）。输入"无"表示无过敏。
+          </p>
+          <Input
+            value={allergyInput}
+            onChange={(e) => setAllergyInput(e.target.value)}
+            placeholder="如：青霉素、海鲜"
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingAllergies(false)}>
+              取消
+            </Button>
+            <Button
+              disabled={updateProfileMut.isPending}
+              onClick={() => {
+                const trimmed = allergyInput.trim() || "无";
+                updateProfileMut.mutate(
+                  { user: username, data: { allergies: trimmed } },
+                );
+                setEditingAllergies(false);
+              }}
+            >
+              保存
             </Button>
           </DialogFooter>
         </DialogContent>

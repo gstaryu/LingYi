@@ -4,7 +4,7 @@ import logging
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from lingyi.api.deps import get_current_user, get_storage
 from lingyi.api.schemas import ThreadCreate, ThreadRename, ThreadResponse
@@ -43,9 +43,12 @@ async def rename_thread(
     thread_id: str,
     request: ThreadRename,
     storage: Any = Depends(get_storage),
+    username: str = Depends(get_current_user),
 ):
-    """重命名会话线程。"""
-    await storage.rename_thread(thread_id, request.new_title)
+    """重命名会话线程（仅限归属用户）。"""
+    updated = await storage.rename_thread(thread_id, request.new_title, username)
+    if not updated:
+        raise HTTPException(status_code=404, detail="线程不存在或不归属当前用户")
     return {"status": "ok"}
 
 
@@ -53,7 +56,10 @@ async def rename_thread(
 async def delete_thread(
     thread_id: str,
     storage: Any = Depends(get_storage),
+    username: str = Depends(get_current_user),
 ):
-    """删除会话线程。"""
-    await storage.delete_thread(thread_id)
+    """删除会话线程（仅限归属用户）。"""
+    deleted = await storage.delete_thread(thread_id, username)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="线程不存在或不归属当前用户")
     return {"status": "ok"}

@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useChat } from "@/hooks/useChat";
 import { MessageBubble } from "./MessageBubble";
+import { ConsultationTimeline } from "./ConsultationTimeline";
+import { ConsultationNotes } from "./ConsultationNotes";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { api, ApiError } from "@/lib/api";
@@ -15,13 +17,22 @@ interface UploadedFile {
   filename: string;
 }
 
-/** 合并连续的 assistant 消息为一个气泡（diagnosis 理法 + treatment 方药 应显示为一个整体）。 */
-function mergeAssistantMessages(msgs: MessageItem[]): MessageItem[] {
+/** 合并连续的 assistant 消息为一个气泡（diagnosis 理法 + treatment 方药 应显示为一个整体）。
+ *  安全网去重：若连续两条 assistant 消息都含【处方建议】（synthesis 重试残留），
+ *  仅保留最后一条（最终批准的处方），避免重复渲染辨证/处方块。 */
+export function mergeAssistantMessages(msgs: MessageItem[]): MessageItem[] {
   const result: MessageItem[] = [];
   for (const m of msgs) {
     const last = result[result.length - 1];
     if (last && last.role === "assistant" && m.role === "assistant") {
-      last.content += "\n\n" + m.content;
+      const lastHasRx = last.content.includes("【处方建议】");
+      const mHasRx = m.content.includes("【处方建议】");
+      if (lastHasRx && mHasRx) {
+        // Both are synthesis outputs (retry) — replace with the latest
+        result[result.length - 1] = { ...m };
+      } else {
+        last.content += "\n\n" + m.content;
+      }
     } else {
       result.push({ ...m });
     }
@@ -30,7 +41,7 @@ function mergeAssistantMessages(msgs: MessageItem[]): MessageItem[] {
 }
 
 export function ChatWindow({ threadId }: { threadId: string }) {
-  const { messages, streaming, send, stop } = useChat(threadId);
+  const { messages, streaming, stages, showTimeline, send, stop } = useChat(threadId);
   const [input, setInput] = useState("");
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -40,7 +51,7 @@ export function ChatWindow({ threadId }: { threadId: string }) {
   // 新消息时自动滚到底部
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, stages]);
 
   async function handleUpload(file: File) {
     setUploading(true);
@@ -69,8 +80,10 @@ export function ChatWindow({ threadId }: { threadId: string }) {
     }
   }
 
-  const lastMsg = messages[messages.length - 1];
-  const showTyping = streaming && lastMsg?.role === "assistant" && lastMsg.content === "";
+  const merged = mergeAssistantMessages(messages);
+  const lastMsg = merged[merged.length - 1];
+  const showTimelineForLast = showTimeline && lastMsg?.role === "assistant";
+  const examplePrompts = ["肚子胀、怕冷、大便稀", "最近总是失眠多梦", "头痛、眼睛干涩"];
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col">
@@ -85,16 +98,35 @@ export function ChatWindow({ threadId }: { threadId: string }) {
               <p className="mt-2 max-w-md text-muted-foreground">
                 请描述您的症状，我将按中医"理法方药"为您分析。可上传病历文件辅助诊断。
               </p>
-            </div>
-          ) : (
-            mergeAssistantMessages(messages).map((m, i) => <MessageBubble key={i} message={m} />)
-          )}
-          {showTyping && (
-            <div className="flex justify-start">
-              <div className="rounded-2xl rounded-bl-sm bg-muted px-4 py-3 text-sm text-muted-foreground">
-                思考中...
+              <div className="mt-5 flex flex-wrap justify-center gap-2">
+                {examplePrompts.map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => setInput(p)}
+                    className="rounded-full border border-border/60 bg-background/60 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    {p}
+                  </button>
+                ))}
               </div>
             </div>
+          ) : (
+            merged.map((m, i) => {
+              const isLast = i === merged.length - 1;
+              const isStreamingLast = streaming && isLast && m.role === "assistant";
+              const showTimelineHere = (isStreamingLast || (showTimelineForLast && isLast)) && stages.length > 0;
+              return (
+                <div key={i} className="space-y-2">
+                  {showTimelineHere && (
+                    <ConsultationTimeline stages={stages} streaming={streaming} />
+                  )}
+                  <MessageBubble message={m} isStreaming={isStreamingLast} />
+                  {!streaming && m.role === "assistant" && m.notes && m.notes.length > 0 && (
+                    <ConsultationNotes notes={m.notes} />
+                  )}
+                </div>
+              );
+            })
           )}
           <div ref={bottomRef} />
         </div>

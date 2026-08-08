@@ -3,6 +3,7 @@ import type {
   ChatRequest,
   ChatResponse,
   MessageItem,
+  ProfileUpdate,
   ThreadInfo,
   TokenResponse,
   UploadResponse,
@@ -85,6 +86,11 @@ export const api = {
 
   // 画像
   getProfile: (username: string) => request<UserProfile>(`/profiles/${username}`),
+  updateProfile: (username: string, data: ProfileUpdate) =>
+    request<UserProfile>(`/profiles/${username}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
 
   // 对话（非流式，流式见 lib/stream.ts）
   chat: (req: ChatRequest) =>

@@ -107,8 +107,13 @@ class ProfileWriterSkill(BaseSkill):
         self._pending.difference_update(tasks)
         logger.info("画像写入 flush 完成")
 
-    def _build_extract_prompt(self, messages: list) -> list[BaseMessage]:
-        """构建画像提取 prompt（取最近 6 条消息）。"""
+    def _build_extract_prompt(self, messages: list, current_allergies: str = "无") -> list[BaseMessage]:
+        """构建画像提取 prompt（取最近 6 条消息）。
+
+        Args:
+            messages: 对话历史
+            current_allergies: 当前患者的过敏史（用于判断移除）
+        """
         recent_msgs = messages[-6:]
         conversation = "\n".join(
             f"{getattr(m, 'type', 'user')}: {getattr(m, 'content', '')}"
@@ -120,36 +125,149 @@ class ProfileWriterSkill(BaseSkill):
                 content=(
                     "你是一个医疗信息提取助手。从以下对话中提取患者的关键信息。\n"
                     "请以 JSON 格式输出：\n"
-                    '{"constitution": "体质类型", "allergies": "过敏史", "new_record": "本次诊疗摘要"}\n'
-                    "重要：如果某项信息未提及，对应字段留空字符串（体质和过敏原**不要**写'未知'或'无'）。\n"
-                    "过敏原应列出具体过敏物（如'青霉素、海鲜'）；体质用具体证型（如'阳虚体质'、'阴虚体质'）。\n"
-                    "存储层会自动合并：过敏原只增不减，体质更新时保留历史。"
+                    '{"constitution": "体质类型", "allergies": "新增过敏原", "allergies_remove": "要移除的过敏原", "new_record": "本次诊疗摘要"}\n'
+                    "重要规则：\n"
+                    "1. 如果某项信息未提及，对应字段留空字符串（体质和过敏原**不要**写'未知'或'无'）。\n"
+                    "2. 过敏原只填物质名本身（如'青霉素'、'白芷'、'党参'），**不要**写成'白芷过敏'、'党参及相关制品'这类描述；体质用具体证型（如'阳虚体质'、'阴虚体质'）。\n"
+                    f"3. 当前患者过敏史: {current_allergies}\n"
+                    "4. 当患者表示不再对某物过敏时（如'我对党参不过敏了'、'我不再对白芷过敏'、'之前对X过敏现在好了'），"
+                    "将需要移除的过敏原填入 allergies_remove 字段（只写物质名，如'党参'、'白芷'），**不要**填入 allergies。\n"
+                    "5. allergies 字段只填**新增**的过敏原（患者新报告的过敏物）。\n"
+                    "6. allergies_remove 和 allergies 可以同时有值（既有新增又有移除）。\n"
+                    "7. 存储层会自动合并新增过敏原（只增不减）；allergies_remove 会从列表中移除对应项。"
                 )
             ),
             HumanMessage(content=f"对话内容：\n{conversation}"),
         ]
 
-    def _parse_profile(self, response: str) -> dict[str, str]:
-        """解析 LLM 返回的画像 JSON。"""
+    def _parse_profile(self, response: Any) -> dict[str, str]:
+        """解析 LLM 返回的画像 JSON。
+
+        兼容 ChatOpenAI（返回 AIMessage，需取 .content）与直接返回 str 的 LLM 包装。
+        """
+        text = response.content if hasattr(response, "content") else str(response)
         try:
-            json_match = re.search(r"\{[^}]+\}", response, re.DOTALL)
+            json_match = re.search(r"\{[^}]+\}", text, re.DOTALL)
             if json_match:
                 data = json.loads(json_match.group())
                 return {
                     k: v
                     for k, v in data.items()
-                    if k in ("constitution", "allergies", "new_record") and v
+                    if k in ("constitution", "allergies", "allergies_remove", "new_record") and v
                 }
-        except (json.JSONDecodeError, AttributeError):
+        except (json.JSONDecodeError, AttributeError, TypeError):
             pass
         return {}
 
+    @staticmethod
+    def _normalize_allergy_item(item: str) -> str:
+        """规范化过敏原名称：去除 LLM 常附加的冗余后缀，便于匹配/去重/移除。
+
+        例: "白芷过敏" -> "白芷", "党参及相关制品" -> "党参", "茯苓类药物" -> "茯苓"。
+        反复剥离尾部后缀以处理 "白芷及相关制品过敏" 这类多层堆叠。
+        """
+        s = (item or "").strip()
+        prev = None
+        while prev != s:
+            prev = s
+            s = re.sub(r"(及相关制品|及制品|相关制品|类药物|过敏)+$", "", s).strip()
+        return s or (item or "").strip()
+
+    @staticmethod
+    def _parse_allergy_list(s: str) -> list[str]:
+        """将过敏原字符串解析为列表（支持各种分隔符），并规范化每项名称。"""
+        if not s or s.strip() in ("", "无", "未知"):
+            return []
+        parts = re.split(r"[、，,；;]\s*", s.strip())
+        items = [
+            ProfileWriterSkill._normalize_allergy_item(p)
+            for p in parts
+            if p.strip() and p.strip() not in ("无", "未知")
+        ]
+        return [i for i in items if i]
+
+    @staticmethod
+    def _detect_allergy_removal(messages: list[BaseMessage]) -> list[str]:
+        """确定性检测：用户明确表示不再对某物过敏时，直接提取该过敏原。
+
+        作为 LLM 提取的规则兜底——即使小模型把"我对白芷不过敏"误读为新增过敏，
+        此处仍能可靠识别移除意图，配合 _normalize_allergy_item 完成移除。
+        仅匹配明确的"不再过敏"语义，保守触发以避免误删。
+        """
+        latest_user_text = ""
+        for m in reversed(messages[-4:]):
+            if getattr(m, "type", "") == "human":
+                c = getattr(m, "content", "")
+                if isinstance(c, str):
+                    latest_user_text = c
+                    break
+        if not latest_user_text:
+            return []
+        # 移除意图否定标记（"不过敏"需在子句边界，避免"不过敏药"等误触发）
+        negation = r"不过敏了|不过敏(?=[。，,；;！？!?。\s]|$)|不再.{0,4}过敏|现在.{0,4}不过敏|过敏.{0,6}(好了|缓解|消失|没了)"
+        if not re.search(negation, latest_user_text):
+            return []
+        # 物质名限定 2-6 个 CJK/字母/数字字符，避免误捕单字"不"
+        token = r"[一-鿿A-Za-z0-9]{2,6}"
+        excludes = ("我", "现在", "之前", "的", "不再")
+        removes: list[str] = []
+        # 1) 直接模式：不再对X过敏 / 对X不过敏（"对"锚定物质名，避免贪婪误捕前文）
+        direct = [
+            rf"不再对({token})过敏",
+            rf"对({token})不过敏",
+        ]
+        for pat in direct:
+            for m in re.finditer(pat, latest_user_text):
+                item = ProfileWriterSkill._normalize_allergy_item(m.group(1))
+                if item and "不" not in item and item not in excludes:
+                    removes.append(item)
+        # 2) 零指代回溯：句中有否定但物质名省略时（如"我对白芷过敏，现在不过敏了"），
+        #    从"对X过敏"提取物质名（要求"对"锚定，避免贪婪吞掉前文）
+        if not removes:
+            for m in re.finditer(rf"对({token})过敏", latest_user_text):
+                item = ProfileWriterSkill._normalize_allergy_item(m.group(1))
+                if item and "不" not in item and item not in excludes:
+                    removes.append(item)
+        return list(dict.fromkeys(removes))
+
     async def _extract_and_save(self, patient_id: str, messages: list) -> None:
         """提取画像信息并持久化。"""
-        extract_prompt = self._build_extract_prompt(messages)
+        # 加载当前画像，获取现有过敏史（用于判断移除）
+        current = await self.storage.get_profile(patient_id)
+        current_allergies = current.allergies if current else "无"
+
+        extract_prompt = self._build_extract_prompt(messages, current_allergies)
         response = await self.llm.ainvoke(extract_prompt)
         profile_data = self._parse_profile(response)
 
+        if not profile_data:
+            return
+
+        # 处理过敏原移除：LLM 提取 + 确定性规则兜底（规范化后去重）
+        detected_removes = self._detect_allergy_removal(messages)
+        allergies_remove = profile_data.pop("allergies_remove", "")
+        remove_items = list(dict.fromkeys(
+            self._parse_allergy_list(allergies_remove) + detected_removes
+        ))
+
+        if remove_items:
+            # 有移除：重算完整过敏列表（现有 - 移除 + 新增），用 set_allergies 覆盖
+            current_items = self._parse_allergy_list(current_allergies)
+            add_items = self._parse_allergy_list(profile_data.get("allergies", ""))
+            new_items = [i for i in current_items if i not in remove_items]
+            for item in add_items:
+                if item not in new_items and item not in remove_items:
+                    new_items.append(item)
+
+            new_allergies = "、".join(new_items) if new_items else "无"
+            await self.storage.set_allergies(patient_id, new_allergies)
+            # 已通过 set_allergies 处理过敏原，不再传给 update_profile
+            profile_data.pop("allergies", None)
+            logger.info(
+                "过敏原移除: patient_id=%s, 移除=%s, 结果=%s",
+                patient_id, "、".join(remove_items), new_allergies,
+            )
+
         if profile_data:
             await self.storage.update_profile(patient_id, profile_data)
-            logger.info("画像已更新: patient_id=%s", patient_id)
+        logger.info("画像已更新: patient_id=%s", patient_id)

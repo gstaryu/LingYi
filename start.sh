@@ -2,8 +2,12 @@
 # 灵医一键启动脚本（Linux / macOS / Git Bash）
 # 用法：./start.sh
 # 后端 FastAPI :8000 + 前端 Next.js :3000，日志输出到 storage/
+# 默认 AGENT_MODE=multiagent、PYTHONUTF8=1
 set -e
 cd "$(dirname "$0")"
+
+export PYTHONUTF8=1
+export AGENT_MODE=multiagent
 
 mkdir -p storage
 
@@ -11,7 +15,7 @@ echo "=== 激活 conda 环境 lingyi ==="
 conda activate lingyi 2>/dev/null || source activate lingyi 2>/dev/null || true
 
 if [ ! -f .env ]; then
-    echo "⚠️ 未找到 .env，请先配置 LLM API Key（参考 README）"
+    echo "⚠️ 未找到 .env，请先配置 DASHSCOPE_API_KEY（参考 README）"
 fi
 
 if [ ! -d frontend/node_modules ]; then
@@ -19,7 +23,7 @@ if [ ! -d frontend/node_modules ]; then
     (cd frontend && npm install)
 fi
 
-echo "=== 启动后端 (FastAPI :8000) ==="
+echo "=== 启动后端 (FastAPI :8000, AGENT_MODE=multiagent) ==="
 uvicorn lingyi.api.app:app --port 8000 > storage/backend.log 2>&1 &
 BACKEND_PID=$!
 echo "后端 PID: $BACKEND_PID (日志: storage/backend.log)"
@@ -35,5 +39,6 @@ echo ""
 echo "✅ 启动完成："
 echo "   前端: http://localhost:3000"
 echo "   后端: http://localhost:8000/api/health"
+echo "   模式: 多智能体会诊（AGENT_MODE=multiagent）"
 echo "   停止: kill $BACKEND_PID $FRONTEND_PID"
 echo "   或: pkill -f uvicorn; pkill -f 'next dev'"

@@ -15,6 +15,7 @@
 """
 
 import logging
+import re
 from typing import Any
 
 from langchain_core.messages import BaseMessage
@@ -31,17 +32,44 @@ DEFAULT_MAX_FOLLOWUPS = 2
 _GRATITUDE_WORDS = {"谢谢", "感谢", "多谢", "thanks", "thank you"}
 
 
+def _extract_herbs_from_treatment(text: str) -> list[str]:
+    """从治疗计划文本中提取 herb_names 药材列表（供问诊判断当前处方组成）。"""
+    if not text:
+        return []
+    m = re.search(r'"herb_names"\s*:\s*\[([^\]]*)\]', text)
+    if m:
+        return [h.strip().strip('"').strip("'") for h in m.group(1).split(",") if h.strip()]
+    return []
+
+
+def _detect_new_allergy_items(text: str) -> list[str]:
+    """检测用户新报告的过敏原（"对X过敏"，非否定式移除），返回规范化过敏原列表。
+
+    仅做数据传播（注入 patient_profile 供 specialists 即时可见），不做路由决策。
+    否定式（"不过敏"/"不再...过敏"）属移除语义，返回空。
+    """
+    if not text or re.search(r"不过敏|不再.{0,4}过敏|过敏.{0,6}(好了|缓解|消失|没了)", text):
+        return []
+    token = r"[一-鿿A-Za-z0-9]{2,6}"  # 2+ 字符，避免误捕单字"不"
+    items: list[str] = []
+    for m in re.finditer(rf"对({token})过敏", text):
+        raw = m.group(1)
+        if raw and "不" not in raw and raw not in ("我", "现在", "之前", "的"):
+            items.append(raw)
+    return list(dict.fromkeys(items))
+
+
 class InquiryResult(BaseModel):
     """问诊结构化输出（由 with_structured_output 强制 LLM 返回）。"""
 
     intent_type: str = Field(
-        description="用户意图: chat(闲聊/问候/道谢) / consult(知识咨询或需追问) / diagnose(具体病症求医)"
+        description="用户意图: chat(闲聊/问候/道谢/与当前处方无关的声明) / consult(知识咨询或需追问) / diagnose(具体病症求医，或需重新辨证/调整既有处方--如对当前处方药材过敏、新症状、药效反馈、要求换药)"
     )
     is_complete: bool = Field(default=False, description="当前信息是否足够进行辨证")
     symptoms: list[str] = Field(default_factory=list, description="从对话中提取的结构化症状")
     response: str = Field(
         default="",
-        description="对用户的回复：chat=闲聊回应, consult=追问, diagnose=简短过渡语（禁止输出医疗建议/方药）",
+        description="对用户的回复：chat=闲聊回应, consult=追问, diagnose=留空（不输出内容，理法方药由后续节点产出）",
     )
 
 
@@ -95,6 +123,20 @@ class InquirySkill(BaseSkill):
         if summary:
             context_parts.append(f"历史摘要: {summary}")
 
+        # 已开过处方时，注入当前药材清单与辨证，供 LLM 判断是否需要调整处方
+        if state.get("has_provided_treatment"):
+            herbs = _extract_herbs_from_treatment(state.get("treatment_plan", ""))
+            if herbs:
+                context_parts.append(f"当前处方药材: {', '.join(herbs)}")
+            diagnosis = state.get("diagnosis", "")
+            if diagnosis:
+                context_parts.append(f"当前辨证: {diagnosis[:200]}")
+            context_parts.append(
+                "【已开过处方】若用户消息涉及对上述药材过敏、药效不佳、不良反应或要求调整，"
+                "需重新开方则 intent=diagnose；与处方无关的声明（如对不在处方中的物质过敏、"
+                "或「我对X不过敏了」这类移除过敏）则 intent=chat。"
+            )
+
         messages = self._build_system_messages(self.system_prompt, context_parts)
         messages.extend(self._history_to_messages(state.get("messages", []), self.max_history))
         return messages
@@ -139,13 +181,34 @@ class InquirySkill(BaseSkill):
             intent_type = "chat"
 
         out = {
-            "messages": [{"role": "assistant", "content": result.response or ""}],
             "symptoms": list(existing_symptoms),
             "intent_type": intent_type,
         }
+        # 只在 chat/consult 时向用户展示回复（追问/闲聊回应）。
+        # diagnose 时不添加消息--理法方药由后续 specialists + synthesis 生成，
+        # 避免追问/过渡语与诊断结论同时出现。
+        if intent_type in ("chat", "consult"):
+            out["messages"] = [{"role": "assistant", "content": result.response or ""}]
         # 只在生成追问（将展示给用户）时才递增计数
         if intent_type == "consult":
             out["inquiry_count"] = current_count + 1
+
+        # 确定性数据传播：用户新报告的过敏原即时注入 patient_profile，
+        # 使 specialists/synthesis 在本回合即可规避（MemRecall 在问诊前已加载旧画像）
+        new_allergens = _detect_new_allergy_items(_last_user_message(state))
+        if new_allergens:
+            profile = dict(state.get("patient_profile") or {})
+            cur = profile.get("allergies", "无")
+            cur_items = [
+                a.strip() for a in re.split(r"[、，,；;]", cur)
+                if a.strip() and a.strip() not in ("无", "未知")
+            ]
+            for a in new_allergens:
+                if a not in cur_items:
+                    cur_items.append(a)
+            profile["allergies"] = "、".join(cur_items) if cur_items else "无"
+            out["patient_profile"] = profile
+            logger.info("问诊注入新过敏原: %s -> %s", new_allergens, profile["allergies"])
         return out
 
     async def _invoke_structured(self, messages: list[BaseMessage]) -> InquiryResult:
