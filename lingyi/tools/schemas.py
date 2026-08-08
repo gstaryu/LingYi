@@ -28,6 +28,16 @@ class LookupHerbInput(BaseModel):
     )
 
 
+class SearchHerbsInput(BaseModel):
+    """按关键词模糊搜索本草。"""
+
+    query: str = Field(
+        ...,
+        description="搜索关键词（症状/功效/药名），如 '腹胀'、'补气'",
+        min_length=1,
+    )
+
+
 class SearchFormulasInput(BaseModel):
     """按证候或关键词搜索方剂。"""
 

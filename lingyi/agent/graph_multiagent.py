@@ -456,7 +456,7 @@ def create_multiagent_agent(
     # ---- 工具筛选 ----
     bianzheng_tool_names = {"search_tcm_classics", "get_patient_profile"}
     fangji_tool_names = {"search_formulas", "lookup_herb", "search_tcm_classics"}
-    bencao_tool_names = {"lookup_herb", "check_herb_safety", "web_search"}
+    bencao_tool_names = {"search_herbs", "lookup_herb", "check_herb_safety", "web_search"}
     reviewer_tool_names = {"check_herb_safety", "lookup_herb"}
 
     bianzheng_tools = _filter_tools(tools, bianzheng_tool_names)
