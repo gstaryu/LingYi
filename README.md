@@ -1,177 +1,189 @@
-# 🎋 灵医 (LingYi) - 中医诊疗多智能体系统
+# 灵医 LingYi · 中医智能诊疗系统
 
-![Python](https://img.shields.io/badge/Python-3.12-blue.svg)
-![LangGraph](https://img.shields.io/badge/LangGraph-1.2-green.svg)
-![FastAPI](https://img.shields.io/badge/FastAPI-后端-009688.svg)
-![Next.js](https://img.shields.io/badge/Next.js-16-前端-black.svg)
-
-**灵医 (LingYi)** 是基于 **LangGraph** 的中医诊疗多智能体系统，按"**理法方药**"推演：问诊 -> 辨证（理法）-> 处方（方药）+ 配伍禁忌校验。架构为 **FastAPI 后端 + Next.js 前端**，前后端分离，SSE 流式输出。
+> 基于多智能体架构的中医辨证论治辅助系统。按"理、法、方、药"体系，通过问诊-辨证-方剂-本草的并行专家会诊，给出结构化的辨证结论与处方建议，并内置十八反十九畏配伍安全校验。
 
 ---
 
 ## ✨ 核心特性
 
-- 🩺 **理法方药流程**：多轮问诊 -> 辨证（病机/治则）-> 处方（方剂/药物），结构化输出
-- 💬 **SSE 流式输出**：前端逐字显示理法方药，可中途停止
-- 📚 **按需 RAG**：根据辨证动态检索中医古籍
-- 🛡️ **双重安全护栏**：前置意图拦截（配伍禁忌请求）+ 后置处方校验（十八反/十九畏）
-- 👤 **用户画像**：按用户名持久化体质、过敏史，跨会话共享，诊疗后自动更新
-- 📎 **文件上传**：病历 PDF/DOCX/TXT 解析辅助诊断
-- 🔐 **JWT 认证**：注册/登录/会话隔离
-- 💾 **会话持久化**：LangGraph checkpointer 保存对话历史，支持多会话切换
+- **多智能体会诊**：辨证、方剂、本草三位专家并行出诊，综合节点汇总结论；可选对抗式安全审查者做处方复核。
+- **双工作流模式**：`workflow`（固定流程，轻量快速）与 `multiagent`（并行专家会诊 + 对抗审查）一键切换。
+- **安全双重防御**：前置 `safety_guard` 拦截 + 确定性 `SafetyEngine`（十八反 6 条 / 十九畏 12 条）硬校验，处方生成后自动核查配伍禁忌。
+- **RAG 经典检索**：ChromaDB 向量检索 + BM25 字符级检索的 RRF 混合融合，支持 Qwen3-Embedding 与可选 CrossEncoder 重排。
+- **画像记忆**：SQLite 持久化用户体质、过敏史、诊疗记录；每轮回话自动加载画像，会诊结束写入更新。
+- **MCP 双向**：既作为 MCP 服务端暴露 5 只读工具，又可作为消费者复用外部 MCP（如 web_search）。
+- **结构化知识库**：本草 / 方剂 / 禁忌三库（33 本草 / 22 方剂 / 38 禁忌），幂等种子脚本一键入库。
+- **流式前端**：Next.js + React，SSE 流式输出，会诊阶段时间线、处方卡片、过敏史编辑。
 
 ---
 
-## 🏗️ 架构
+## 🧱 技术栈
+
+| 层 | 技术 |
+|---|---|
+| Agent 编排 | LangGraph 1.x（StateGraph / Send 并行 / Checkpointer） |
+| LLM 框架 | LangChain 1.x（ChatOpenAI / create_agent / 结构化输出） |
+| LLM | Qwen3 系列（DashScope），按角色可配不同模型 |
+| 后端 | FastAPI + Uvicorn，JWT 鉴权，SSE / WebSocket 流式 |
+| 前端 | Next.js 16 + React 19 + Tailwind v4 + @base-ui/shadcn |
+| 向量库 | ChromaDB（生产）/ Mock（开发） |
+| 嵌入 | Qwen3-Embedding-0.6B（本地 HuggingFace / 在线 DashScope） |
+| 持久化 | SQLite（aiosqlite 异步） |
+| 安全 | SafetyEngine 规则引擎 + 对抗审查者 |
+
+---
+
+## 📁 项目结构
 
 ```
-┌─────────────────────────────────────────────┐
-│          Next.js 16 前端 (:3000)            │
-│  React 19 + shadcn/ui + Tailwind + SSE      │
-└──────────────────┬──────────────────────────┘
-                   │ HTTP / SSE（JWT Bearer）
-┌──────────────────▼──────────────────────────┐
-│          FastAPI 后端 (:8000)               │
-│  /api/chat(流式) · /threads · /profiles     │
-│  · /upload · /login · /register             │
-└──────────────────┬──────────────────────────┘
-                   │
-┌──────────────────▼──────────────────────────┐
-│      Core（纯 Python，不依赖 Web 框架）      │
-│  agent/(LangGraph 图+技能) · rag/ · safety/ │
-│  storage/(SQLite) · models/ · parsers/      │
-└─────────────────────────────────────────────┘
+LingYi/
+├── lingyi/                  # 主包
+│   ├── agent/               # LangGraph 图 + 技能节点 + 专家 + 记忆
+│   │   ├── graph.py             # workflow 模式图工厂（默认）
+│   │   ├── graph_multiagent.py  # multiagent 模式图工厂
+│   │   ├── skills/              # inquiry / diagnosis / treatment / safety_guard / rag_search
+│   │   ├── specialists/         # 辨证 / 方剂 / 本草 专家
+│   │   ├── safety_reviewer.py   # 对抗安全审查者
+│   │   └── memory/              # recall / profile_writer / summarizer
+│   ├── tools/               # 7 个领域工具（DI 工厂）
+│   ├── knowledge/           # 结构化知识库模型
+│   ├── rag/                 # RAG（mock/chroma + reranker + BM25 混合）
+│   ├── safety/              # 十八反十九畏规则引擎
+│   ├── storage/             # SQLite 持久化
+│   ├── mcp/                 # MCP 服务端（FastMCP stdio）
+│   ├── api/                 # FastAPI 后端
+│   └── config.py            # pydantic-settings 配置
+├── frontend/               # Next.js 前端
+├── data_pipeline/          # TCM 数据处理（ingest + seed_knowledge）
+├── tests/                  # pytest 测试套件
+└── docs/                   # 项目文档
 ```
 
-**Agent 工作流**：
-```
-START -> reader -> mem_recall -> safety_guard -> inquiry -> 路由
-  ├ chat/consult -> END（普通对话/追问）
-  ├ safety_rejected -> END（安全拦截）
-  └ diagnose -> rag_search -> diagnosis(理法) -> treatment(方药) -> writer -> END
-```
+详细架构见 [docs/architecture.md](docs/architecture.md)。
 
 ---
 
 ## 🚀 快速开始
 
-### 一键启动（Windows PowerShell）
+### 环境要求
 
-```powershell
-.\start.ps1
-```
+- Python 3.12（conda 环境名 `lingyi`）
+- Node.js 18+（前端）
+- DashScope API Key（模型与嵌入）
 
-自动打开两个窗口分别运行后端与前端。
-
-### 手动启动
-
-**前置**：Python 3.12（conda 环境 `lingyi`）、Node.js 18+。
+### 1. 安装
 
 ```bash
-# 1. 后端
+# 后端
 conda activate lingyi
 pip install -e ".[dev]"
-cp .env.example .env   # 填入 OPENAI_API_KEY / DASHSCOPE_API_KEY
-uvicorn lingyi.api.app:app --port 8000
 
-# 2. 前端（另开终端）
+# 前端
 cd frontend
 npm install
-npm run dev
 ```
 
-打开 http://localhost:3000 -> 注册 -> 对话。
+### 2. 配置
 
-### 配置（`.env`）
+在项目根目录创建 `.env`（不提交）：
 
-| 变量 | 说明 | 默认 |
-|---|---|---|
-| `OPENAI_API_KEY` / `DASHSCOPE_API_KEY` | LLM API Key（OpenAI 兼容） | - |
-| `MODEL_NAME` | LLM 模型名 | `qwen-max` |
-| `RAG_MODE` | RAG 模式（`mock`/`chroma`） | `mock` |
-| `EMBEDDING_MODE` | Embedding 模式（`local`/`online`） | `local` |
-| `LLM_TIMEOUT` | LLM 超时（秒） | `120` |
-
-前端直连后端：`frontend/.env.local` 的 `NEXT_PUBLIC_API_URL`（默认 `http://localhost:8000`）。
-
----
-
-## 🚢 部署
-
-### 开发模式
-
-```bash
-# 一键启动（自动开两个进程）
-./start.sh          # Linux/macOS/Git Bash
-.\start.ps1         # Windows PowerShell
+```env
+DASHSCOPE_API_KEY=sk-xxxxxxxx
+MODEL_NAME=qwen-max
+RAG_MODE=mock                 # mock（开发）/ chroma（生产）
+EMBEDDING_MODE=local          # local（HuggingFace）/ online（DashScope）
+AGENT_MODE=multiagent         # workflow / multiagent
 ```
 
-或手动分两个终端：后端 `uvicorn lingyi.api.app:app --port 8000`，前端 `cd frontend && npm run dev`。
+完整配置项见 [docs/deployment.md](docs/deployment.md)。
 
-### 生产部署
+### 3. 初始化知识库
 
-**后端**（uvicorn/gunicorn）：
 ```bash
-conda activate lingyi
-pip install -e ".[dev]"
-uvicorn lingyi.api.app:app --host 0.0.0.0 --port 8000
-# 或 gunicorn -k uvicorn.workers.UvicornWorker -w 4 lingyi.api.app:app
+# 结构化知识库（本草/方剂/禁忌，幂等）
+python -m data_pipeline.seed_knowledge
+
+# RAG 经典语料入库（chroma 模式）
+python -m data_pipeline.ingest --mode chroma
 ```
 
-**前端**（Next.js 静态/Node 服务）：
+### 4. 启动服务
+
 ```bash
-cd frontend
-npm install
-npm run build       # 生产构建
-npm run start       # 启动生产服务（默认 :3000）
-# 生产环境把 NEXT_PUBLIC_API_URL 指向后端公网地址
+# 后端（UTF-8 安全启动脚本）
+./scripts/dev_backend.ps1
+# 或
+uvicorn lingyi.api.app:app --reload --port 8000
+
+# 前端
+cd frontend && npm run dev
 ```
 
-**注意**：
-- 生产环境务必更换 `JWT_SECRET_KEY`（默认是开发密钥）。
-- 后端 CORS 默认 `*`，生产建议限定前端域名（`lingyi/api/app.py`）。
-- RAG 生产模式切 `RAG_MODE=chroma` 并运行 `python -m data_pipeline.ingest --mode chroma` 建索引。
-- 运行时数据（SQLite、上传文件、checkpoints）在 `storage/`，注意备份。
+打开 http://localhost:3000，注册账号即可开始问诊。
 
----
-
-## 🧪 测试
+### 5. 测试
 
 ```bash
-conda activate lingyi
-pytest tests/ -v          # 后端（含 API/Skill/RAG/Safety/Storage，无需真实 API）
-cd frontend && npm run build   # 前端构建
+pytest tests/ -v          # 后端
+cd frontend && npm run test   # 前端
 ```
 
 ---
 
-## 📁 目录结构
+## 🩺 Agent 工作流
 
+灵医支持两种工作流，通过 `AGENT_MODE` 切换：
+
+**workflow 模式**（默认，轻量）：
 ```
-LingYi/
-├── lingyi/                  # 后端主包
-│   ├── agent/               # LangGraph 图 + skills/ + memory/
-│   ├── api/                 # FastAPI 路由（chat/threads/profiles/upload/auth）
-│   ├── rag/                 # RAG（mock/chroma/reranker）
-│   ├── safety/              # 十八反十九畏引擎
-│   ├── storage/             # SQLite（用户/画像/线程/checkpointer）
-│   ├── models/              # LLM/Embedding 抽象
-│   └── parsers/             # 文件解析（PDF/DOCX/TXT）
-├── frontend/                # Next.js 16 前端
-│   └── src/{app,components,hooks,lib,stores}
-├── data_pipeline/           # TCM 古籍切分入库
-├── tests/                   # pytest 测试套件
-├── docs/                    # 文档
-├── start.ps1                # 一键启动脚本
-└── TCM_data/                # 中医古籍原始数据
+START -> reader -> mem_recall -> safety_guard -> inquiry -> 路由
+   ├─ chat/consult -> summarize -> writer -> END
+   └─ diagnose -> rag_search -> diagnosis -> treatment -> safety_check -> writer -> END
 ```
+
+**multiagent 模式**（并行专家会诊 + 对抗审查）：
+```
+START -> reader -> mem_recall -> safety_guard -> inquiry -> 路由
+   ├─ chat/consult -> summarize -> writer -> END
+   └─ diagnose -> dispatch -> [辨证 | 方剂 | 本草] 并行 -> synthesis
+                  -> reviewer -> safety_check -> summarize -> writer -> END
+```
+
+- **工具 = Agent 可选择做的事**（LLM 自主决定）：检索经典、查药材、查方剂、web_search 等。
+- **图边 = 必须永远发生的事**（不可省略）：safety_guard、SafetyEngine、summarizer、reader、profile_writer。
+- 处方生成后经 SafetyEngine 确定性校验，不通过则反馈要求重写。
+
+详见 [docs/agent.md](docs/agent.md)。
+
+---
+
+## 🔒 安全机制
+
+| 层 | 职责 |
+|---|---|
+| `SafetyGuardSkill` | 前置拦截，关键词预检 + LLM 审查用户输入中的禁忌意图 |
+| `SafetyEngine` | 确定性规则引擎，十八反 6 条 + 十九畏 12 条，处方生成后硬校验 |
+| `SafetyReviewerAgent` | 对抗式批评者（multiagent），智能审查处方，不通过则回综合节点重生成 |
+| `SAFETY_FAIL_MODE` | 前置审查 LLM 异常时策略：`closed`（拒绝，默认）/ `open`（放行） |
+
+所有处方建议末尾声明：**孕妇、哺乳期女性使用前需咨询专业中医师**。本系统输出仅供参考，不能替代执业中医师面诊。
+
+---
+
+## 📚 文档索引
+
+| 文档 | 内容 |
+|---|---|
+| [docs/architecture.md](docs/architecture.md) | 系统架构、分层、依赖注入、状态流 |
+| [docs/agent.md](docs/agent.md) | Agent 工作流、专家会诊、安全审查、记忆、工具、MCP |
+| [docs/api.md](docs/api.md) | REST API 参考（认证、会话、流式、画像） |
+| [docs/rag.md](docs/rag.md) | RAG 子系统、混合检索、重排 |
+| [docs/deployment.md](docs/deployment.md) | 部署、配置项、环境变量 |
+| [docs/data_pipeline.md](docs/data_pipeline.md) | 数据处理与知识库种子 |
+| [docs/testing.md](docs/testing.md) | 测试体系与运行 |
 
 ---
 
 ## ⚠️ 免责声明
 
-本项目仅供技术探索与学术研究，**不具备临床执业资格**。所有处方建议仅供参考，切勿自行抓药，如有身体不适请就医。
-
-## 📄 License
-
-[MIT License](LICENSE)
+灵医是中医诊疗辅助系统，所有输出（辨证、处方、用药建议）仅供学习与研究参考，**不构成医疗建议**，不能替代执业中医师面诊。请勿据此自行抓药。处方中涉及毒性药材（如附子、半夏）须严格遵医嘱炮制与使用。

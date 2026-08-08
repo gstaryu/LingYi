@@ -12,8 +12,16 @@ import logging
 from typing import Any
 
 from lingyi.agent.skills.base import BaseSkill
+from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
+
+
+class RAGGradeResult(BaseModel):
+    """RAG 评估结构化输出。"""
+
+    score: float = Field(description="检索结果与症状的相关性评分 0.0-1.0")
+    reasoning: str = Field(default="", description="评分理由")
 
 
 class RAGSearchSkill(BaseSkill):
@@ -24,18 +32,29 @@ class RAGSearchSkill(BaseSkill):
     支持 mock/chroma 双模式（由注入的 RAG client 决定）。
     """
 
-    def __init__(self, llm: Any = None, rag_client: Any = None, recall_k: int = 15):
+    def __init__(
+        self,
+        llm: Any = None,
+        rag_client: Any = None,
+        recall_k: int = 15,
+        reranker: Any = None,
+        rerank_k: int = 5,
+    ):
         """
         初始化 RAG 检索技能。
 
         Args:
             llm: LLM 实例（用于查询重写）
             rag_client: BaseRAGClient 实例
-            recall_k: 粗排召回数量
+            recall_k: 粗排召回数量（向量检索阶段）
+            reranker: BaseReranker 实例（精排；为 None 则跳过重排，向后兼容）
+            rerank_k: 精排截取数量
         """
         super().__init__(llm=llm)
         self.rag_client = rag_client
         self.recall_k = recall_k
+        self.reranker = reranker
+        self.rerank_k = rerank_k
 
     async def execute(self, state: dict[str, Any]) -> dict[str, Any]:
         """
@@ -58,10 +77,20 @@ class RAGSearchSkill(BaseSkill):
             return {"retrieved_docs": []}
 
         try:
-            # 执行检索
+            # 粗排：向量检索召回 recall_k 条
             results = await self.rag_client.hybrid_search(query, n_results=self.recall_k)
+
+            # 精排：Cross-Encoder 重排，取 top rerank_k（无 reranker 时跳过，向后兼容）
+            if self.reranker and results:
+                results = await self.reranker.rerank(query, results, top_k=self.rerank_k)
+
             docs = [r.content for r in results if r.content]
-            logger.info("RAG 检索完成: 查询='%s', 返回 %d 条结果", query[:50], len(docs))
+            logger.info(
+                "RAG 检索完成: 查询='%s', 召回 %d 条, 精排后 %d 条",
+                query[:50],
+                self.recall_k,
+                len(docs),
+            )
             return {"retrieved_docs": docs}
         except Exception as e:
             logger.error("RAG 检索失败: %s", e)
@@ -102,19 +131,26 @@ class RAGGraderSkill(BaseSkill):
 
     async def execute(self, state: dict[str, Any]) -> dict[str, Any]:
         """评估 RAG 检索质量，同时递增重试计数。"""
+        retry_count = state.get("rag_retry_count", 0) + 1
         if not self.llm:
-            return {"rag_score": 0.5, "rag_retry_count": state.get("rag_retry_count", 0) + 1}
+            return {"rag_score": 0.5, "rag_retry_count": retry_count}
 
         messages = self.build_messages(state)
+        score = 0.5
         try:
-            response = await self.llm.ainvoke(messages)
-            parsed = self.parse_json_response(response, fallback={"score": 0.5})
-            score = float(parsed.get("score", 0.5))
-            return {"rag_score": score, "rag_retry_count": state.get("rag_retry_count", 0) + 1}
+            # 优先结构化输出；不支持时回退到 JSON 解析
+            try:
+                structured = self.llm.with_structured_output(RAGGradeResult)
+                result = await structured.ainvoke(messages)
+                score = float(result.score)
+            except NotImplementedError:
+                response = await self.llm.ainvoke(messages)
+                parsed = self.parse_json_response(response, fallback={"score": 0.5})
+                score = float(parsed.get("score", 0.5))
         except Exception as e:
             logger.warning("RAG 评估失败: %s", e)
 
-        return {"rag_score": 0.5, "rag_retry_count": state.get("rag_retry_count", 0) + 1}
+        return {"rag_score": score, "rag_retry_count": retry_count}
 
 
 class RAGRewriteSkill(BaseSkill):

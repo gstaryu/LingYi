@@ -33,6 +33,7 @@ def create_agent(
     storage: "BaseProfileStore",
     safety_engine: "SafetyEngine",
     checkpointer: BaseCheckpointSaver,
+    reranker: Any = None,
     file_parser: "FileParser | None" = None,
     settings: "Settings | None" = None,
 ) -> tuple[Any, Any]:
@@ -68,19 +69,27 @@ def create_agent(
 
     # 读取配置
     max_retries = settings.safety_max_retries if settings else 3
+    safety_fail_mode = settings.safety_fail_mode if settings else "closed"
     recall_k = settings.rag_recall_k if settings else 15
+    rerank_k = settings.rag_rerank_k if settings else 5
     score_threshold = settings.rag_score_threshold if settings else 0.7
     enable_evaluation = settings.rag_enable_evaluation if settings else False
 
     # 创建技能实例
     reader = ReaderSkill(file_parser=file_parser)
     mem_recall = MemRecallSkill(storage=storage)
-    safety_guard = SafetyGuardSkill(llm=llm)
+    safety_guard = SafetyGuardSkill(llm=llm, fail_mode=safety_fail_mode)
     inquiry = InquirySkill(
         llm=llm,
         max_history=settings.max_history_messages_inquiry if settings else 5,
     )
-    rag_search = RAGSearchSkill(llm=llm, rag_client=rag_client, recall_k=recall_k)
+    rag_search = RAGSearchSkill(
+        llm=llm,
+        rag_client=rag_client,
+        recall_k=recall_k,
+        reranker=reranker,
+        rerank_k=rerank_k,
+    )
     rag_grader = RAGGraderSkill(llm=llm)
     rag_rewrite = RAGRewriteSkill(llm=llm)
     diagnosis = DiagnosisSkill(

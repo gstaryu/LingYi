@@ -68,6 +68,25 @@ class Settings(BaseSettings):
     llm_temperature: float = Field(default=0.7, description="LLM 温度参数")
     llm_timeout: int = Field(default=120, description="LLM API 超时时间（秒）")
     llm_max_retries: int = Field(default=3, description="LLM API 最大重试次数")
+    llm_specialist_max_retries: int = Field(
+        default=1,
+        description="专家/综合/审查者 LLM API 最大重试次数（低于 llm_max_retries，"
+        "避免网关抖动时静默 3x 重试风暴拖慢会诊）",
+    )
+
+    # 多智能体专家模型配置（留空则回退到 model_name）
+    model_name_bianzheng: str = Field(
+        default="",
+        description="辨证专家模型名（留空回退到 model_name）",
+    )
+    model_name_fangji: str = Field(
+        default="",
+        description="方剂专家模型名（留空回退到 model_name）",
+    )
+    model_name_bencao: str = Field(
+        default="",
+        description="本草专家模型名（留空回退到 model_name）",
+    )
 
     # 本地模型（vLLM 等部署）
     local_model_name: str = Field(default="qwen-local", description="本地模型名称")
@@ -119,6 +138,10 @@ class Settings(BaseSettings):
     )
 
     # ==================== Agent 工作流配置 ====================
+    agent_mode: str = Field(
+        default="workflow",
+        description="Agent 模式: workflow（单 Agent 工作流，默认）/ multiagent（多智能体会诊）",
+    )
     token_compression_threshold: int = Field(
         default=8000,
         description="上下文压缩触发阈值（字符数粗略折算）",
@@ -135,7 +158,42 @@ class Settings(BaseSettings):
         default=2,
         description="处方节点携带的历史对话轮次",
     )
+    max_followups: int = Field(
+        default=1,
+        description="最大追问轮数（达到后强制进入诊断）；1 = 仅追问一次，用户回答后即辨证",
+    )
     safety_max_retries: int = Field(default=3, description="安全校验最大重试次数")
+    reviewer_max_retries: int = Field(
+        default=2,
+        description="对抗审查者最大重试次数（耗尽后交由 SafetyEngine 硬校验裁决）",
+    )
+    safety_fail_mode: str = Field(
+        default="closed",
+        description="前置安全审查 LLM 异常时的失败策略: closed（默认，拒绝请求）/ open（放行）",
+    )
+
+    # ==================== 追踪配置 ====================
+    enable_tracing: bool = Field(default=False, description="是否启用 LangSmith 链路追踪")
+    langsmith_api_key: str = Field(default="", description="LangSmith API Key")
+    langsmith_project: str = Field(default="lingyi", description="LangSmith 项目名")
+
+    # ==================== 网络搜索配置 ====================
+    web_search_enabled: bool = Field(
+        default=True,
+        description="是否启用 web_search 工具（复用 RivalSearchMCP 服务，失败时按 fallback 策略处理）",
+    )
+    rivalsearch_mcp_command: str = Field(
+        default="C:/Users/start/mcp-servers/RivalSearchMCP/.venv/Scripts/python.exe",
+        description="RivalSearchMCP stdio 启动命令（解释器路径）",
+    )
+    rivalsearch_mcp_script: str = Field(
+        default="C:/Users/start/mcp-servers/RivalSearchMCP/server.py",
+        description="RivalSearchMCP server.py 脚本路径（作为 stdio 启动参数）",
+    )
+    web_search_fallback_to_ddgs: bool = Field(
+        default=False,
+        description="MCP 连接失败时是否回退到 DuckDuckGo（需安装 ddgs/langchain-community）；False 则优雅省略 web_search 工具",
+    )
 
     # ==================== 认证配置 ====================
     jwt_secret_key: str = Field(

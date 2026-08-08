@@ -80,6 +80,13 @@ class ProfileResponse(BaseModel):
     past_history: list[str] = Field(default_factory=list)
 
 
+class ProfileUpdate(BaseModel):
+    """画像更新请求（手动编辑）。allergies 为完整覆盖，非合并。"""
+
+    constitution: str | None = Field(default=None, description="体质类型（留空不修改）")
+    allergies: str | None = Field(default=None, description="过敏史（完整覆盖，非合并）")
+
+
 # ==================== 健康检查 ====================
 
 class HealthResponse(BaseModel):

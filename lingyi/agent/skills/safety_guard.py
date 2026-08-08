@@ -9,10 +9,18 @@ import logging
 from typing import Any
 
 from langchain_core.messages import BaseMessage
+from pydantic import BaseModel, Field
 
 from lingyi.agent.skills.base import BaseSkill
 
 logger = logging.getLogger(__name__)
+
+
+class SafetyGuardResult(BaseModel):
+    """安全审查结构化输出。"""
+
+    has_violation: bool = Field(description="是否检测到配伍禁忌意图")
+    violation_reason: str = Field(default="", description="违规理由")
 
 
 class SafetyGuardSkill(BaseSkill):
@@ -23,14 +31,18 @@ class SafetyGuardSkill(BaseSkill):
     若检测到违规，设置 intent_type="safety_rejected" 并生成拒绝消息。
     """
 
-    def __init__(self, llm: Any = None):
+    def __init__(self, llm: Any = None, fail_mode: str = "closed"):
         """
         初始化安全审查技能。
 
         Args:
             llm: LLM 实例
+            fail_mode: LLM 调用异常时的失败策略
+                       "closed"（默认）- 保守拒绝，保障用药安全
+                       "open" - 放行（仅用于排障/测试）
         """
         super().__init__(llm=llm)
+        self.fail_mode = fail_mode
 
     def build_messages(self, state: dict[str, Any]) -> list[BaseMessage]:
         """构建安全审查消息列表（system prompt + 最近约 2 轮对话）。"""
@@ -38,6 +50,28 @@ class SafetyGuardSkill(BaseSkill):
         # 取最近 4 条消息（约 2 轮，max_history=2 -> 截取最后 4 条）用于审查
         messages.extend(self._history_to_messages(state.get("messages", []), max_history=2))
         return messages
+
+    async def _evaluate_safety(
+        self, messages: list[BaseMessage]
+    ) -> tuple[bool, str]:
+        """
+        评估用户输入是否包含配伍禁忌意图。
+
+        优先用结构化输出（function_calling）；不支持时回退到 JSON 解析。
+
+        Returns:
+            (has_violation, violation_reason)
+        """
+        try:
+            structured = self.llm.with_structured_output(SafetyGuardResult)
+            result = await structured.ainvoke(messages)
+            return bool(result.has_violation), result.violation_reason or ""
+        except NotImplementedError:
+            response = await self.llm.ainvoke(messages)
+            parsed = self.parse_json_response(response, fallback={"has_violation": False})
+            return bool(parsed.get("has_violation", False)), parsed.get(
+                "violation_reason", ""
+            )
 
     async def execute(self, state: dict[str, Any]) -> dict[str, Any]:
         """
@@ -70,17 +104,30 @@ class SafetyGuardSkill(BaseSkill):
 
         messages = self.build_messages(state)
         try:
-            response = await self.llm.ainvoke(messages)
+            has_violation, violation_reason = await self._evaluate_safety(messages)
         except Exception as e:
             logger.error("安全审查 LLM 调用失败: %s", e)
-            return {}  # 调用失败时放行
-
-        # 解析响应
-        parsed = self.parse_json_response(response, fallback={"has_violation": False})
-        has_violation = parsed.get("has_violation", False)
+            if self.fail_mode == "closed":
+                # fail-closed：审查服务不可用时保守拒绝，保障用药安全
+                logger.warning("安全审查 fail-closed：拒绝请求（fail_mode=closed）")
+                return {
+                    "messages": [
+                        {
+                            "role": "assistant",
+                            "content": (
+                                "⚠️ 安全审查服务暂时不可用，为保障用药安全，"
+                                "系统暂不处理该请求。请稍后重试或咨询专业中医师。"
+                            ),
+                        }
+                    ],
+                    "intent_type": "safety_rejected",
+                    "safety_violation_msg": "安全审查服务不可用（fail-closed）",
+                }
+            return {}  # open 模式：放行
 
         if has_violation:
-            violation_reason = parsed.get("violation_reason", "检测到配伍禁忌")
+            if not violation_reason:
+                violation_reason = "检测到配伍禁忌"
             rejection_msg = (
                 f"⚠️ 安全警告：{violation_reason}\n\n"
                 "您的请求涉及中药配伍禁忌（十八反/十九畏），系统无法执行此操作。\n"

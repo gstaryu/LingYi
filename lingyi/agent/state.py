@@ -5,10 +5,23 @@ Agent 状态定义 — LangGraph StateGraph 的状态字典。
 """
 
 from typing import Annotated, Any, Optional
+from operator import add
 
 from langchain_core.messages import BaseMessage
 from langgraph.graph.message import add_messages
 from typing_extensions import TypedDict
+
+
+def _consultation_notes_reducer(left: list, right: Any) -> list:
+    """会诊笔记归约器。
+
+    - ``None`` → 重置为空列表（每次新 diagnose 流程开始时由 dispatch_specialists 触发，
+      避免 operator.add 累积上一轮的笔记导致专家数翻倍）。
+    - ``list`` → 追加（专家节点并行返回 ``[note]``，通过多次归约累积为 3 条）。
+    """
+    if right is None:
+        return []
+    return (left or []) + right
 
 
 class AgentState(TypedDict, total=False):
@@ -56,6 +69,11 @@ class AgentState(TypedDict, total=False):
     treatment_plan: Optional[str]
     """处方建议。"""
 
+    # ==================== 多智能体会诊 ====================
+    consultation_notes: Annotated[list[dict], _consultation_notes_reducer]
+    """会诊笔记列表（reducer: _consultation_notes_reducer - None 重置 / list 追加）。
+    每个专家节点追加一条笔记；dispatch_specialists 在新 diagnose 流程开始时传 None 重置。"""
+
     # ==================== 安全 ====================
     safety_errors: Optional[str]
     """安全校验错误信息。"""
@@ -65,6 +83,17 @@ class AgentState(TypedDict, total=False):
 
     safety_violation_msg: Optional[str]
     """违规消息记录。"""
+
+    # ==================== 对抗安全审查者（Phase 3） ====================
+    reviewer_approved: bool
+    """对抗审查者是否批准处方（智能审查层）。"""
+
+    reviewer_retry_count: int
+    """对抗审查者重试计数（与 safety_retry_count 独立）。"""
+
+    synthesis_message_id: Optional[str]
+    """综合节点生成的 AIMessage 的 ID；重试时据此 RemoveMessage 移除上一版被拒处方，
+    避免历史中残留多版处方导致前端重复渲染辨证结论/处方建议。"""
 
     # ==================== 记忆 ====================
     patient_profile: dict[str, Any]
