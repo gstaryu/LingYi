@@ -8,7 +8,7 @@
 
 - **多智能体会诊**：辨证、方剂、本草三位专家并行出诊，综合节点汇总结论；可选对抗式安全审查者做处方复核。
 - **双工作流模式**：`workflow`（固定流程，轻量快速）与 `multiagent`（并行专家会诊 + 对抗审查）一键切换。
-- **安全双重防御**：前置 `safety_guard` 拦截 + 确定性 `SafetyEngine`（十八反 6 条 / 十九畏 12 条）硬校验，处方生成后自动核查配伍禁忌。
+- **安全双重防御**：前置 `safety_guard` 拦截 + 确定性 `SafetyEngine`（十八反 / 十九畏）硬校验，处方生成后自动核查配伍禁忌。
 - **RAG 经典检索**：ChromaDB 向量检索 + BM25 字符级检索的 RRF 混合融合，支持 Qwen3-Embedding 与可选 CrossEncoder 重排。
 - **画像记忆**：SQLite 持久化用户体质、过敏史、诊疗记录；每轮回话自动加载画像，会诊结束写入更新。
 - **MCP 双向**：既作为 MCP 服务端暴露 5 只读工具，又可作为消费者复用外部 MCP（如 web_search）。
@@ -39,7 +39,7 @@
 LingYi/
 ├── lingyi/                  # 主包
 │   ├── agent/               # LangGraph 图 + 技能节点 + 专家 + 记忆
-│   │   ├── graph.py             # workflow 模式图工厂（默认）
+│   │   ├── graph.py             # workflow 模式图工厂
 │   │   ├── graph_multiagent.py  # multiagent 模式图工厂
 │   │   ├── skills/              # inquiry / diagnosis / treatment / safety_guard / rag_search
 │   │   ├── specialists/         # 辨证 / 方剂 / 本草 专家
@@ -134,7 +134,7 @@ cd frontend && npm run test   # 前端
 
 灵医支持两种工作流，通过 `AGENT_MODE` 切换：
 
-**workflow 模式**（默认，轻量）：
+**workflow 模式**（轻量）：
 ```
 START -> reader -> mem_recall -> safety_guard -> inquiry -> 路由
    ├─ chat/consult -> summarize -> writer -> END
