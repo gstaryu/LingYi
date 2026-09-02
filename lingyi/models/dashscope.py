@@ -45,6 +45,8 @@ class DashScopeLLM(BaseLLM):
         self._model_name = model_name
         self._temperature = temperature
         self._max_tokens = 8192
+        # Token 用量累计器（供评测/监控读取；reset_usage() 清零）
+        self.total_usage: dict[str, int] = {"input_tokens": 0, "output_tokens": 0, "calls": 0}
         self._client = ChatOpenAI(
             api_key=api_key,
             base_url=base_url,
@@ -96,7 +98,17 @@ class DashScopeLLM(BaseLLM):
             client = self._client
 
         response = await client.ainvoke(lc_messages)
+        # 透出 Token 用量：累加到实例属性，供评测/监控读取（reset_usage 清零）
+        usage = getattr(response, "usage_metadata", None)
+        if usage:
+            self.total_usage["input_tokens"] += usage.get("input_tokens", 0)
+            self.total_usage["output_tokens"] += usage.get("output_tokens", 0)
+            self.total_usage["calls"] += 1
         return response.content
+
+    def reset_usage(self) -> None:
+        """清零 Token 用量累计器（评测 harness 每次请求前调用）。"""
+        self.total_usage = {"input_tokens": 0, "output_tokens": 0, "calls": 0}
 
     def with_structured_output(self, schema):
         """

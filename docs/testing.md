@@ -2,12 +2,44 @@
 
 ## 概述
 
-灵医项目包含后端和前端两套测试体系，全部使用桩（stub）离线运行，无需真实 LLM API。
+灵医项目包含后端和前端两套测试体系，全部使用桩（stub）离线运行，无需真实 LLM API。此外提供一套六维在线评测体系（需要 LLM API Key）。
 
 | 端 | 框架 | 测试数 | 运行目录 |
 |---|---|---|---|
 | 后端 | pytest | 319 passed + 1 skipped | 项目根目录 |
 | 前端 | vitest + @testing-library/react | 37 tests | `frontend/` |
+| 评测 | evaluation/（LLM-in-the-loop） | 201 条标注数据 | 项目根目录 |
+
+## 评测体系（evaluation/）
+
+六维指标，每维 ≥30 条标注数据，运行器为 `python -m evaluation.runner`：
+
+| 维度 | 指标 | 数据量 | 需要 chroma |
+|---|---|---|---|
+| rag | Recall@3/5、MRR、nDCG@5 | 46 条 golden 检索集 | 是 |
+| faithfulness | 忠实度均分（1-5）、矛盾率 | 30 条经典问答 | 是 |
+| quality | 辨证准确/完整性/清晰度/安全表达（LLM-judge 1-5） | 35 条标准证候病例 | 建议 chroma |
+| router | 意图路由准确率（chat/consult/diagnose） | 30 条标注查询 | 否 |
+| safety | SafetyEngine 规则准确率 + 端到端拦截率 | 20 药对 + 30 对抗用例 | 否 |
+| performance | 端到端/分节点延迟 P50/P95、Token/请求 | 30 轮（15 chat + 15 diagnose） | 否 |
+| performance | 端到端/分节点延迟 P50/P95、Token/请求 | 30 轮（15 chat + 15 diagnose） | 否 |
+
+运行示例：
+
+```bash
+# RAG 相关评测（需 chroma 模式）
+$env:RAG_MODE="chroma"; python -m evaluation.runner --only rag,faithfulness
+
+# Agent 流程评测
+python -m evaluation.runner --only quality,router,safety,performance
+
+# 冒烟（每项前 N 条）
+python -m evaluation.runner --only safety --limit 5
+```
+
+报告落 `evaluation/reports/`（JSON 明细 + summary.md 汇总），完整分析见 [evaluation_report.md](evaluation_report.md)。
+
+## 后端测试
 
 ## 后端测试
 

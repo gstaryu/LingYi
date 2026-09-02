@@ -67,17 +67,44 @@ class LocalEmbedding(BaseEmbedding):
 
         from sentence_transformers import SentenceTransformer
 
+        def _load(device: str, local_only: bool):
+            # 优先本地缓存加载（不发网络请求，免疫 hf-mirror 抖动），未命中再在线
+            try:
+                return SentenceTransformer(
+                    self._model_name, device=device, local_files_only=local_only
+                )
+            except Exception:
+                if local_only:
+                    raise
+                return SentenceTransformer(
+                    self._model_name, device=device, local_files_only=True
+                )
+
         try:
-            self._model = SentenceTransformer(self._model_name, device=self._device)
-            logger.info("Embedding 模型加载成功: %s (device=%s)", self._model_name, self._device)
+            self._model = _load(self._device, local_only=True)
+            logger.info(
+                "Embedding 模型加载成功（本地缓存）: %s (device=%s)",
+                self._model_name, self._device,
+            )
         except Exception as e:
-            # CUDA 不可用时自动回退到 CPU
+            # 加载失败（缓存未命中或 device 不可用）：CUDA→先试 CPU 本地缓存，再在线
+            logger.info("本地缓存加载失败: %s", e)
+            candidates = []
             if self._device == "cuda":
-                logger.warning("CUDA 不可用，回退到 CPU: %s", e)
-                self._model = SentenceTransformer(self._model_name, device="cpu")
-                self._device = "cpu"
+                candidates.append(("cpu", True))
+                candidates.append(("cpu", False))
+            candidates.append((self._device, False))
+            last_err = e
+            for device, local_only in candidates:
+                try:
+                    self._model = _load(device, local_only)
+                    self._device = device
+                    logger.info("Embedding 模型回退加载成功: device=%s, local_only=%s", device, local_only)
+                    break
+                except Exception as e2:
+                    last_err = e2
             else:
-                raise
+                raise last_err
 
     async def aembed_documents(self, texts: list[str]) -> list[list[float]]:
         """

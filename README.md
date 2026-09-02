@@ -103,9 +103,29 @@ AGENT_MODE=multiagent         # workflow / multiagent
 # 结构化知识库（本草/方剂/禁忌，幂等）
 python -m data_pipeline.seed_knowledge
 
-# RAG 经典语料入库（chroma 模式）
+# 本草批量扩充（2015 版《中国药典》xlsx，需指定外部 xlsx 路径，见脚本内默认值）
+python -m data_pipeline.seed_pharmacopoeia
+
+# 方剂库扩充：四部古籍全量处方（局方/千金/外台/医方集解，幂等）
+#   提取产物与校验 drop 名单位于 storage/extracted_formulas/
+python -m data_pipeline.seed_formulas_classics
+
+# RAG 经典语料入库（chroma 模式，本地 Qwen3-Embedding）
 python -m data_pipeline.ingest --mode chroma
 ```
+
+#### 知识库数据来源
+
+| 库 | 规模 | 来源 |
+|---|---|---|
+| herbs 表 | **614 味** | 手工整理 33 味（《神农本草经》/《中药学》教材）+ 2015 版《中国药典》581 味（`seed_pharmacopoeia.py`，字段映射自药典"功能与主治/用法与用量"，别名/炮制/禁忌留空由 SafetyEngine 兜底） |
+| formulas 表 | **1855 首** | 手工整理 22 首 + 四部古籍全量提取 1833 首：**《备急千金要方》901、《太平惠民和剂局方》569、《外台秘要》242、《医方集解》121** |
+| contraindications 表 | 14 条 | 手工整理（体质/配伍禁忌） |
+
+**方剂古籍来源**（文本取自 [jobkoko/tcm-database](https://github.com/jobkoko/tcm-database) `tcm/` 文件 F-009/F-011/F-025/F-091，仅取处方条目）：
+《备急千金要方》（唐·孙思邈）、《外台秘要》（唐·王焘）、《太平惠民和剂局方》（宋·官修）、《医方集解》（清·汪昂）。
+处理管线：OCR 清洗 → 分书结构化提取（处理各书排版差异与外台聚合条目切分）→ 规则筛查 + 分书 Agent 逐批对照原文校验（确证错误剔除，共剔除 161 首）→ 跨书同名按朝代优先级去重（千金 > 外台 > 局方 > 医方集解）→ INSERT-only 入库。
+**已知局限**：古籍底本 OCR 残缺导致部分条目组成药味不全（提取器以"上X味"计数核对标记 `herb_count_mismatch`），属底本质量上限，非解析错误。
 
 ### 4. 启动服务
 
@@ -121,12 +141,19 @@ cd frontend && npm run dev
 
 打开 http://localhost:3000，注册账号即可开始问诊。
 
-### 5. 测试
+### 5. 测试与评测
 
 ```bash
-pytest tests/ -v          # 后端
-cd frontend && npm run test   # 前端
+pytest tests/ -v          # 后端单元测试
+
+# 六维评测（RAG检索/忠实度/回答质量/安全/路由/性能）
+# 注意: rag 与 faithfulness 评测需 chroma 模式
+$env:RAG_MODE="chroma"; python -m evaluation.runner --only rag,faithfulness
+python -m evaluation.runner --only quality,router,safety,performance
+# 单项: python -m evaluation.runner --only safety --limit 5
 ```
+
+完整结果与分析见 [docs/evaluation_report.md](docs/evaluation_report.md)。
 
 ---
 

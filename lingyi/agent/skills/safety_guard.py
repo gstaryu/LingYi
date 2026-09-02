@@ -6,6 +6,7 @@
 """
 
 import logging
+import re
 from typing import Any
 
 from langchain_core.messages import BaseMessage
@@ -98,6 +99,29 @@ class SafetyGuardSkill(BaseSkill):
             "硫黄", "水银", "巴豆", "丁香", "芒硝", "肉桂", "桂枝",
             "开方", "开药", "处方", "药材", "中药", "配伍", "反", "畏",
         )
+        # 危重症信号词：命中即确定性引导就医（不经 LLM，100% 拦截）
+        critical_match = re.search(
+            r"咯血|咳血|呕血|大口吐血|惊厥|抽搐|昏迷|意识不清|意识模糊|说胡话|谵妄"
+            r"|压榨(样|感|样疼痛)|板状腹|硬得像板|肚子硬|口唇发紫|喘憋|呼吸骤停|心跳骤停"
+            r"|脑梗|中风|中毒|内出血",
+            last_user_msg,
+        )
+        if critical_match:
+            logger.warning("安全审查: 命中危重症信号词「%s」，确定性引导就医", critical_match.group(0))
+            return {
+                "messages": [
+                    {
+                        "role": "assistant",
+                        "content": (
+                            "🚨 您描述的情况可能属于急重症，请立即前往医院急诊或拨打 120，"
+                            "切勿延误。线上问诊无法替代急救处置，也不要自行服用药物（包括丹参粉、"
+                            "安宫牛黄丸等\"急救\"中药）掩盖症状。"
+                        ),
+                    }
+                ],
+                "intent_type": "safety_rejected",
+                "safety_violation_msg": f"危重症信号词命中: {critical_match.group(0)}",
+            }
         if not any(kw in last_user_msg for kw in herb_keywords):
             logger.debug("安全审查: 用户消息无药材关键词，跳过 LLM 调用")
             return {}

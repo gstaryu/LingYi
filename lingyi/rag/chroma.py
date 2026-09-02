@@ -389,6 +389,22 @@ class ChromaRAGClient(BaseRAGClient):
     # 文档入库
     # ------------------------------------------------------------------
 
+    async def existing_ids(self) -> set[str]:
+        """
+        返回集合中已存在的全部文档 ID（md5(content)）。
+
+        供 ingest 断点续传使用：入库前先取现有 ID 集合，跳过已嵌入的文档，
+        避免中断后重复嵌入（本地 CPU embedding 代价高）。
+        """
+        import asyncio as _asyncio
+
+        self._ensure_client()
+        loop = _asyncio.get_running_loop()
+        result = await loop.run_in_executor(
+            None, lambda: self._collection.get(include=[])
+        )
+        return set(result.get("ids", []))
+
     async def add_documents(self, documents: list[dict[str, Any]]) -> int:
         """
         添加文档到 ChromaDB。

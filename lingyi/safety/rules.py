@@ -55,10 +55,14 @@ class SafetyEngine:
     def __init__(self):
         """初始化安全引擎，合并十八反和十九畏为统一规则表。"""
         # 合并所有禁忌规则，便于统一遍历
-        self._all_rules: dict[str, list[str]] = {
-            **self.EIGHTEEN_ANTAGONISMS,
-            **self.NINETEEN_INHIBITIONS,
-        }
+        # 注意: 十九畏表的「川乌/草乌」键会覆盖十八反表的同名键（dict 语义），
+        # 必须按列表合并而非整体覆盖，否则川乌/草乌丢失「反半夏/瓜蒌/贝母」等条目
+        self._all_rules: dict[str, list[str]] = {}
+        for key, forbidden in self.EIGHTEEN_ANTAGONISMS.items():
+            self._all_rules[key] = list(forbidden)
+        for key, forbidden in self.NINETEEN_INHIBITIONS.items():
+            merged = self._all_rules.setdefault(key, [])
+            merged.extend(x for x in forbidden if x not in merged)
         logger.info(
             "SafetyEngine 初始化完成: 十八反 %d 条, 十九畏 %d 条",
             len(self.EIGHTEEN_ANTAGONISMS),

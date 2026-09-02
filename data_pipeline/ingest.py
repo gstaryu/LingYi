@@ -14,6 +14,7 @@ import asyncio
 import json
 import logging
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -38,7 +39,7 @@ TCM_FILES: dict[str, str] = {
 
 
 def chunk_all_books(tcm_data_dir: str) -> dict[str, list[Chunk]]:
-    """对所有古籍执行切分。"""
+    """对所有古籍执行切分（各书 Chunker + 统一归一化后处理）。"""
     all_chunks: dict[str, list[Chunk]] = {}
 
     for book_name, filename in TCM_FILES.items():
@@ -52,11 +53,150 @@ def chunk_all_books(tcm_data_dir: str) -> dict[str, list[Chunk]]:
             text = f.read()
 
         chunker = get_chunker(book_name)
-        chunks = chunker.chunk(text)
+        chunks = _normalize_chunks(chunker.chunk(text), book_name)
         all_chunks[book_name] = chunks
         logger.info("  %s: %d 个 chunk", book_name, len(chunks))
 
+    # 全库内容去重（脉经底本存在整卷重复内容；重复 chunk 对检索无增益且浪费嵌入）
+    import hashlib
+
+    seen_md5: set[str] = set()
+    for book_name, chunks in all_chunks.items():
+        unique: list[Chunk] = []
+        for c in chunks:
+            fp = hashlib.md5(c.content.encode()).hexdigest()
+            if fp in seen_md5:
+                continue
+            seen_md5.add(fp)
+            unique.append(c)
+        if len(unique) != len(chunks):
+            logger.info("  %s: 内容去重 %d -> %d", book_name, len(chunks), len(unique))
+        all_chunks[book_name] = unique
+
     return all_chunks
+
+
+# ==================== 归一化后处理（处理各书格式差异的共性问题）====================
+
+# 抓取源杂质行（Chinese Text Project / 中国哲学书电子化计划 的导航与版权页脚）
+_BOILERPLATE_RE = re.compile(
+    r"Chinese Text Project|Library Resources|Show all|Full-text search"
+    r"|版权|严禁使用自动下载|违者自动封锁|在此提出|Chinese Medicine|Pre-Qin and Han"
+    r"|Please confirm|请确认|人机验证|验证码|Cloudflare|challenge|captcha",
+    re.IGNORECASE,
+)
+_MIN_CJK_RATIO = 0.3  # 中文占比低于此值的 chunk 视为垃圾
+_MAX_CHUNK_LEN = 500  # 超长 chunk 再切到条文级粒度（古籍原文单条不过数百字）
+
+
+def _split_long_chunk(c: Chunk, max_len: int) -> list[Chunk]:
+    """超长 chunk 按句号边界再切（metadata 继承，id 加序号后缀）。
+
+    单句超长时降级按 ；，、 二级切分，仍超长则硬切窗口。
+    """
+    # 二级切分：单句 > max_len 时按 ；，、 再切
+    sentences: list[str] = []
+    for s in c.content.split("。"):
+        if not s.strip():
+            continue
+        if len(s) <= max_len:
+            sentences.append(s)
+            continue
+        sub = re.split(r"([；，、])", s)  # 保留分隔符
+        piece = ""
+        for token in sub:
+            piece += token
+            if len(piece) >= max_len or (token in "；，、" and len(piece) > max_len // 3):
+                sentences.append(piece)
+                piece = ""
+        if piece.strip():
+            sentences.append(piece)
+
+    out: list[Chunk] = []
+    buf: list[str] = []
+    part_no = 1
+    for s in sentences:
+        buf.append(s)
+        # 阈值按 len+2 计（join 分隔符「。\n」占 2 字符），保证产出块不超 max_len
+        if sum(len(x) + 2 for x in buf) > max_len:
+            content = "。\n".join(buf[:-1]) + "。"
+            if content.strip():
+                out.append(Chunk(
+                    id=f"{c.id}_{part_no}",
+                    content=content,
+                    metadata={**c.metadata, "split_from": c.id},
+                ))
+            part_no += 1
+            buf = [buf[-1]]
+    if buf:
+        content = "。\n".join(buf)
+        if not content.endswith("。"):
+            content += "。"
+        if content.strip():
+            out.append(Chunk(
+                id=f"{c.id}_{part_no}",
+                content=content,
+                metadata={**c.metadata, "split_from": c.id},
+            ))
+    return out or [c]
+
+
+# 目录/导航块特征：编号目录行（"60. 骨空论"）或书名列表行
+_TOC_LINE_RE = re.compile(r"^\s*\d{1,3}[\.、]\s*\S{1,20}\s*$|^\s*《[^》]{1,30}》\s*$")
+
+
+def _is_toc_junk(content: str) -> bool:
+    """
+    目录/导航块判定（两类信号任一命中即判垃圾）:
+    1. 非空行 ≥5 且 >50% 匹配目录行特征（编号行/书名行）
+    2. 长块（>300 字）但句读标点（。！？；）密度 < 0.5% —— 古籍正文必带句读，
+       无句读的长块只能是目录/列表/导航
+    """
+    lines = [l for l in content.splitlines() if l.strip()]
+    if lines:
+        toc_like = sum(1 for l in lines if _TOC_LINE_RE.match(l))
+        if toc_like >= 5 and toc_like > 0.5 * len(lines):
+            return True
+    if len(content) > 300:
+        punct = sum(content.count(p) for p in "。！？；")
+        if punct < 0.005 * len(content):
+            return True
+    return False
+
+
+def _normalize_chunks(chunks: list[Chunk], book_name: str) -> list[Chunk]:
+    """
+    各书 Chunker 之后的统一后处理:
+    1. 剥离抓取源杂质行（CTP 导航/版权页脚）
+    2. 丢弃中文占比过低的垃圾 chunk
+    3. 超长 chunk 按句号边界再切（保留 metadata）
+    """
+    cleaned: list[Chunk] = []
+    for c in chunks:
+        content = _BOILERPLATE_RE.sub("", c.content)
+        # 行级清洗：丢弃 ASCII 主导的行（CTP 导航行与中文正文交错时）
+        lines = []
+        for line in content.splitlines():
+            letters = len(re.findall(r"[a-zA-Z]", line))
+            cjk_line = len(re.findall(r"[一-鿿]", line))
+            if letters > 3 and cjk_line < 0.15 * max(1, len(line)):
+                continue
+            lines.append(line)
+        content = re.sub(r"\n{2,}", "\n", "\n".join(lines)).strip()
+        cjk = len(re.findall(r"[一-鿿]", content))
+        if len(content) < 10 or cjk < _MIN_CJK_RATIO * len(content):
+            continue
+        if _is_toc_junk(content):
+            continue
+        cleaned.append(Chunk(id=c.id, content=content, metadata=c.metadata))
+
+    result: list[Chunk] = []
+    for c in cleaned:
+        if len(c.content) <= _MAX_CHUNK_LEN:
+            result.append(c)
+        else:
+            result.extend(_split_long_chunk(c, _MAX_CHUNK_LEN))
+    return result
 
 
 def save_chunks_json(all_chunks: dict[str, list[Chunk]], output_dir: str) -> None:
@@ -134,6 +274,11 @@ async def ingest_to_chroma(all_chunks: dict[str, list[Chunk]], settings) -> int:
     )
 
     total = 0
+    skipped = 0
+    # 断点续传：按内容指纹（md5）跳过已入库文档，中断后重跑只嵌入剩余部分
+    existing = await client.existing_ids()
+    logger.info("断点续传: 库中已有 %d 条，跳过重复", len(existing))
+
     for book_name, chunks in all_chunks.items():
         docs = [
             {"content": c.content, "metadata": {"book": book_name, **c.metadata}}
@@ -146,9 +291,21 @@ async def ingest_to_chroma(all_chunks: dict[str, list[Chunk]], settings) -> int:
             unit="batch",
         ):
             batch = docs[i : i + BATCH_SIZE]
-            n = await client.add_documents(batch)
+            # 跳过本批中按内容指纹已入库的文档
+            import hashlib
+
+            new_docs = [
+                d for d in batch
+                if hashlib.md5(d["content"].encode()).hexdigest() not in existing
+            ]
+            if not new_docs:
+                skipped += len(batch)
+                continue
+            n = await client.add_documents(new_docs)
             total += n
         logger.info("%s: 入库 %d 条", book_name, len(docs))
+    if skipped:
+        logger.info("断点续传: 跳过已入库 %d 条", skipped)
     return total
 
 
