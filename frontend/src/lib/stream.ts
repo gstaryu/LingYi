@@ -76,6 +76,7 @@ export async function streamChat(req: ChatRequest, opts: StreamOptions): Promise
               stage: parsed.stage ?? "",
               label: parsed.label ?? "",
               status: parsed.status === "done" ? "done" : "start",
+              note: parsed.note ?? undefined,
             });
           } else if (parsed.token !== undefined) {
             opts.onEvent({ type: "token", content: parsed.token });
@@ -85,6 +86,7 @@ export async function streamChat(req: ChatRequest, opts: StreamOptions): Promise
               thread_id: parsed.thread_id ?? "",
               notes: Array.isArray(parsed.notes) ? parsed.notes : undefined,
               diagnosis: typeof parsed.diagnosis === "string" ? parsed.diagnosis : undefined,
+              elapsed_ms: typeof parsed.elapsed_ms === "number" ? parsed.elapsed_ms : undefined,
             });
           } else if (parsed.error) {
             opts.onEvent({ type: "error", message: parsed.error });

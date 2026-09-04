@@ -8,6 +8,7 @@ import { AlertTriangle, Copy, Check, Loader2 } from "lucide-react";
 import type { MessageItem } from "@/lib/types";
 import type { Components } from "react-markdown";
 import { PrescriptionCard } from "./PrescriptionCard";
+import { ConsultationTrace } from "./ConsultationTrace";
 
 /** 提取完整的 herb_names JSON，返回药材列表与剥离 JSON 后的文本。 */
 function extractHerbs(s: string): { text: string; herbs: string[] } {
@@ -141,6 +142,7 @@ export function MessageBubble({
   const [copied, setCopied] = useState(false);
   const { text: cleaned, herbs } = processContent(message.content, isStreaming);
   const isSafety = !isUser && cleaned.includes("安全警告");
+  const hasTrace = Boolean(message.stages?.length || message.notes?.length);
 
   async function handleCopy() {
     try {
@@ -163,9 +165,9 @@ export function MessageBubble({
   }
 
   return (
-    <div className="group flex justify-start">
+    <div className="group flex items-start justify-start">
       <div
-        className={`max-w-[85%] rounded-2xl rounded-bl-sm px-4 py-3 ${
+        className={`min-w-0 flex-1 rounded-2xl rounded-bl-sm px-4 py-3 ${
           isSafety ? "border border-destructive/40 bg-destructive/10" : "bg-muted"
         }`}
       >
@@ -175,13 +177,20 @@ export function MessageBubble({
             安全警告
           </div>
         )}
+        <ConsultationTrace
+          stages={message.stages}
+          notes={message.notes}
+          streaming={isStreaming}
+          elapsedMs={message.elapsedMs}
+        />
         <div className="max-w-[65ch] text-sm">
           {cleaned ? (
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
               {cleaned}
             </ReactMarkdown>
           ) : (
-            isStreaming && (
+            isStreaming &&
+            !hasTrace && (
               <div className="flex items-center gap-2 py-1 text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
                 <span className="animate-pulse text-sm">思考中</span>
@@ -203,7 +212,7 @@ export function MessageBubble({
       {!isStreaming && cleaned && (
         <button
           onClick={handleCopy}
-          className="ml-1 mt-1 self-start rounded-md p-1.5 text-muted-foreground opacity-0 transition-opacity hover:bg-muted hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100"
+          className="ml-1 mt-1 shrink-0 self-start rounded-md p-1.5 text-muted-foreground opacity-0 transition-opacity hover:bg-muted hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100"
           aria-label="复制回复"
           title="复制"
         >

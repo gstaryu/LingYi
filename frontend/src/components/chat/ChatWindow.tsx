@@ -3,8 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useChat } from "@/hooks/useChat";
 import { MessageBubble } from "./MessageBubble";
-import { ConsultationTimeline } from "./ConsultationTimeline";
-import { ConsultationNotes } from "./ConsultationNotes";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { api, ApiError } from "@/lib/api";
@@ -19,7 +17,8 @@ interface UploadedFile {
 
 /** 合并连续的 assistant 消息为一个气泡（diagnosis 理法 + treatment 方药 应显示为一个整体）。
  *  安全网去重：若连续两条 assistant 消息都含【处方建议】（synthesis 重试残留），
- *  仅保留最后一条（最终批准的处方），避免重复渲染辨证/处方块。 */
+ *  仅保留最后一条（最终批准的处方），避免重复渲染辨证/处方块。
+ *  合并时保留 per-message extras（notes/stages/elapsedMs）：后者缺失时继承前者的。 */
 export function mergeAssistantMessages(msgs: MessageItem[]): MessageItem[] {
   const result: MessageItem[] = [];
   for (const m of msgs) {
@@ -29,9 +28,20 @@ export function mergeAssistantMessages(msgs: MessageItem[]): MessageItem[] {
       const mHasRx = m.content.includes("【处方建议】");
       if (lastHasRx && mHasRx) {
         // Both are synthesis outputs (retry) — replace with the latest
-        result[result.length - 1] = { ...m };
+        result[result.length - 1] = {
+          ...m,
+          notes: m.notes ?? last.notes,
+          stages: m.stages ?? last.stages,
+          elapsedMs: m.elapsedMs ?? last.elapsedMs,
+        };
       } else {
-        last.content += "\n\n" + m.content;
+        result[result.length - 1] = {
+          ...last,
+          content: last.content + "\n\n" + m.content,
+          notes: last.notes ?? m.notes,
+          stages: last.stages ?? m.stages,
+          elapsedMs: last.elapsedMs ?? m.elapsedMs,
+        };
       }
     } else {
       result.push({ ...m });
@@ -41,7 +51,7 @@ export function mergeAssistantMessages(msgs: MessageItem[]): MessageItem[] {
 }
 
 export function ChatWindow({ threadId }: { threadId: string }) {
-  const { messages, streaming, stages, showTimeline, send, stop } = useChat(threadId);
+  const { messages, streaming, send, stop } = useChat(threadId);
   const [input, setInput] = useState("");
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -51,7 +61,7 @@ export function ChatWindow({ threadId }: { threadId: string }) {
   // 新消息时自动滚到底部
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, stages]);
+  }, [messages]);
 
   async function handleUpload(file: File) {
     setUploading(true);
@@ -81,8 +91,6 @@ export function ChatWindow({ threadId }: { threadId: string }) {
   }
 
   const merged = mergeAssistantMessages(messages);
-  const lastMsg = merged[merged.length - 1];
-  const showTimelineForLast = showTimeline && lastMsg?.role === "assistant";
   const examplePrompts = ["肚子胀、怕冷、大便稀", "最近总是失眠多梦", "头痛、眼睛干涩"];
 
   return (
@@ -114,18 +122,7 @@ export function ChatWindow({ threadId }: { threadId: string }) {
             merged.map((m, i) => {
               const isLast = i === merged.length - 1;
               const isStreamingLast = streaming && isLast && m.role === "assistant";
-              const showTimelineHere = (isStreamingLast || (showTimelineForLast && isLast)) && stages.length > 0;
-              return (
-                <div key={i} className="space-y-2">
-                  {showTimelineHere && (
-                    <ConsultationTimeline stages={stages} streaming={streaming} />
-                  )}
-                  <MessageBubble message={m} isStreaming={isStreamingLast} />
-                  {!streaming && m.role === "assistant" && m.notes && m.notes.length > 0 && (
-                    <ConsultationNotes notes={m.notes} />
-                  )}
-                </div>
-              );
+              return <MessageBubble key={i} message={m} isStreaming={isStreamingLast} />;
             })
           )}
           <div ref={bottomRef} />

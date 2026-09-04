@@ -52,32 +52,47 @@ STAGE_LABELS: dict[str, str] = {
 }
 
 
-def _emit_stage(stage: str, label: str, status: str = "start") -> None:
+def _emit_stage(stage: str, label: str, status: str = "start", note: Any = None) -> None:
     """向 LangGraph 自定义流发送阶段进度事件。
 
     使用 get_stream_writer()（langgraph 1.2.6，contextvars 传播）。
     必须在图节点内部调用；直接调用节点（如单元测试）时无运行时上下文，
     get_stream_writer 会抛错，此处吞掉异常保证节点本身不受影响。
+
+    Args:
+        note: 专家阶段的会诊笔记载荷（随 done 事件推给前端做渐进揭示）。
     """
     try:
         from langgraph.config import get_stream_writer
 
-        get_stream_writer()({"type": "stage", "stage": stage, "label": label, "status": status})
+        payload: dict[str, Any] = {"type": "stage", "stage": stage, "label": label, "status": status}
+        if note is not None:
+            payload["note"] = note
+        get_stream_writer()(payload)
     except Exception:  # noqa: BLE001 - 流上下文缺失时静默跳过
         pass
+
+
+# 附带会诊笔记的阶段（并行专家，done 时把笔记推给前端做渐进揭示）
+_NOTE_STAGES = {"bianzheng", "fangji", "bencao"}
 
 
 def _wrap_with_stage(stage: str, label: str, node_fn: Any):
     """包装图节点，在执行前后发送 stage start/done 事件。
 
     保留原节点函数名便于 LangGraph 追踪与日志。并行专家节点各自独立发送，
-    前端时间线据此点亮对应阶段。
+    前端时间线据此点亮对应阶段。专家阶段 done 时附带会诊笔记载荷。
     """
 
     async def wrapped(state: dict[str, Any]) -> dict[str, Any]:
         _emit_stage(stage, label, "start")
         result = await node_fn(state)
-        _emit_stage(stage, label, "done")
+        note = None
+        if stage in _NOTE_STAGES and isinstance(result, dict):
+            notes = result.get("consultation_notes") or []
+            if notes:
+                note = notes[0]
+        _emit_stage(stage, label, "done", note)
         return result
 
     wrapped.__name__ = getattr(node_fn, "__name__", f"node_{stage}")
