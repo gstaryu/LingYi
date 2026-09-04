@@ -56,4 +56,23 @@ describe("mergeAssistantMessages", () => {
     const merged = mergeAssistantMessages(msgs);
     expect(merged).toHaveLength(4);
   });
+
+  it("合并时继承后一条消息的 extras（notes/stages/elapsedMs）", () => {
+    const msgs: MessageItem[] = [
+      { role: "user", content: "A" },
+      { role: "assistant", content: "问诊过渡语" },
+      {
+        role: "assistant",
+        content: "【辨证结论】…",
+        notes: [{ specialist: "辨证专家" }],
+        stages: [{ stage: "inquiry", label: "问诊", status: "done" }],
+        elapsedMs: 8200,
+      },
+    ];
+    const merged = mergeAssistantMessages(msgs);
+    expect(merged).toHaveLength(2);
+    expect(merged[1].notes).toHaveLength(1);
+    expect(merged[1].stages).toHaveLength(1);
+    expect(merged[1].elapsedMs).toBe(8200);
+  });
 });

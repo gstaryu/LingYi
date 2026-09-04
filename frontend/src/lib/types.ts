@@ -26,6 +26,10 @@ export interface MessageItem {
   role: "user" | "assistant";
   content: string;
   notes?: ConsultationNote[];
+  /** 会诊阶段轨迹（per-message 持久，流式中实时更新，完成后保留为摘要条） */
+  stages?: Stage[];
+  /** 单轮响应用时（毫秒，来自 done 事件） */
+  elapsedMs?: number;
 }
 
 export interface UserProfile {
@@ -66,16 +70,29 @@ export interface ConsultationNote {
   [k: string]: unknown;
 }
 
-/** 会诊阶段（用于时间线展示）。 */
+/** 会诊阶段（用于时间线展示）。note=该阶段完成时的会诊笔记（渐进揭示）。 */
 export interface Stage {
   stage: string;
   label: string;
   status: "start" | "done";
+  note?: ConsultationNote;
 }
 
 /** SSE 流式事件（POST /api/chat?stream=true） */
 export type ChatStreamEvent =
   | { type: "token"; content: string }
-  | { type: "stage"; stage: string; label: string; status: "start" | "done" }
-  | { type: "done"; thread_id: string; notes?: ConsultationNote[]; diagnosis?: string }
+  | {
+      type: "stage";
+      stage: string;
+      label: string;
+      status: "start" | "done";
+      note?: ConsultationNote;
+    }
+  | {
+      type: "done";
+      thread_id: string;
+      notes?: ConsultationNote[];
+      diagnosis?: string;
+      elapsed_ms?: number;
+    }
   | { type: "error"; message: string };

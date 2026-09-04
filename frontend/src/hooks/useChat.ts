@@ -13,23 +13,45 @@ import { toast } from "sonner";
  * - 切换 threadId 时加载历史消息（GET /threads/{id}/messages）。
  * - send() 调用 SSE 流式接口，逐 token 追加到助手消息。
  * - done 事件回传 thread_id（新会话首次发送时），并刷新会话列表与画像。
- * - 会诊笔记（notes）附加到对应的助手消息上（per-message），而非全局状态。
+ * - 会诊笔记（notes）与会诊阶段轨迹（stages）附加到对应的助手消息上（per-message），
+ *   完成后以摘要条形式保留，不再整体消失。
  * - stop() 通过 AbortController 中止流。
  */
+
+/** stage 事件归约：新阶段开始时将仍在 start 的前序阶段标记为 done，避免重复追加；
+ *  done 事件可携带会诊笔记（note），随阶段条目持久化（渐进揭示）。 */
+function reduceStages(
+  prev: Stage[],
+  ev: { stage: string; label: string; status: "start" | "done"; note?: ConsultationNote }
+): Stage[] {
+  if (ev.status === "start") {
+    let next = prev.map((s) => (s.status === "start" ? { ...s, status: "done" as const } : s));
+    if (!next.some((s) => s.stage === ev.stage)) {
+      next = [...next, { stage: ev.stage, label: ev.label, status: "start" }];
+    } else {
+      next = next.map((s) =>
+        s.stage === ev.stage ? { ...s, status: "start" as const, note: undefined } : s
+      );
+    }
+    return next;
+  }
+  return prev.map((s) =>
+    s.stage === ev.stage ? { ...s, status: "done" as const, note: ev.note } : s
+  );
+}
+
 export function useChat(threadId: string, initialMessages: MessageItem[] = []) {
   const [messages, setMessages] = useState<MessageItem[]>(initialMessages);
   const [streaming, setStreaming] = useState(false);
-  const [stages, setStages] = useState<Stage[]>([]);
-  const [showTimeline, setShowTimeline] = useState(false);
   const [currentThreadId, setCurrentThreadId] = useState(threadId);
   const abortRef = useRef<AbortController | null>(null);
+  /** 轮次序号：每次 send 递增。用于丢弃迟到的上一轮 resync（防止覆盖新一轮的乐观消息）。 */
+  const turnSeqRef = useRef(0);
   const qc = useQueryClient();
 
   // 切换会话时加载历史
   useEffect(() => {
     setCurrentThreadId(threadId);
-    setStages([]);
-    setShowTimeline(false);
     if (!threadId) {
       setMessages([]);
       return;
@@ -47,11 +69,10 @@ export function useChat(threadId: string, initialMessages: MessageItem[] = []) {
   const send = useCallback(
     async (text: string, files: string[] = []) => {
       if (!text.trim() || streaming) return;
+      const myTurn = ++turnSeqRef.current;
       const userMsg: MessageItem = { role: "user", content: text };
       setMessages((m) => [...m, userMsg, { role: "assistant", content: "" }]);
       setStreaming(true);
-      setStages([]);
-      setShowTimeline(true);
 
       const controller = new AbortController();
       abortRef.current = controller;
@@ -79,43 +100,41 @@ export function useChat(threadId: string, initialMessages: MessageItem[] = []) {
                     const lastBz = newContent.lastIndexOf("【辨证结论】");
                     newContent = newContent.slice(lastBz);
                   }
-                  copy[copy.length - 1] = { role: "assistant", content: newContent };
+                  copy[copy.length - 1] = { ...last, content: newContent };
                   return copy;
                 });
               } else if (ev.type === "stage") {
-                setStages((prev) => {
-                  // 新阶段开始：将之前仍在 start 的阶段标记为 done
-                  let next = prev;
-                  if (ev.status === "start") {
-                    next = prev.map((s) => (s.status === "start" ? { ...s, status: "done" as const } : s));
-                    // 避免重复追加同一阶段
-                    if (!next.some((s) => s.stage === ev.stage)) {
-                      next = [...next, { stage: ev.stage, label: ev.label, status: "start" }];
-                    } else {
-                      next = next.map((s) => (s.stage === ev.stage ? { ...s, status: "start" as const } : s));
+                // 阶段事件实时写入最后一条助手消息（per-message 轨迹）
+                setMessages((m) => {
+                  const copy = [...m];
+                  for (let i = copy.length - 1; i >= 0; i--) {
+                    if (copy[i].role === "assistant") {
+                      copy[i] = { ...copy[i], stages: reduceStages(copy[i].stages ?? [], ev) };
+                      break;
                     }
-                  } else {
-                    next = prev.map((s) => (s.stage === ev.stage ? { ...s, status: "done" as const } : s));
                   }
-                  return next;
+                  return copy;
                 });
               } else if (ev.type === "done") {
                 const tid = ev.thread_id || currentThreadId;
                 if (ev.thread_id) setCurrentThreadId(ev.thread_id);
-                // 将会诊笔记附加到对应的助手消息（per-message 持久化）
+                // 将会诊笔记与用时附加到对应的助手消息（per-message 持久化）
                 const incomingNotes: ConsultationNote[] | undefined = ev.notes;
-                if (incomingNotes && incomingNotes.length > 0) {
-                  setMessages((m) => {
-                    const copy = [...m];
-                    for (let i = copy.length - 1; i >= 0; i--) {
-                      if (copy[i].role === "assistant") {
-                        copy[i] = { ...copy[i], notes: incomingNotes };
-                        break;
-                      }
+                const elapsedMs = ev.elapsed_ms;
+                setMessages((m) => {
+                  const copy = [...m];
+                  for (let i = copy.length - 1; i >= 0; i--) {
+                    if (copy[i].role === "assistant") {
+                      copy[i] = {
+                        ...copy[i],
+                        ...(incomingNotes && incomingNotes.length > 0 ? { notes: incomingNotes } : {}),
+                        ...(typeof elapsedMs === "number" ? { elapsedMs } : {}),
+                      };
+                      break;
                     }
-                    return copy;
-                  });
-                }
+                  }
+                  return copy;
+                });
                 // 新会话创建/画像更新后刷新列表
                 qc.invalidateQueries({ queryKey: ["threads"] });
                 qc.invalidateQueries({ queryKey: ["profile"] });
@@ -124,24 +143,53 @@ export function useChat(threadId: string, initialMessages: MessageItem[] = []) {
                 setTimeout(() => qc.invalidateQueries({ queryKey: ["threads"] }), 12000);
                 setTimeout(() => qc.invalidateQueries({ queryKey: ["profile"] }), 8000);
                 // 同步后端权威状态：确保所有消息（含 inquiry 过渡语等非流式消息）按正确顺序显示
-                // 同步时保留 per-message notes（通过内容匹配）
+                // 同步时保留 per-message extras：notes / stages / elapsedMs（先按内容匹配，
+                // 匹配不上时兜底挂到最后一条助手消息——流式气泡可能被截断/重写导致内容不一致）
+                // 守卫：若在 getMessages 返回前用户已开启新一轮（send），此结果已过期，直接丢弃，
+                // 否则会把新一轮的乐观消息（用户消息+流式气泡）整体覆盖掉。
                 if (tid) {
+                  const seq = turnSeqRef.current;
                   api
                     .getMessages(tid)
                     .then((msgs) => {
+                      if (turnSeqRef.current !== seq) return; // 已开新轮，丢弃过期 resync
                       setMessages((prev) => {
-                        // 从现有消息中收集 notes（按内容匹配）
-                        const notesByContent = new Map<string, ConsultationNote[]>();
+                        const hasExtras = (m: MessageItem) =>
+                          Boolean(
+                            m.notes?.length || m.stages?.length || typeof m.elapsedMs === "number"
+                          );
+                        const extrasByContent = new Map<string, MessageItem>();
                         for (const m of prev) {
-                          if (m.notes && m.notes.length > 0) {
-                            notesByContent.set(m.content, m.notes);
+                          if (hasExtras(m)) extrasByContent.set(m.content, m);
+                        }
+                        const merged = msgs.map((m) => {
+                          const e = extrasByContent.get(m.content);
+                          if (!e) return m;
+                          return {
+                            ...m,
+                            notes: e.notes,
+                            stages: e.stages,
+                            elapsedMs: e.elapsedMs,
+                          };
+                        });
+                        // 兜底：最后一条助手消息没有 extras 时，把本轮流式消息的 extras 挂上去
+                        const streamedLast = prev[prev.length - 1];
+                        if (streamedLast?.role === "assistant" && hasExtras(streamedLast)) {
+                          for (let i = merged.length - 1; i >= 0; i--) {
+                            if (merged[i].role === "assistant") {
+                              if (!hasExtras(merged[i])) {
+                                merged[i] = {
+                                  ...merged[i],
+                                  notes: streamedLast.notes,
+                                  stages: streamedLast.stages,
+                                  elapsedMs: streamedLast.elapsedMs,
+                                };
+                              }
+                              break;
+                            }
                           }
                         }
-                        if (notesByContent.size === 0) return msgs;
-                        return msgs.map((m) => ({
-                          ...m,
-                          notes: notesByContent.get(m.content),
-                        }));
+                        return merged;
                       });
                     })
                     .catch(() => {});
@@ -155,8 +203,6 @@ export function useChat(threadId: string, initialMessages: MessageItem[] = []) {
         );
       } finally {
         setStreaming(false);
-        // Keep timeline visible 3s after streaming ends so user sees completed stages
-        setTimeout(() => setShowTimeline(false), 3000);
         abortRef.current = null;
       }
     },
@@ -168,5 +214,5 @@ export function useChat(threadId: string, initialMessages: MessageItem[] = []) {
     setStreaming(false);
   }, []);
 
-  return { messages, streaming, stages, showTimeline, send, stop, currentThreadId };
+  return { messages, streaming, send, stop, currentThreadId };
 }
