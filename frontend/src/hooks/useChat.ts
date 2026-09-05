@@ -18,22 +18,21 @@ import { toast } from "sonner";
  * - stop() 通过 AbortController 中止流。
  */
 
-/** stage 事件归约：新阶段开始时将仍在 start 的前序阶段标记为 done，避免重复追加；
- *  done 事件可携带会诊笔记（note），随阶段条目持久化（渐进揭示）。 */
+/** stage 事件归约：只信显式 done 事件（并行专家各自独立收尾，start 不提前补勾——
+ *  否则下一阶段 start 会把仍在运行的前序专家假标为完成，笔记晚几秒才补上）；
+ *  done 事件可携带会诊笔记（note），随阶段条目持久化（渐进揭示）。
+ *  事件丢失的场景由完成态 reconcileStages 前缀重建兜底。 */
 function reduceStages(
   prev: Stage[],
   ev: { stage: string; label: string; status: "start" | "done"; note?: ConsultationNote }
 ): Stage[] {
   if (ev.status === "start") {
-    let next = prev.map((s) => (s.status === "start" ? { ...s, status: "done" as const } : s));
-    if (!next.some((s) => s.stage === ev.stage)) {
-      next = [...next, { stage: ev.stage, label: ev.label, status: "start" }];
-    } else {
-      next = next.map((s) =>
+    if (prev.some((s) => s.stage === ev.stage)) {
+      return prev.map((s) =>
         s.stage === ev.stage ? { ...s, status: "start" as const, note: undefined } : s
       );
     }
-    return next;
+    return [...prev, { stage: ev.stage, label: ev.label, status: "start" }];
   }
   return prev.map((s) =>
     s.stage === ev.stage ? { ...s, status: "done" as const, note: ev.note } : s

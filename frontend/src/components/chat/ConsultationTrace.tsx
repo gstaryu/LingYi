@@ -266,7 +266,7 @@ export function ConsultationTrace({
 
   const doneCount = reconcileStages(stages ?? []).length;
   const summaryParts = [
-    `会诊过程 · ${doneCount} 步`,
+    doneCount > 0 ? `会诊过程 · ${doneCount} 步` : "会诊过程",
     typeof elapsedMs === "number" ? `${(elapsedMs / 1000).toFixed(1)}s` : null,
     notes?.length ? `${notes.length} 位专家` : null,
   ].filter(Boolean);
