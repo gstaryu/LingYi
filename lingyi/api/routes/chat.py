@@ -36,6 +36,8 @@ class MessageItem(BaseModel):
 
     role: str
     content: str
+    # 会诊笔记（仅最近一轮诊断，取自 checkpointer 状态；前端刷新后据此恢复会诊轨迹摘要条）
+    notes: list[dict[str, Any]] | None = None
 
 
 def _extract_last_ai_response(messages: list[BaseMessage]) -> str:
@@ -321,17 +323,25 @@ async def get_thread_messages(thread_id: str, agent: Any = Depends(get_agent)):
     获取指定会话的消息历史 - 通过公开 API agent.aget_state 读取。
 
     不再深入 checkpointer 内部结构（channel_values），使用 LangGraph 公开 StateSnapshot。
+    最近一轮诊断的会诊笔记（consultation_notes）附加到最后一条助手消息，
+    前端刷新后据此恢复会诊轨迹摘要条（stages/elapsedMs 为流式瞬态，不做持久化）。
     """
     config = {"configurable": {"thread_id": thread_id}}
     try:
         snapshot = await agent.aget_state(config)
         messages = snapshot.values.get("messages", []) if snapshot else []
+        notes = (snapshot.values.get("consultation_notes", []) or []) if snapshot and snapshot.values else []
         result: list[MessageItem] = []
         for msg in messages:
             if isinstance(msg, HumanMessage) and msg.content:
                 result.append(MessageItem(role="user", content=msg.content))
             elif isinstance(msg, AIMessage) and msg.content:
                 result.append(MessageItem(role="assistant", content=msg.content))
+        if result and notes:
+            for item in reversed(result):
+                if item.role == "assistant":
+                    item.notes = list(notes)
+                    break
         return result
     except Exception as e:
         logger.warning("获取消息历史失败: thread_id=%s, error=%s", thread_id, e)

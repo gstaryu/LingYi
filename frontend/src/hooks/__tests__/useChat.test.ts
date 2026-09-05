@@ -29,20 +29,21 @@ vi.mock("@/lib/api", () => ({
 import { api } from "@/lib/api";
 
 describe("useChat stages 持久化", () => {
-  it("token 追加不得抹掉消息上的 stages/notes（回归：spread 丢失）", async () => {
+  it("token 不抹 stages；并行专家不提前补勾；重跑重置笔记", async () => {
     const { result } = renderHook(() => useChat(""));
 
     await act(async () => {
       result.current.send("腹痛");
     });
 
-    // 回放：阶段 -> token -> 阶段 -> done
+    // 回放：阶段 -> token -> 并行专家（start 先于 done 到达）
     act(() => {
       emit?.({ type: "stage", stage: "inquiry", label: "问诊", status: "start" });
       emit?.({ type: "stage", stage: "inquiry", label: "问诊", status: "done" });
       emit?.({ type: "token", content: "诊" });
       emit?.({ type: "token", content: "断中" });
       emit?.({ type: "stage", stage: "bianzheng", label: "辨证", status: "start" });
+      emit?.({ type: "stage", stage: "fangji", label: "方剂", status: "start" });
       emit?.({
         type: "stage",
         stage: "bianzheng",
@@ -53,10 +54,21 @@ describe("useChat stages 持久化", () => {
     });
 
     const last = result.current.messages[result.current.messages.length - 1];
-    // token 之后 stages 仍在（修复前被 {role, content} 全新对象抹掉）
+    // token 之后 stages 仍在（回归：spread 丢失）
     expect(last.content).toBe("诊断中");
-    expect(last.stages?.map((s) => s.stage)).toEqual(["inquiry", "bianzheng"]);
-    expect(last.stages?.[1]?.note?.syndrome).toBe("脾胃虚寒");
+    expect(last.stages?.map((s) => s.stage)).toEqual(["inquiry", "bianzheng", "fangji"]);
+    // 方剂 start 不得把仍在运行的辨证提前打成 done（假完成）
+    expect(last.stages?.find((s) => s.stage === "bianzheng")?.status).toBe("done");
+    expect(last.stages?.find((s) => s.stage === "fangji")?.status).toBe("start");
+    expect(last.stages?.find((s) => s.stage === "bianzheng")?.note?.syndrome).toBe("脾胃虚寒");
+
+    // 前序阶段重跑（重试）：回到 start 且笔记清空
+    act(() => {
+      emit?.({ type: "stage", stage: "bianzheng", label: "辨证", status: "start" });
+    });
+    const rerun = result.current.messages[result.current.messages.length - 1];
+    expect(rerun.stages?.find((s) => s.stage === "bianzheng")?.status).toBe("start");
+    expect(rerun.stages?.find((s) => s.stage === "bianzheng")?.note).toBeUndefined();
 
     act(() => {
       emit?.({
@@ -72,7 +84,7 @@ describe("useChat stages 持久化", () => {
       expect(done.notes?.length).toBe(1);
       expect(done.elapsedMs).toBe(1200);
       // done 之后 stages 依旧完整
-      expect(done.stages?.map((s) => s.stage)).toEqual(["inquiry", "bianzheng"]);
+      expect(done.stages?.length).toBe(3);
     });
   });
 
