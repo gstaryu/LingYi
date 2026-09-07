@@ -1,12 +1,16 @@
 # 灵医 LingYi · 中医智能诊疗系统
 
 > 基于多智能体架构的中医辨证论治辅助系统。按"理、法、方、药"体系，通过问诊-辨证-方剂-本草的并行专家会诊，给出结构化的辨证结论与处方建议，并内置十八反十九畏配伍安全校验。
+<!-- 第一张图片：宽度 100% -->
+<p align="center">
+  <img src="./images/主页.png" alt="主页" style="width: 100%; max-width: 100%;">
+</p>
 
-![](D:\PycharmProjects\LingYi\images\主页.png)
-
-![](D:\PycharmProjects\LingYi\images\问诊1.png)
-
-![](D:\PycharmProjects\LingYi\images\问诊-专家.png)
+<!-- 第二、三张图片：左右并排 -->
+<div style="display: flex; justify-content: space-between; gap: 10px;">
+  <img src="./images/问诊1.png" alt="问诊" style="width: 48%;">
+  <img src="./images/问诊-专家.png" alt="问诊-专家" style="width: 48%;">
+</div>
 
 ---
 
