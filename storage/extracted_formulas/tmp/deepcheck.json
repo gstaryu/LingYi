@@ -1,0 +1,713 @@
+[
+ {
+  "idx": 330,
+  "grp": "flagged",
+  "name": "大犀角汤",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:犀角",
+   "SHANGWEI_MISMATCH:src=14,ext=9"
+  ],
+  "ok": [],
+  "src_title": "又大犀角汤方",
+  "comp_region_head": "旋复花（二两）白术（二两）桂心（二两）防己（二两）黄芩（二两）生姜（三两）香皮（四两）紫苏茎（一握）上十四味",
+  "src_shangwei": "上十四味=14"
+ },
+ {
+  "idx": 57,
+  "grp": "flagged",
+  "name": "豉汤",
+  "issues": [],
+  "ok": [],
+  "src_title": "豉汤方",
+  "comp_region_head": "豆豉（一升）伏龙肝（三两研）小儿小便（三升）上三味",
+  "src_shangwei": "上三味=3"
+ },
+ {
+  "idx": 8,
+  "grp": "flagged",
+  "name": "疗伤寒雪煎",
+  "issues": [],
+  "ok": [],
+  "src_title": "又疗伤寒雪煎方",
+  "comp_region_head": "麻黄（十斤去节）杏仁（四升去双仁尖皮熬捣为膏）大黄（一斤十三两金色者各细锉）上三味",
+  "src_shangwei": "上三味=3"
+ },
+ {
+  "idx": 378,
+  "grp": "flagged",
+  "name": "马蔺散",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:牛骨灰,神曲,鸡子,黄腊",
+   "SHANGWEI_MISMATCH:src=3,ext=6"
+  ],
+  "ok": [],
+  "src_title": "马蔺散方",
+  "comp_region_head": "干姜黄连（原无分两）上三味",
+  "src_shangwei": "上三味=3"
+ },
+ {
+  "idx": 192,
+  "grp": "flagged",
+  "name": "并宜服此花苁蓉丸",
+  "issues": [
+   "SHANGWEI_MISMATCH:src=16,ext=14"
+  ],
+  "ok": [],
+  "src_title": "并宜服此花苁蓉丸方",
+  "comp_region_head": "花苁蓉（八分）泽泻（四分）五味子（四分）紫巴戟天（四分去心）地骨皮（四分）磁石（六分研水淘去赤汁干之研入）人参（六分）赤石脂（六分研入）韭子（五分熬）龙骨（五分研入）甘草（五分炙）牡丹皮（五分）干地黄（十分）禹余粮（三分研入）桑螵蛸（三十枚",
+  "src_shangwei": "上十六味=16"
+ },
+ {
+  "idx": 162,
+  "grp": "flagged",
+  "name": "黄昏汤",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:黄昏",
+   "SHANGWEI_MISMATCH:src=1,ext=2"
+  ],
+  "ok": [],
+  "src_title": "黄昏汤方",
+  "comp_region_head": "葶苈大枣泻肺汤主之。兼疗胸胁胀满，一身面目浮肿，鼻塞清涕出，不闻香臭酸辛，咳逆上气，喘鸣迫塞方。葶苈（三熬令色紫）上一味",
+  "src_shangwei": "上一味=1"
+ },
+ {
+  "idx": 148,
+  "grp": "flagged",
+  "name": "姜椒汤",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:椒",
+   "SHANGWEI_MISMATCH:src=6,ext=2"
+  ],
+  "ok": [],
+  "src_title": "姜椒汤方",
+  "comp_region_head": "生姜（一两）麻黄（五两去节）甘草（一尺炙）上六味",
+  "src_shangwei": "上六味=6"
+ },
+ {
+  "idx": 72,
+  "grp": "flagged",
+  "name": "黄汗吴蓝汤",
+  "issues": [
+   "SHANGWEI_MISMATCH:src=7,ext=5"
+  ],
+  "ok": [],
+  "src_title": "黄汗吴蓝汤方",
+  "comp_region_head": "吴蓝（六分）芍药麦门冬（去心）桑白皮汉防己白藓皮山栀子（各六分）上七味",
+  "src_shangwei": "上七味=7"
+ },
+ {
+  "idx": 408,
+  "grp": "flagged",
+  "name": "服生麦门冬汤",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:芒硝,通草,甘草,白术,大枣,麻黄",
+   "SHANGWEI_MISMATCH:src=5,ext=11",
+   "NAME_TITLE_DIFF:title=复服栝蒌汤方"
+  ],
+  "ok": [],
+  "src_title": "复服栝蒌汤方",
+  "comp_region_head": "桂心（二两）豉（三升）上五味",
+  "src_shangwei": "上五味=5"
+ },
+ {
+  "idx": 56,
+  "grp": "flagged",
+  "name": "赤小豆丸",
+  "issues": [],
+  "ok": [],
+  "src_title": "赤小豆丸方",
+  "comp_region_head": "赤小豆（二两）鬼臼（二两）鬼箭（二两）丹砂（二两研）雄黄（二两研）上五味",
+  "src_shangwei": "上五味=5"
+ },
+ {
+  "idx": 354,
+  "grp": "flagged",
+  "name": "疗瘿海藻散",
+  "issues": [
+   "SHANGWEI_MISMATCH:src=7,ext=5"
+  ],
+  "ok": [],
+  "src_title": "又疗瘿海藻散方",
+  "comp_region_head": "海藻（十分洗）昆布（一两洗）海蛤（一两研）通草（一两）菘萝（洗）干姜桂心（各二两）上七味",
+  "src_shangwei": "上七味=7"
+ },
+ {
+  "idx": 400,
+  "grp": "flagged",
+  "name": "生发膏",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:续断,辛夷仁,寄生,泽兰,零陵香,蔓荆子",
+   "SHANGWEI_MISMATCH:src=8,ext=14"
+  ],
+  "ok": [],
+  "src_title": "又生发膏方",
+  "comp_region_head": "细辛（一两）防风（二两）乌梅（一升）吴茱萸（五合）干地黄白术（各一两）大麦（五合）生姜（四两）上八味",
+  "src_shangwei": "上八味=8"
+ },
+ {
+  "idx": 280,
+  "grp": "flagged",
+  "name": "茱萸根下虫酒",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:东行茱萸根"
+  ],
+  "ok": [],
+  "src_title": "茱萸根下虫酒方",
+  "comp_region_head": "大麻子（八升）橘皮（二两切）上三味",
+  "src_shangwei": "上三味=3"
+ },
+ {
+  "idx": 54,
+  "grp": "flagged",
+  "name": "虎头杀鬼丸",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:虎头骨,鬼臼,雄黄,皂荚,雌黄,芜荑",
+   "SHANGWEI_MISMATCH:src=2,ext=7"
+  ],
+  "ok": [],
+  "src_title": "虎头杀鬼丸方",
+  "comp_region_head": "朱砂（一两）蜀常山（三两）上二味",
+  "src_shangwei": "上二味=2"
+ },
+ {
+  "idx": 302,
+  "grp": "flagged",
+  "name": "麻黄根粉",
+  "issues": [],
+  "ok": [],
+  "src_title": "麻黄根粉方",
+  "comp_region_head": "麻黄根（三两）石硫黄（三两研）米粉（五合）上三味",
+  "src_shangwei": "上三味=3"
+ },
+ {
+  "idx": 248,
+  "grp": "flagged",
+  "name": "六生散",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:蜀附子",
+   "SHANGWEI_MISMATCH:src=6,ext=2"
+  ],
+  "ok": [],
+  "src_title": "六生散方",
+  "comp_region_head": "防风（二两）上六味",
+  "src_shangwei": "上六味=6"
+ },
+ {
+  "idx": 14,
+  "grp": "flagged",
+  "name": "服小柴胡汤",
+  "issues": [],
+  "ok": [],
+  "src_title": "可服小柴胡汤方",
+  "comp_region_head": "柴胡（八两）人参（三两）甘草（三两炙）黄芩（三两）生姜（三两）半夏（半升洗）大枣（十二枚擘）上七味",
+  "src_shangwei": "上七味=7"
+ },
+ {
+  "idx": 410,
+  "grp": "flagged",
+  "name": "疗石气在皮肤肿热膏",
+  "issues": [
+   "SHANGWEI_MISMATCH:src=12,ext=10"
+  ],
+  "ok": [],
+  "src_title": "又疗石气在皮肤肿热膏方",
+  "comp_region_head": "生麦门冬（去心）葳蕤鼠李皮石膏（碎）凝水石沙参（各一两）青葙子露蜂房（各一分）竹沥（一大合）杏仁油（一大合）牛酥（五大两）生地黄汁（三合）上十二味",
+  "src_shangwei": "上十二味=12"
+ },
+ {
+  "idx": 392,
+  "grp": "flagged",
+  "name": "常服散",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:生大豆黄",
+   "SHANGWEI_MISMATCH:src=6,ext=5",
+   "NAME_TITLE_DIFF:title=备急疗疔肿方"
+  ],
+  "ok": [],
+  "src_title": "备急疗疔肿方",
+  "comp_region_head": "苍耳子（七枚）绯（一寸）乱发（鸡子大）腐蒿草节（二七枚）上六味",
+  "src_shangwei": "上六味=6"
+ },
+ {
+  "idx": 141,
+  "grp": "flagged",
+  "name": "吸散",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:天雄,石膏,款冬花,钟乳",
+   "SHANGWEI_MISMATCH:src=12,ext=6"
+  ],
+  "ok": [],
+  "src_title": "吸散方",
+  "comp_region_head": "细辛（二分）乌头（一分炮，去皮）杏仁（一分）吴茱萸（四分洗）菖蒲（一分）紫菀（二分）皂荚（一分去皮、子，炙）款上十二味",
+  "src_shangwei": "上十二味=12"
+ },
+ {
+  "idx": 152,
+  "grp": "flagged",
+  "name": "四味石钟乳散",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:钟乳,款冬花,桂心",
+   "SHANGWEI_MISMATCH:src=9,ext=4"
+  ],
+  "ok": [],
+  "src_title": "四味石钟乳散方",
+  "comp_region_head": "石（一分）巴豆（半分去心皮熬）上九味",
+  "src_shangwei": "上九味=9"
+ },
+ {
+  "idx": 272,
+  "grp": "flagged",
+  "name": "地黄煎",
+  "issues": [
+   "SHANGWEI_MISMATCH:src=10,ext=4"
+  ],
+  "ok": [],
+  "src_title": "地黄煎方",
+  "comp_region_head": "生地黄汁（三升）生葛汁（一升澄清）生玄参汁（一升）大黄（二两）栀子仁升麻上一十味",
+  "src_shangwei": "上一十味=10"
+ },
+ {
+  "idx": 305,
+  "grp": "flagged",
+  "name": "干枣汤",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:干枣,大戟,甘草,甘遂,黄芩,花",
+   "SHANGWEI_MISMATCH:src=12,ext=9"
+  ],
+  "ok": [],
+  "src_title": "干枣汤方",
+  "comp_region_head": "大黄（一两）上十二味",
+  "src_shangwei": "上十二味=12"
+ },
+ {
+  "idx": 386,
+  "grp": "flagged",
+  "name": "猪肝丸",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:猪肝,阿胶,乌梅肉,胡粉",
+   "SHANGWEI_MISMATCH:src=2,ext=5"
+  ],
+  "ok": [],
+  "src_title": "猪肝丸方",
+  "comp_region_head": "黄连（二两）曲（一两）上二味",
+  "src_shangwei": "上二味=2"
+ },
+ {
+  "idx": 294,
+  "grp": "flagged",
+  "name": "桑白皮根煎",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:桑根东引白皮"
+  ],
+  "ok": [],
+  "src_title": "桑白皮根煎方",
+  "comp_region_head": "野狼牙（三两）东行茱萸根皮（五两）上三味",
+  "src_shangwei": "上三味=3"
+ },
+ {
+  "idx": 100,
+  "grp": "flagged",
+  "name": "麝香散",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:生犀角,青木香",
+   "SHANGWEI_MISMATCH:src=17,ext=3"
+  ],
+  "ok": [],
+  "src_title": "麝香散方",
+  "comp_region_head": "麝香（一分）麦门冬（一分去心）上十七味",
+  "src_shangwei": "上十七味=17"
+ },
+ {
+  "idx": 341,
+  "grp": "flagged",
+  "name": "疗眼赤饮",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:前胡,黄芩,栀子仁,决明子,叶",
+   "SHANGWEI_MISMATCH:src=3,ext=8"
+  ],
+  "ok": [],
+  "src_title": "又疗眼赤饮方",
+  "comp_region_head": "黄连（三两）秦皮（二两）蕤仁（半两）上三味",
+  "src_shangwei": "上三味=3"
+ },
+ {
+  "idx": 396,
+  "grp": "flagged",
+  "name": "解毒药散",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:蓝叶花,白梁粉,蜜",
+   "SHANGWEI_MISMATCH:src=1,ext=4"
+  ],
+  "ok": [],
+  "src_title": "又解毒药散方",
+  "comp_region_head": "甘草（二两）上一味",
+  "src_shangwei": "上一味=1"
+ },
+ {
+  "idx": 247,
+  "grp": "flagged",
+  "name": "疗之十黄散",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:雄黄",
+   "SHANGWEI_MISMATCH:src=18,ext=17"
+  ],
+  "ok": [],
+  "src_title": "疗之十黄散方",
+  "comp_region_head": "人参（五分）蜀椒（五分汗）大黄（四分）朱砂（三分研）干姜（四分）黄柏（二分）山茱萸（二分）细辛（二分）黄（三分）泽泻（三分）黄连（一分）蒲黄（一分）桂心（三分）麻黄（去节一分）黄孙（一分壮蒙也一方云黄昏）黄环（三分）黄芩（三分）上十八味",
+  "src_shangwei": "上十八味=18"
+ },
+ {
+  "idx": 402,
+  "grp": "flagged",
+  "name": "飞乌膏散",
+  "issues": [],
+  "ok": [],
+  "src_title": "又飞乌膏散方",
+  "comp_region_head": "作水银上黑烟（一名细粉者三两）矾石（三两烧粉）上二味",
+  "src_shangwei": "上二味=2"
+ },
+ {
+  "idx": 307,
+  "grp": "unflagged",
+  "name": "肾沥汤",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:羊肾,麦门冬,干地黄,当归,干姜,心",
+   "SHANGWEI_MISMATCH:src=13,ext=8"
+  ],
+  "ok": [],
+  "src_title": "肾沥汤方",
+  "comp_region_head": "芍药（三两）石斛（三两）牛膝（三两）白术（三两）人参（二两）上十三味",
+  "src_shangwei": "上十三味=13"
+ },
+ {
+  "idx": 175,
+  "grp": "unflagged",
+  "name": "神验白前汤",
+  "issues": [
+   "EXCERPT_NOT_FOUND"
+  ],
+  "ok": []
+ },
+ {
+  "idx": 5,
+  "grp": "unflagged",
+  "name": "栀子生姜汤",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:肥栀子"
+  ],
+  "ok": [],
+  "src_title": "又栀子生姜汤方",
+  "comp_region_head": "香豉（四合）生姜（五两切）上三味",
+  "src_shangwei": "上三味=3"
+ },
+ {
+  "idx": 107,
+  "grp": "unflagged",
+  "name": "芍药丸",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:当归,干姜",
+   "SHANGWEI_MISMATCH:src=12,ext=7"
+  ],
+  "ok": [],
+  "src_title": "芍药丸方",
+  "comp_region_head": "芍药（八分）枳实（八分）人参（六分）白术（八分）鳖甲（八分）茯苓（八分）诃黎勒皮（八分）柴胡（六分）大黄（十分）桂心（六分）上十二味",
+  "src_shangwei": "上十二味=12"
+ },
+ {
+  "idx": 287,
+  "grp": "unflagged",
+  "name": "麻黄止汗通肉解风痹汤",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:麻黄,防风,白术,细辛,石膏,姜附子",
+   "SHANGWEI_MISMATCH:src=39,ext=9"
+  ],
+  "ok": [],
+  "src_title": "麻黄止汗通肉解风痹汤方",
+  "comp_region_head": "枳实（三两）桔梗（三两）生地黄（切二升）蒴（四两）黄芩（三两）远志（三两去心）荆子（三两）上三十九味",
+  "src_shangwei": "上三十九味=39"
+ },
+ {
+  "idx": 217,
+  "grp": "unflagged",
+  "name": "丹砂丸",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:丹砂,芫花,乌头,芍药,葛皮,吴茱萸",
+   "SHANGWEI_MISMATCH:src=18,ext=8"
+  ],
+  "ok": [],
+  "src_title": "丹砂丸方",
+  "comp_region_head": "干姜（四分）黄柏（二分）山茱萸（二分）细辛（二分）黄（三分）泽泻（三分）黄连（一分）蒲黄（一分）桂心（三分）麻黄（去节一分）黄孙（一分壮蒙也一方云黄昏）黄环（三分）黄芩（三分）上十八味",
+  "src_shangwei": "上十八味=18"
+ },
+ {
+  "idx": 105,
+  "grp": "unflagged",
+  "name": "桔梗散",
+  "issues": [
+   "EXCERPT_NOT_FOUND"
+  ],
+  "ok": []
+ },
+ {
+  "idx": 137,
+  "grp": "unflagged",
+  "name": "芫花煎",
+  "issues": [],
+  "ok": [],
+  "src_title": "芫花煎方",
+  "comp_region_head": "芫花（二两）干姜（二两）白蜜（二升）上三味",
+  "src_shangwei": "上三味=3"
+ },
+ {
+  "idx": 214,
+  "grp": "unflagged",
+  "name": "竹叶饮",
+  "issues": [],
+  "ok": [],
+  "src_title": "竹叶饮方",
+  "comp_region_head": "竹叶（一握）麦门冬（一升去心）大枣（二十颗擘）甘草（三两炙）半夏（一升汤洗令滑尽）粳米（五合）生姜（三两）上七味",
+  "src_shangwei": "上七味=7"
+ },
+ {
+  "idx": 69,
+  "grp": "unflagged",
+  "name": "茵陈汤",
+  "issues": [],
+  "ok": [],
+  "src_title": "茵陈汤方",
+  "comp_region_head": "茵陈（四两）柴胡（四两）升麻（三两）龙胆草（二两）黄芩大黄（各三两）上六味",
+  "src_shangwei": "上六味=6"
+ },
+ {
+  "idx": 62,
+  "grp": "unflagged",
+  "name": "瓜蒂汤",
+  "issues": [],
+  "ok": [],
+  "src_title": "瓜蒂汤方",
+  "comp_region_head": "瓜蒂（一两）赤小豆（四十九枚）丁香（二七枚）上三味",
+  "src_shangwei": "上三味=3"
+ },
+ {
+  "idx": 251,
+  "grp": "unflagged",
+  "name": "紫石汤",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:紫石英,石膏,赤石脂,大黄,干姜,甘草",
+   "SHANGWEI_MISMATCH:src=5,ext=9"
+  ],
+  "ok": [],
+  "src_title": "紫石汤方",
+  "comp_region_head": "滑石（八两）石苇（三两去毛）榆皮（一升）葵子（一升）通草（四两）上五味",
+  "src_shangwei": "上五味=5"
+ },
+ {
+  "idx": 65,
+  "grp": "unflagged",
+  "name": "地黄汁汤",
+  "issues": [],
+  "ok": [],
+  "src_title": "地黄汁汤方",
+  "comp_region_head": "生地黄汁（八合）大黄（六分末）芒硝（一两）上三味",
+  "src_shangwei": "上三味=3"
+ },
+ {
+  "idx": 231,
+  "grp": "unflagged",
+  "name": "温脾汤",
+  "issues": [
+   "SHANGWEI_MISMATCH:src=9,ext=8"
+  ],
+  "ok": [],
+  "src_title": "温脾汤方",
+  "comp_region_head": "石膏（四分碎绵裹）甘草（四分炙）黄芩（三两）杏仁（十四枚去尖皮两仁碎）麻黄（六分去节）蜀椒（二分去目闭口汗）防风（四分）桂心（五分）上九味",
+  "src_shangwei": "上九味=9"
+ },
+ {
+  "idx": 220,
+  "grp": "unflagged",
+  "name": "牛黄散",
+  "issues": [
+   "SHANGWEI_MISMATCH:src=15,ext=8"
+  ],
+  "ok": [],
+  "src_title": "牛黄散方",
+  "comp_region_head": "牛黄（研）鬼箭羽王不留行徐长卿（一名鬼督邮）远志（去心）干姜附子（炮）五味子（四分）麦门冬（六分去心）上十五味",
+  "src_shangwei": "上十五味=15"
+ },
+ {
+  "idx": 168,
+  "grp": "unflagged",
+  "name": "半夏苏子汤",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:半夏"
+  ],
+  "ok": [],
+  "src_title": "半夏苏子汤方",
+  "comp_region_head": "苏子（一升）生姜（五两）大枣（四十枚擘）橘皮桂心（各三两）甘草（二两）上七味",
+  "src_shangwei": "上七味=7"
+ },
+ {
+  "idx": 31,
+  "grp": "unflagged",
+  "name": "前胡汤",
+  "issues": [],
+  "ok": [],
+  "src_title": "前胡汤方",
+  "comp_region_head": "前胡（一两）麦门冬（三两去心）竹茹（二两）橘皮（一两）甘草（一两炙）生姜（二两）生地黄（四两切）上七味",
+  "src_shangwei": "上七味=7"
+ },
+ {
+  "idx": 313,
+  "grp": "unflagged",
+  "name": "七味干漆散",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:干漆",
+   "SHANGWEI_MISMATCH:src=15,ext=13"
+  ],
+  "ok": [],
+  "src_title": "又七味干漆散方",
+  "comp_region_head": "干地黄（八两）芍药（二两）苁蓉（二两）五味子（二两）食茱萸（四两）枸杞子（四两）上药捣筛为散。酒服方寸匕。渐加至二匕。日二服。以知为度。忌芜荑。又五落散。主五劳六极七伤八不足。里急。胸胁胀满。背痛头眩。四肢重。腰膂强。环脐腹有病甚大黄（六分",
+  "src_shangwei": "上十五味=15"
+ },
+ {
+  "idx": 365,
+  "grp": "unflagged",
+  "name": "猪蹄洗汤",
+  "issues": [],
+  "ok": [],
+  "src_title": "猪蹄洗汤方",
+  "comp_region_head": "猪蹄（一具治如食法）蔷薇根（一斤）甘草（五两炙）芍药（五两）白芷（五两）上五味",
+  "src_shangwei": "上五味=5"
+ },
+ {
+  "idx": 86,
+  "grp": "unflagged",
+  "name": "茱萸丸",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:吴茱萸,桂心,白术,人参,皮,附子",
+   "SHANGWEI_MISMATCH:src=6,ext=11"
+  ],
+  "ok": [],
+  "src_title": "茱萸丸方",
+  "comp_region_head": "干姜（一两）上六味",
+  "src_shangwei": "上六味=6"
+ },
+ {
+  "idx": 246,
+  "grp": "unflagged",
+  "name": "镇心丸",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:茯神,龙齿,升麻,石膏,黄芩,茯苓",
+   "SHANGWEI_MISMATCH:src=11,ext=17"
+  ],
+  "ok": [],
+  "src_title": "镇心丸方",
+  "comp_region_head": "人参（六分）橘皮（八分）诃黎勒皮（八分熬）桂心（六分）上十一味",
+  "src_shangwei": "上十一味=11"
+ },
+ {
+  "idx": 50,
+  "grp": "unflagged",
+  "name": "青葙子散",
+  "issues": [],
+  "ok": [],
+  "src_title": "青葙子散方",
+  "comp_region_head": "青葙子（一两）芦（二两）野狼牙（一两）橘皮（一两）苦参（三两）上五味",
+  "src_shangwei": "上五味=5"
+ },
+ {
+  "idx": 376,
+  "grp": "unflagged",
+  "name": "黄连阿胶汤",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:栀子,乌梅",
+   "SHANGWEI_MISMATCH:src=3,ext=5"
+  ],
+  "ok": [],
+  "src_title": "黄连阿胶汤方",
+  "comp_region_head": "黄连（二两）黄柏（二两）阿胶（二两炙）上三味",
+  "src_shangwei": "上三味=3"
+ },
+ {
+  "idx": 183,
+  "grp": "unflagged",
+  "name": "栝蒌汤",
+  "issues": [
+   "HERBS_OUTSIDE_REGION:生姜,茅根,芦根",
+   "SHANGWEI_MISMATCH:src=9,ext=5"
+  ],
+  "ok": [],
+  "src_title": "又栝蒌汤方",
+  "comp_region_head": "栝蒌（五两）知母（四两）小麦（二升）麦门冬（五两去心）大枣（二十枚去核）生地黄（六两）葳蕤（四两）淡竹叶（三升）上九味",
+  "src_shangwei": "上九味=9"
+ },
+ {
+  "idx": 237,
+  "grp": "unflagged",
+  "name": "姜附汤",
+  "issues": [
+   "SHANGWEI_MISMATCH:src=5,ext=4"
+  ],
+  "ok": [],
+  "src_title": "姜附汤方",
+  "comp_region_head": "干姜附子（炮各八两）麻黄（去节）芎桂心（各四两）上五味",
+  "src_shangwei": "上五味=5"
+ },
+ {
+  "idx": 406,
+  "grp": "unflagged",
+  "name": "紫丸",
+  "issues": [
+   "SHANGWEI_MISMATCH:src=4,ext=3"
+  ],
+  "ok": [],
+  "src_title": "又紫丸方",
+  "comp_region_head": "赤石脂（各一两）巴豆（三十枚去心皮熬）杏仁（五十枚去尖皮熬）上四味",
+  "src_shangwei": "上四味=4"
+ },
+ {
+  "idx": 125,
+  "grp": "unflagged",
+  "name": "柴胡桂枝汤",
+  "issues": [],
+  "ok": [],
+  "src_title": "柴胡桂枝汤方",
+  "comp_region_head": "柴胡（四两）大枣（六枚）黄芩（一两半）人参（一两半）甘草（一两炙）半夏（二合半）桂心生姜（各一两半）芍药（一两半）上九味",
+  "src_shangwei": "上九味=9"
+ },
+ {
+  "idx": 45,
+  "grp": "unflagged",
+  "name": "柴胡散",
+  "issues": [
+   "SHANGWEI_MISMATCH:src=9,ext=6"
+  ],
+  "ok": [],
+  "src_title": "柴胡散方",
+  "comp_region_head": "柴胡（八分）茵陈（十分）青木香（十分）黄芩（八分）土瓜根（十分）白藓皮（八分）上九味",
+  "src_shangwei": "上九味=9"
+ },
+ {
+  "idx": 32,
+  "grp": "unflagged",
+  "name": "橘皮汤",
+  "issues": [],
+  "ok": [],
+  "src_title": "橘皮汤方",
+  "comp_region_head": "橘皮（三两）生姜（四两）茯苓（三两）上三味",
+  "src_shangwei": "上三味=3"
+ },
+ {
+  "idx": 144,
+  "grp": "unflagged",
+  "name": "款冬花丸",
+  "issues": [
+   "SHANGWEI_MISMATCH:src=13,ext=11"
+  ],
+  "ok": [],
+  "src_title": "款冬花丸方",
+  "comp_region_head": "款冬花（六分）桂心（四分）紫菀（六分）杏仁（四分去尖、皮、两仁，熬）附子（二两炮）藜芦（四分）干姜（六分）甘草（七分炙）细辛（六分）防风（八分）芫花（六分熬）蜀上十三味",
+  "src_shangwei": "上十三味=13"
+ }
+]

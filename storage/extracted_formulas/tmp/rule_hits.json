@@ -1,0 +1,1602 @@
+[
+ {
+  "index": 6,
+  "name": "透冰丹",
+  "section": "卷之一\\治诸风",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "low_coverage",
+   "no_dosage"
+  ],
+  "coverage": 0.333
+ },
+ {
+  "index": 7,
+  "name": "龙脑天麻煎",
+  "section": "卷之一\\治诸风",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 14,
+  "name": "和太师牛黄丸",
+  "section": "卷之一\\治诸风",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.667
+ },
+ {
+  "index": 27,
+  "name": "小续命汤",
+  "section": "卷之一\\治诸风",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 29,
+  "name": "排风汤",
+  "section": "卷之一\\治诸风",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 30,
+  "name": "大通圣白花蛇散",
+  "section": "卷之一\\治诸风",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.571
+ },
+ {
+  "index": 31,
+  "name": "消风散",
+  "section": "卷之一\\治诸风",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 32,
+  "name": "羌活散",
+  "section": "卷之一\\治诸风",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.8
+ },
+ {
+  "index": 35,
+  "name": "虎骨散",
+  "section": "卷之一\\治诸风",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.6
+ },
+ {
+  "index": 39,
+  "name": "白龙丸",
+  "section": "卷之一\\〔绍兴续添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "low_coverage",
+   "no_dosage"
+  ],
+  "coverage": 0.0
+ },
+ {
+  "index": 40,
+  "name": "七圣散",
+  "section": "卷之一\\〔绍兴续添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 42,
+  "name": "四生散",
+  "section": "卷之一\\〔绍兴续添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 44,
+  "name": "四斤丸",
+  "section": "卷之一\\〔绍兴续添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.667
+ },
+ {
+  "index": 48,
+  "name": "追风散",
+  "section": "卷之一\\〔宝庆新增方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.8
+ },
+ {
+  "index": 50,
+  "name": "黑神丸",
+  "section": "卷之一\\〔宝庆新增方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.6
+ },
+ {
+  "index": 57,
+  "name": "七生丸",
+  "section": "卷之一\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.6
+ },
+ {
+  "index": 60,
+  "name": "乳香宣经丸",
+  "section": "卷之一\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.8
+ },
+ {
+  "index": 61,
+  "name": "换腿丸",
+  "section": "卷之一\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 73,
+  "name": "人参败毒散",
+  "section": "卷之二\\治伤寒",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 75,
+  "name": "林檎散",
+  "section": "卷之二\\治伤寒",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 78,
+  "name": "小青龙汤",
+  "section": "卷之二\\治伤寒",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 85,
+  "name": "术附汤",
+  "section": "卷之二\\治伤寒",
+  "issues": [
+   "name可疑后缀: 术附汤"
+  ],
+  "flags": [],
+  "coverage": 1.0
+ },
+ {
+  "index": 87,
+  "name": "姜附汤",
+  "section": "卷之二\\治伤寒",
+  "issues": [
+   "name可疑后缀: 姜附汤"
+  ],
+  "flags": [],
+  "coverage": 1.0
+ },
+ {
+  "index": 103,
+  "name": "锉散",
+  "section": "卷之二\\〔绍兴续添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "low_coverage",
+   "no_dosage"
+  ],
+  "coverage": 0.4
+ },
+ {
+  "index": 104,
+  "name": "桂苓丸",
+  "section": "卷之二\\〔绍兴续添方〕",
+  "issues": [
+   "dosage全空",
+   "indication为空"
+  ],
+  "flags": [
+   "no_dosage",
+   "weak_indication"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 121,
+  "name": "不换金正气散",
+  "section": "卷之二\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.8
+ },
+ {
+  "index": 129,
+  "name": "三拗汤",
+  "section": "卷之二\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 137,
+  "name": "丁沉丸",
+  "section": "卷之三\\治一切气",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 149,
+  "name": "膈气散",
+  "section": "卷之三\\治一切气",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 166,
+  "name": "俞山人降气汤",
+  "section": "卷之三\\〔绍兴续添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 176,
+  "name": "分气紫苏饮",
+  "section": "卷之三\\〔绍兴续添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 179,
+  "name": "草果饮",
+  "section": "卷之三\\〔绍兴续添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 186,
+  "name": "金露丸",
+  "section": "卷之三\\〔宝庆新增方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.571
+ },
+ {
+  "index": 193,
+  "name": "盐煎散",
+  "section": "卷之三\\〔宝庆新增方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "low_coverage",
+   "no_dosage"
+  ],
+  "coverage": 0.4
+ },
+ {
+  "index": 198,
+  "name": "白沉香散",
+  "section": "卷之三\\〔淳新添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.5
+ },
+ {
+  "index": 199,
+  "name": "丁香煮散",
+  "section": "卷之三\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.667
+ },
+ {
+  "index": 200,
+  "name": "二姜丸",
+  "section": "卷之三\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.5
+ },
+ {
+  "index": 203,
+  "name": "和气散",
+  "section": "卷之三\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.6
+ },
+ {
+  "index": 204,
+  "name": "守中金丸",
+  "section": "卷之三\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 209,
+  "name": "如神丸",
+  "section": "卷之三\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 213,
+  "name": "千金大养脾丸",
+  "section": "卷之三\\〔新添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.667
+ },
+ {
+  "index": 215,
+  "name": "四君子汤",
+  "section": "卷之三\\〔新添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 216,
+  "name": "参苓壮脾丸",
+  "section": "卷之三\\〔新添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.667
+ },
+ {
+  "index": 228,
+  "name": "玉芝丸",
+  "section": "卷之四\\治痰饮",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 230,
+  "name": "胡椒理中丸",
+  "section": "卷之四\\治痰饮",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 231,
+  "name": "备急五嗽丸",
+  "section": "卷之四\\治痰饮",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.667
+ },
+ {
+  "index": 232,
+  "name": "大阿胶丸",
+  "section": "卷之四\\治痰饮",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 236,
+  "name": "华盖散",
+  "section": "卷之四\\治痰饮",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 249,
+  "name": "人参款花膏",
+  "section": "卷之四\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 253,
+  "name": "人参清肺汤",
+  "section": "卷之四\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 259,
+  "name": "杏参散",
+  "section": "卷之四\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 260,
+  "name": "杏子汤",
+  "section": "卷之四\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.8
+ },
+ {
+  "index": 262,
+  "name": "菟丝子丸",
+  "section": "卷之五\\治诸虚",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 265,
+  "name": "石南丸",
+  "section": "卷之五\\治诸虚",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 267,
+  "name": "黄丸",
+  "section": "卷之五\\治诸虚",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "low_coverage",
+   "no_dosage"
+  ],
+  "coverage": 0.333
+ },
+ {
+  "index": 268,
+  "name": "茴香丸",
+  "section": "卷之五\\治诸虚",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 270,
+  "name": "无比山药丸",
+  "section": "卷之五\\治诸虚",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "low_coverage",
+   "no_dosage"
+  ],
+  "coverage": 0.25
+ },
+ {
+  "index": 276,
+  "name": "预知子丸",
+  "section": "卷之五\\治诸虚",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 281,
+  "name": "朴附丸",
+  "section": "卷之五\\〔宝庆新增方〕",
+  "issues": [
+   "name可疑后缀: 朴附丸"
+  ],
+  "flags": [],
+  "coverage": 0.75
+ },
+ {
+  "index": 285,
+  "name": "十四味建中汤",
+  "section": "卷之五\\〔宝庆新增方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 287,
+  "name": "茱萸内消丸",
+  "section": "卷之五\\〔宝庆新增方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 290,
+  "name": "乐令建中汤",
+  "section": "卷之五\\〔淳新添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 294,
+  "name": "十全大补汤",
+  "section": "卷之五\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 299,
+  "name": "椒附丸",
+  "section": "卷之五\\〔续添诸局经验秘方〕",
+  "issues": [
+   "name可疑后缀: 椒附丸"
+  ],
+  "flags": [],
+  "coverage": 0.6
+ },
+ {
+  "index": 305,
+  "name": "鹿茸四斤丸",
+  "section": "卷之五\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 307,
+  "name": "羊肉丸",
+  "section": "卷之五\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 309,
+  "name": "十四友丸",
+  "section": "卷之五\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 314,
+  "name": "北亭丸",
+  "section": "卷之五\\治痼冷",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 315,
+  "name": "沉香荜澄茄散",
+  "section": "卷之五\\〔绍兴续添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.667
+ },
+ {
+  "index": 319,
+  "name": "鹿茸大补汤",
+  "section": "卷之五\\〔淳新添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 322,
+  "name": "震灵丹",
+  "section": "卷之五\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 333,
+  "name": "八正散",
+  "section": "卷之六\\治积热",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.5
+ },
+ {
+  "index": 339,
+  "name": "甘露饮",
+  "section": "卷之六\\〔绍兴续添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 344,
+  "name": "碧雪",
+  "section": "卷之六\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "low_coverage",
+   "no_dosage"
+  ],
+  "coverage": 0.333
+ },
+ {
+  "index": 347,
+  "name": "麦门冬散",
+  "section": "卷之六\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.8
+ },
+ {
+  "index": 360,
+  "name": "麻仁丸",
+  "section": "卷之六\\治泻痢",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 364,
+  "name": "胃风汤",
+  "section": "卷之六\\治泻痢",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 365,
+  "name": "半硫丸",
+  "section": "卷之六\\治泻痢",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 369,
+  "name": "地榆散",
+  "section": "卷之六\\〔宝庆新增方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.667
+ },
+ {
+  "index": 379,
+  "name": "豆附丸",
+  "section": "卷之六\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "name可疑后缀: 豆附丸"
+  ],
+  "flags": [],
+  "coverage": 1.0
+ },
+ {
+  "index": 387,
+  "name": "万金饮",
+  "section": "卷之六\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 391,
+  "name": "密蒙花散",
+  "section": "卷之七\\治眼目疾",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.667
+ },
+ {
+  "index": 394,
+  "name": "镇肝丸",
+  "section": "卷之七\\治眼目疾",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 397,
+  "name": "蝉花散",
+  "section": "卷之七\\〔宝庆新增方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.833
+ },
+ {
+  "index": 400,
+  "name": "洗肝散",
+  "section": "卷之七\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.833
+ },
+ {
+  "index": 402,
+  "name": "明睛散",
+  "section": "卷之七\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 405,
+  "name": "汤泡散",
+  "section": "卷之七\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 406,
+  "name": "还睛丸",
+  "section": "卷之七\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 411,
+  "name": "玉屑无忧散",
+  "section": "卷之七\\治咽喉口齿",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.8
+ },
+ {
+  "index": 414,
+  "name": "赴筵散",
+  "section": "卷之七\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 417,
+  "name": "玉池散",
+  "section": "卷之七\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 421,
+  "name": "集效丸",
+  "section": "卷之八\\治杂病",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.667
+ },
+ {
+  "index": 426,
+  "name": "必胜散",
+  "section": "卷之八\\治杂病",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 439,
+  "name": "云母膏",
+  "section": "卷之八\\治疮肿伤折",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.6
+ },
+ {
+  "index": 441,
+  "name": "何首乌散",
+  "section": "卷之八\\治疮肿伤折",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 442,
+  "name": "桦皮散",
+  "section": "卷之八\\治疮肿伤折",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 446,
+  "name": "千金漏芦汤",
+  "section": "卷之八\\〔宝庆新增方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.667
+ },
+ {
+  "index": 451,
+  "name": "油调立效散",
+  "section": "卷之八\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 453,
+  "name": "槟榔散",
+  "section": "卷之八\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 456,
+  "name": "乌蛇膏",
+  "section": "卷之八\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.5
+ },
+ {
+  "index": 464,
+  "name": "人参荆芥散",
+  "section": "卷之九\\治妇人诸疾",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 466,
+  "name": "熟干地黄散",
+  "section": "卷之九\\治妇人诸疾",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.8
+ },
+ {
+  "index": 467,
+  "name": "安息活血丹",
+  "section": "卷之九\\治妇人诸疾",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.5
+ },
+ {
+  "index": 468,
+  "name": "吴茱萸汤",
+  "section": "卷之九\\治妇人诸疾",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 470,
+  "name": "温经汤",
+  "section": "卷之九\\治妇人诸疾",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 476,
+  "name": "四物汤",
+  "section": "卷之九\\治妇人诸疾",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.5
+ },
+ {
+  "index": 484,
+  "name": "半夏茯苓汤",
+  "section": "卷之九\\治妇人诸疾",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 497,
+  "name": "安胎饮",
+  "section": "卷之九\\〔宝庆新增方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.833
+ },
+ {
+  "index": 500,
+  "name": "人参鳖甲丸",
+  "section": "卷之九\\〔淳新添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 501,
+  "name": "济危上丹",
+  "section": "卷之九\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.667
+ },
+ {
+  "index": 504,
+  "name": "琥珀黑散",
+  "section": "卷之九\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "low_coverage",
+   "no_dosage"
+  ],
+  "coverage": 0.2
+ },
+ {
+  "index": 506,
+  "name": "术香散",
+  "section": "卷之九\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.5
+ },
+ {
+  "index": 509,
+  "name": "皱血丸",
+  "section": "卷之九\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 512,
+  "name": "白垩丹",
+  "section": "卷之九\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.7
+ },
+ {
+  "index": 519,
+  "name": "旋复汤",
+  "section": "卷之九\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 522,
+  "name": "四神散",
+  "section": "卷之九\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 525,
+  "name": "小地黄丸",
+  "section": "卷之九\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 530,
+  "name": "增损四物汤",
+  "section": "卷之九\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 542,
+  "name": "五疳保童丸",
+  "section": "卷之十\\治小儿诸疾",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.5
+ },
+ {
+  "index": 547,
+  "name": "进食丸",
+  "section": "卷之十\\治小儿诸疾",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 561,
+  "name": "生犀散",
+  "section": "卷之十\\治小儿诸疾",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 562,
+  "name": "清凉饮子",
+  "section": "卷之十\\治小儿诸疾",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 571,
+  "name": "睡惊丹",
+  "section": "卷之十\\〔绍兴续添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.5
+ },
+ {
+  "index": 573,
+  "name": "加减四君子汤",
+  "section": "卷之十\\〔绍兴续添方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 595,
+  "name": "朱矾散",
+  "section": "卷之十\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 596,
+  "name": "紫苏子散",
+  "section": "卷之十\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 599,
+  "name": "钱氏白术散",
+  "section": "卷之十\\〔吴直阁增诸家名方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 603,
+  "name": "五疳消食丸",
+  "section": "卷之十\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 604,
+  "name": "麦煎散",
+  "section": "卷之十\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 608,
+  "name": "银白散",
+  "section": "卷之十\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空"
+  ],
+  "flags": [
+   "no_dosage"
+  ],
+  "coverage": 1.0
+ },
+ {
+  "index": 611,
+  "name": "龙胆丸",
+  "section": "卷之十\\〔续添诸局经验秘方〕",
+  "issues": [
+   "dosage全空",
+   "indication为空"
+  ],
+  "flags": [
+   "no_dosage",
+   "weak_indication"
+  ],
+  "coverage": 0.75
+ },
+ {
+  "index": 629,
+  "name": "芬积香",
+  "section": "卷之十\\诸香",
+  "issues": [
+   "indication为空"
+  ],
+  "flags": [
+   "low_coverage",
+   "weak_indication"
+  ],
+  "coverage": 0.4
+ },
+ {
+  "index": 630,
+  "name": "衙香",
+  "section": "卷之十\\诸香",
+  "issues": [
+   "indication为空"
+  ],
+  "flags": [
+   "low_coverage",
+   "weak_indication"
+  ],
+  "coverage": 0.4
+ }
+]

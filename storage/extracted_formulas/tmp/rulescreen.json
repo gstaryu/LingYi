@@ -1,0 +1,626 @@
+{
+ "total": 416,
+ "flagged_by_rules": 56,
+ "items": [
+  {
+   "idx": 0,
+   "name": "疗伤寒五六日斑出以后汤",
+   "section": "卷第一",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗伤寒五六日斑出以后汤"
+    ]
+   ]
+  },
+  {
+   "idx": 3,
+   "name": "疗伤寒头痛壮热百节疼痛汤",
+   "section": "卷第一",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗伤寒头痛壮热百节疼痛汤"
+    ]
+   ]
+  },
+  {
+   "idx": 6,
+   "name": "白虎加人参汤",
+   "section": "卷第一",
+   "probs": [
+    [
+     "name_verb_residue",
+     "白虎加人参汤"
+    ]
+   ]
+  },
+  {
+   "idx": 8,
+   "name": "疗伤寒雪煎",
+   "section": "卷第一",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗伤寒雪煎"
+    ]
+   ]
+  },
+  {
+   "idx": 14,
+   "name": "服小柴胡汤",
+   "section": "卷第三",
+   "probs": [
+    [
+     "name_verb_residue",
+     "服小柴胡汤"
+    ]
+   ]
+  },
+  {
+   "idx": 15,
+   "name": "服大柴胡汤",
+   "section": "卷第三",
+   "probs": [
+    [
+     "name_verb_residue",
+     "服大柴胡汤"
+    ]
+   ]
+  },
+  {
+   "idx": 19,
+   "name": "服苦参汤",
+   "section": "卷第三",
+   "probs": [
+    [
+     "name_verb_residue",
+     "服苦参汤"
+    ]
+   ]
+  },
+  {
+   "idx": 29,
+   "name": "决计服此鳖甲汤",
+   "section": "卷第三",
+   "probs": [
+    [
+     "name_verb_residue",
+     "决计服此鳖甲汤"
+    ]
+   ]
+  },
+  {
+   "idx": 63,
+   "name": "茵陈汤及丸",
+   "section": "卷第四",
+   "probs": [
+    [
+     "name_verb_residue",
+     "茵陈汤及丸"
+    ]
+   ]
+  },
+  {
+   "idx": 77,
+   "name": "疗疟常山汤",
+   "section": "卷第五",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗疟常山汤"
+    ]
+   ]
+  },
+  {
+   "idx": 78,
+   "name": "疗疟丸",
+   "section": "卷第五",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗疟丸"
+    ]
+   ]
+  },
+  {
+   "idx": 124,
+   "name": "服此柴胡汤",
+   "section": "卷第七",
+   "probs": [
+    [
+     "name_verb_residue",
+     "服此柴胡汤"
+    ]
+   ]
+  },
+  {
+   "idx": 159,
+   "name": "桂枝去芍药加皂荚汤",
+   "section": "卷第十",
+   "probs": [
+    [
+     "name_verb_residue",
+     "桂枝去芍药加皂荚汤"
+    ]
+   ]
+  },
+  {
+   "idx": 186,
+   "name": "疗消渴麦门冬丸",
+   "section": "卷第十一",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗消渴麦门冬丸"
+    ]
+   ]
+  },
+  {
+   "idx": 191,
+   "name": "服肾沥汤",
+   "section": "卷第十一",
+   "probs": [
+    [
+     "name_verb_residue",
+     "服肾沥汤"
+    ],
+    [
+     "ind_empty",
+     ""
+    ]
+   ]
+  },
+  {
+   "idx": 192,
+   "name": "并宜服此花苁蓉丸",
+   "section": "卷第十一",
+   "probs": [
+    [
+     "name_verb_residue",
+     "并宜服此花苁蓉丸"
+    ]
+   ]
+  },
+  {
+   "idx": 194,
+   "name": "疗渴小便数散",
+   "section": "卷第十一",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗渴小便数散"
+    ]
+   ]
+  },
+  {
+   "idx": 195,
+   "name": "加减六物丸",
+   "section": "卷第十一",
+   "probs": [
+    [
+     "name_verb_residue",
+     "加减六物丸"
+    ]
+   ]
+  },
+  {
+   "idx": 198,
+   "name": "膏髓酒",
+   "section": "卷第十二",
+   "probs": [
+    [
+     "ind_empty",
+     ""
+    ]
+   ]
+  },
+  {
+   "idx": 209,
+   "name": "枳实散",
+   "section": "卷第十二",
+   "probs": [
+    [
+     "ind_empty",
+     ""
+    ]
+   ]
+  },
+  {
+   "idx": 218,
+   "name": "即是李子豫赤丸",
+   "section": "卷第十三",
+   "probs": [
+    [
+     "name_verb_residue",
+     "即是李子豫赤丸"
+    ]
+   ]
+  },
+  {
+   "idx": 223,
+   "name": "狸骨丸",
+   "section": "卷第十三",
+   "probs": [
+    [
+     "ind_empty",
+     ""
+    ]
+   ]
+  },
+  {
+   "idx": 226,
+   "name": "得患即服此竹沥汤",
+   "section": "卷第十四",
+   "probs": [
+    [
+     "name_verb_residue",
+     "得患即服此竹沥汤"
+    ]
+   ]
+  },
+  {
+   "idx": 233,
+   "name": "西州续命汤",
+   "section": "卷第十四",
+   "probs": [
+    [
+     "ind_short",
+     "角弓反张口噤。"
+    ]
+   ]
+  },
+  {
+   "idx": 234,
+   "name": "服此汤",
+   "section": "卷第十四",
+   "probs": [
+    [
+     "name_verb_residue",
+     "服此汤"
+    ]
+   ]
+  },
+  {
+   "idx": 239,
+   "name": "次服枳实丸",
+   "section": "卷第十四",
+   "probs": [
+    [
+     "name_verb_residue",
+     "次服枳实丸"
+    ]
+   ]
+  },
+  {
+   "idx": 247,
+   "name": "疗之十黄散",
+   "section": "卷第十五",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗之十黄散"
+    ]
+   ]
+  },
+  {
+   "idx": 250,
+   "name": "得热即发水银丸",
+   "section": "卷第十五",
+   "probs": [
+    [
+     "name_verb_residue",
+     "得热即发水银丸"
+    ]
+   ]
+  },
+  {
+   "idx": 253,
+   "name": "四味防风散",
+   "section": "卷第十五",
+   "probs": [
+    [
+     "ind_short",
+     "疗风多汗恶风。"
+    ]
+   ]
+  },
+  {
+   "idx": 260,
+   "name": "泻肝汤",
+   "section": "卷第十六",
+   "probs": [
+    [
+     "ind_short",
+     "胁下急小便难。"
+    ]
+   ]
+  },
+  {
+   "idx": 273,
+   "name": "或为脚气牛膝汤",
+   "section": "卷第十六",
+   "probs": [
+    [
+     "name_verb_residue",
+     "或为脚气牛膝汤"
+    ]
+   ]
+  },
+  {
+   "idx": 275,
+   "name": "大黄泄热汤",
+   "section": "卷第十六",
+   "probs": [
+    [
+     "ind_short",
+     "心满痛小腹热。"
+    ]
+   ]
+  },
+  {
+   "idx": 285,
+   "name": "乃服此汤",
+   "section": "卷第十六",
+   "probs": [
+    [
+     "name_verb_residue",
+     "乃服此汤"
+    ]
+   ]
+  },
+  {
+   "idx": 326,
+   "name": "洗脚渍汤",
+   "section": "卷第十八",
+   "probs": [
+    [
+     "ind_short",
+     "疗脚气冲心闷。"
+    ]
+   ]
+  },
+  {
+   "idx": 329,
+   "name": "加减青木香丸",
+   "section": "卷第十八",
+   "probs": [
+    [
+     "name_verb_residue",
+     "加减青木香丸"
+    ]
+   ]
+  },
+  {
+   "idx": 340,
+   "name": "疗两眼痛大黄汤",
+   "section": "卷第二十一",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗两眼痛大黄汤"
+    ]
+   ]
+  },
+  {
+   "idx": 341,
+   "name": "疗眼赤饮",
+   "section": "卷第二十一",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗眼赤饮"
+    ]
+   ]
+  },
+  {
+   "idx": 354,
+   "name": "疗瘿海藻散",
+   "section": "卷第二十三",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗瘿海藻散"
+    ]
+   ]
+  },
+  {
+   "idx": 357,
+   "name": "疗喉痹塞射干丸",
+   "section": "卷第二十三",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗喉痹塞射干丸"
+    ]
+   ]
+  },
+  {
+   "idx": 360,
+   "name": "疗咽喉中痛不利丸",
+   "section": "卷第二十三",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗咽喉中痛不利丸"
+    ]
+   ]
+  },
+  {
+   "idx": 363,
+   "name": "疗发痈疽排脓散",
+   "section": "卷第二十四",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗发痈疽排脓散"
+    ]
+   ]
+  },
+  {
+   "idx": 364,
+   "name": "疗痈疽已溃白芷摩膏",
+   "section": "卷第二十四",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗痈疽已溃白芷摩膏"
+    ]
+   ]
+  },
+  {
+   "idx": 371,
+   "name": "为疮内漏大内塞排脓散",
+   "section": "卷第二十四",
+   "probs": [
+    [
+     "name_verb_residue",
+     "为疮内漏大内塞排脓散"
+    ]
+   ]
+  },
+  {
+   "idx": 372,
+   "name": "疗痈疽败坏生肉膏",
+   "section": "卷第二十四",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗痈疽败坏生肉膏"
+    ]
+   ]
+  },
+  {
+   "idx": 374,
+   "name": "疗发背发乳房及诸恶疮膏",
+   "section": "卷第二十四",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗发背发乳房及诸恶疮膏"
+    ]
+   ]
+  },
+  {
+   "idx": 379,
+   "name": "服调中散",
+   "section": "卷第二十五",
+   "probs": [
+    [
+     "name_verb_residue",
+     "服调中散"
+    ]
+   ]
+  },
+  {
+   "idx": 387,
+   "name": "疗淋榆皮汤",
+   "section": "卷第二十七",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗淋榆皮汤"
+    ]
+   ]
+  },
+  {
+   "idx": 389,
+   "name": "疗堕落瘀血桃枝汤",
+   "section": "卷第二十九",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗堕落瘀血桃枝汤"
+    ]
+   ]
+  },
+  {
+   "idx": 391,
+   "name": "疗金疮生肌白膏",
+   "section": "卷第二十九",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗金疮生肌白膏"
+    ]
+   ]
+  },
+  {
+   "idx": 392,
+   "name": "常服散",
+   "section": "卷第三十",
+   "probs": [
+    [
+     "name_verb_residue",
+     "常服散"
+    ]
+   ]
+  },
+  {
+   "idx": 399,
+   "name": "主风头沐汤",
+   "section": "卷第三十二",
+   "probs": [
+    [
+     "name_verb_residue",
+     "主风头沐汤"
+    ]
+   ]
+  },
+  {
+   "idx": 401,
+   "name": "服防风蔓荆子丸",
+   "section": "卷第三十二",
+   "probs": [
+    [
+     "name_verb_residue",
+     "服防风蔓荆子丸"
+    ]
+   ]
+  },
+  {
+   "idx": 404,
+   "name": "疗疮上须贴膏",
+   "section": "卷第三十四",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗疮上须贴膏"
+    ]
+   ]
+  },
+  {
+   "idx": 408,
+   "name": "服生麦门冬汤",
+   "section": "卷第三十七",
+   "probs": [
+    [
+     "name_verb_residue",
+     "服生麦门冬汤"
+    ]
+   ]
+  },
+  {
+   "idx": 410,
+   "name": "疗石气在皮肤肿热膏",
+   "section": "卷第三十七",
+   "probs": [
+    [
+     "name_verb_residue",
+     "疗石气在皮肤肿热膏"
+    ]
+   ]
+  },
+  {
+   "idx": 413,
+   "name": "别法随事择用解散",
+   "section": "卷第三十八",
+   "probs": [
+    [
+     "name_verb_residue",
+     "别法随事择用解散"
+    ]
+   ]
+  }
+ ]
+}

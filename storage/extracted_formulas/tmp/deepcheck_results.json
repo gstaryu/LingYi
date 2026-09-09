@@ -1,0 +1,1062 @@
+[
+ {
+  "name": "六味地黄丸",
+  "section_found": true,
+  "herbs": [
+   "发热咳嗽",
+   "下部疮疡等",
+   "地黄",
+   "山茱肉",
+   "山药",
+   "茯苓",
+   "丹皮",
+   "而聪耳明目"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 7,
+  "only_comment": [
+   "而聪耳明目"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 2,
+  "n_herbs_extracted": 8
+ },
+ {
+  "name": "还少丹",
+  "section_found": true,
+  "herbs": [
+   "熟地黄",
+   "山药",
+   "牛膝",
+   "枸杞",
+   "茯苓",
+   "名打老儿丸",
+   "通心气以交肾",
+   "名滋阴大补丸"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 6,
+  "only_comment": [
+   "通心气以交肾",
+   "名滋阴大补丸"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 8
+ },
+ {
+  "name": "滋肾丸",
+  "section_found": true,
+  "herbs": [
+   "黄柏",
+   "知母",
+   "桂",
+   "水衰心烦",
+   "膀胱虚热"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 3,
+  "only_comment": [
+   "水衰心烦",
+   "膀胱虚热"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 3,
+  "n_herbs_extracted": 5
+ },
+ {
+  "name": "龟鹿二仙膏",
+  "section_found": true,
+  "herbs": [
+   "鹿角",
+   "龟板",
+   "枸杞",
+   "人参",
+   "得阴气最全",
+   "性",
+   "生无过于此者"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 5,
+  "only_comment": [
+   "得阴气最全",
+   "生无过于此者"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 0,
+  "n_herbs_extracted": 7
+ },
+ {
+  "name": "麻黄汤",
+  "section_found": true,
+  "herbs": [
+   "恶寒恶风",
+   "麻黄",
+   "桂枝",
+   "杏仁",
+   "甘草",
+   "能开腠散寒",
+   "达之肌表",
+   "芒硝",
+   "大腹皮",
+   "木通",
+   "仁甘草石膏汤",
+   "名麻黄加术汤",
+   "名麻黄附子汤",
+   "名甘草麻黄汤",
+   "治里水",
+   "方去桂用麻黄",
+   "汤"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 6,
+  "only_comment": [
+   "能开腠散寒",
+   "达之肌表",
+   "芒硝",
+   "大腹皮",
+   "木通",
+   "仁甘草石膏汤",
+   "名麻黄加术汤",
+   "名麻黄附子汤",
+   "名甘草麻黄汤",
+   "治里水",
+   "方去桂用麻黄"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 2,
+  "n_herbs_extracted": 17
+ },
+ {
+  "name": "桂枝汤",
+  "section_found": true,
+  "herbs": [
+   "生姜",
+   "甘草",
+   "大枣",
+   "温能散",
+   "名疏邪实表汤",
+   "名桂枝甘草汤",
+   "桂枝加附子汤",
+   "名桂枝新加汤",
+   "桂枝加芍药汤",
+   "汤",
+   "表未解也",
+   "甘澜水煎",
+   "名桂麻各半汤",
+   "日再发",
+   "枝二越婢一汤",
+   "名小建中汤",
+   "建中汤",
+   "名当归建中汤",
+   "小腹拘急",
+   "名桂枝五物汤",
+   "治血痹",
+   "枝汤",
+   "加龙骨牡蛎汤"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 4,
+  "only_comment": [
+   "温能散",
+   "名疏邪实表汤",
+   "名桂枝甘草汤",
+   "桂枝加附子汤",
+   "名桂枝新加汤",
+   "桂枝加芍药汤",
+   "汤",
+   "甘澜水煎",
+   "名桂麻各半汤",
+   "日再发",
+   "枝二越婢一汤",
+   "名小建中汤",
+   "建中汤",
+   "名当归建中汤",
+   "小腹拘急",
+   "名桂枝五物汤",
+   "治血痹",
+   "枝汤",
+   "加龙骨牡蛎汤"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 23
+ },
+ {
+  "name": "小青龙汤",
+  "section_found": true,
+  "herbs": [
+   "麻黄",
+   "桂枝",
+   "芍药",
+   "细辛",
+   "甘草",
+   "干姜",
+   "半夏",
+   "子",
+   "加花粉",
+   "亦去麻黄",
+   "加附子",
+   "苓",
+   "味酸温以收之",
+   "能润肾而行水",
+   "青龙加石膏汤"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 12,
+  "only_comment": [
+   "味酸温以收之",
+   "能润肾而行水",
+   "青龙加石膏汤"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 15
+ },
+ {
+  "name": "九味羌活汤",
+  "section_found": true,
+  "herbs": [
+   "苍术",
+   "细辛",
+   "川芎",
+   "白芷",
+   "生地黄",
+   "黄芩",
+   "甘草",
+   "去苍术",
+   "乱反正之主药",
+   "辟恶而去湿",
+   "一身尽痛为使"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 8,
+  "only_comment": [
+   "乱反正之主药",
+   "辟恶而去湿",
+   "一身尽痛为使"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 11
+ },
+ {
+  "name": "太无神术散",
+  "section_found": true,
+  "herbs": [
+   "苍术",
+   "厚朴",
+   "陈皮",
+   "甘草",
+   "菖蒲"
+  ],
+  "flags": [
+   "weak_indication"
+  ],
+  "found_in_zone": 4,
+  "only_comment": [],
+  "not_found": [
+   "厚朴"
+  ],
+  "status": "MISMATCH",
+  "dosage_annos_in_zone": 2,
+  "n_herbs_extracted": 5
+ },
+ {
+  "name": "局方神术散",
+  "section_found": true,
+  "herbs": [
+   "苍术",
+   "川芎",
+   "白芷",
+   "羌活",
+   "细辛",
+   "炙甘草"
+  ],
+  "flags": [
+   "weak_indication"
+  ],
+  "found_in_zone": 6,
+  "only_comment": [],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 6
+ },
+ {
+  "name": "葱豉汤",
+  "section_found": true,
+  "herbs": [
+   "葱白",
+   "豉",
+   "加葛根三两",
+   "葱通阳而发汗",
+   "名连须葱白汤"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 3,
+  "only_comment": [
+   "葱通阳而发汗",
+   "名连须葱白汤"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 0,
+  "n_herbs_extracted": 5
+ },
+ {
+  "name": "川芎茶调散",
+  "section_found": true,
+  "herbs": [
+   "薄荷",
+   "川芎",
+   "荆介",
+   "羌活",
+   "白芷",
+   "甘草",
+   "防风",
+   "辛",
+   "故以为君",
+   "清阳而散郁火"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 8,
+  "only_comment": [
+   "故以为君",
+   "清阳而散郁火"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 4,
+  "n_herbs_extracted": 10
+ },
+ {
+  "name": "栀子豉汤",
+  "section_found": true,
+  "herbs": [
+   "栀子",
+   "淡豉",
+   "服令微吐",
+   "能胜焦",
+   "栀子甘草豉汤",
+   "前证兼少气者",
+   "栀子生姜豉汤",
+   "治前证兼呕者",
+   "名栀子干姜汤",
+   "微烦者",
+   "名栀子厚朴汤",
+   "心烦腹满",
+   "名栀子大黄汤",
+   "亦治伤寒食复",
+   "枳实栀子豉汤",
+   "劳复",
+   "名豉薤汤",
+   "气腹痛诸热证"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 3,
+  "only_comment": [
+   "能胜焦",
+   "栀子甘草豉汤",
+   "前证兼少气者",
+   "栀子生姜豉汤",
+   "治前证兼呕者",
+   "名栀子干姜汤",
+   "微烦者",
+   "心烦腹满",
+   "名栀子大黄汤",
+   "亦治伤寒食复",
+   "枳实栀子豉汤",
+   "劳复",
+   "名豉薤汤",
+   "气腹痛诸热证"
+  ],
+  "not_found": [
+   "名栀子厚朴汤"
+  ],
+  "status": "MISMATCH",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 18
+ },
+ {
+  "name": "小柴胡汤",
+  "section_found": true,
+  "herbs": [
+   "柴胡",
+   "半夏",
+   "人参",
+   "甘草",
+   "黄芩",
+   "生姜",
+   "大枣",
+   "陈皮",
+   "加栝蒌",
+   "加花粉",
+   "桂枝覆取微汗",
+   "粳米",
+   "燥无津加石膏",
+   "加芍药",
+   "蛎",
+   "芍药",
+   "经头痛加川芎",
+   "发黄加茵陈",
+   "为佐",
+   "则营卫争"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 18,
+  "only_comment": [
+   "为佐",
+   "则营卫争"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 3,
+  "n_herbs_extracted": 20
+ },
+ {
+  "name": "芍药甘草汤",
+  "section_found": true,
+  "herbs": [
+   "甘草",
+   "痛为木盛克土",
+   "加干姜",
+   "名甘草干姜汤",
+   "小便数",
+   "药甘草附子汤",
+   "名黄芩芍药汤",
+   "脉洪数",
+   "名白术芍药汤"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 1,
+  "only_comment": [
+   "痛为木盛克土",
+   "加干姜",
+   "名甘草干姜汤",
+   "小便数",
+   "药甘草附子汤",
+   "名黄芩芍药汤",
+   "脉洪数",
+   "名白术芍药汤"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 0,
+  "n_herbs_extracted": 9
+ },
+ {
+  "name": "栝蒌薤白白酒汤",
+  "section_found": true,
+  "herbs": [
+   "栝蒌",
+   "薤白",
+   "白酒",
+   "上焦膻中药也",
+   "蒌薤白半夏汤",
+   "心痛彻背",
+   "实薤白桂枝汤"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 3,
+  "only_comment": [
+   "上焦膻中药也",
+   "蒌薤白半夏汤",
+   "心痛彻背",
+   "实薤白桂枝汤"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 2,
+  "n_herbs_extracted": 7
+ },
+ {
+  "name": "补中益气汤（东垣）",
+  "section_found": true,
+  "herbs": [
+   "甘草",
+   "白术",
+   "陈皮",
+   "当归",
+   "咽干加葛根",
+   "脾者肺之本",
+   "为佐",
+   "以升阳明清气",
+   "柴胡",
+   "以升少阳清气",
+   "名调中益气汤",
+   "口不知味",
+   "汤",
+   "名参术益胃汤",
+   "名益胃升阳汤",
+   "血后食少水泻",
+   "气和中汤",
+   "名调荣养卫汤"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 7,
+  "only_comment": [
+   "脾者肺之本",
+   "为佐",
+   "以升阳明清气",
+   "柴胡",
+   "以升少阳清气",
+   "名调中益气汤",
+   "名参术益胃汤",
+   "名益胃升阳汤",
+   "血后食少水泻",
+   "气和中汤",
+   "名调荣养卫汤"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 2,
+  "n_herbs_extracted": 18
+ },
+ {
+  "name": "四物汤",
+  "section_found": true,
+  "herbs": [
+   "当归",
+   "生地黄",
+   "芍药",
+   "厥阴药也",
+   "川芎",
+   "赤芍",
+   "大黄",
+   "芒硝",
+   "名补肝丸",
+   "及血虚下痢",
+   "四制香附"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 3,
+  "only_comment": [
+   "厥阴药也",
+   "川芎",
+   "赤芍",
+   "大黄",
+   "芒硝",
+   "名补肝丸",
+   "及血虚下痢",
+   "四制香附"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 2,
+  "n_herbs_extracted": 11
+ },
+ {
+  "name": "人参养荣汤",
+  "section_found": true,
+  "herbs": [
+   "甘草",
+   "陈皮",
+   "桂心",
+   "当归",
+   "熟地黄",
+   "所以补肺",
+   "所以健脾",
+   "熟地所以滋肾"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 0,
+  "only_comment": [
+   "甘草",
+   "陈皮",
+   "桂心",
+   "当归",
+   "熟地黄",
+   "所以补肺",
+   "所以健脾",
+   "熟地所以滋肾"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 0,
+  "n_herbs_extracted": 8
+ },
+ {
+  "name": "秦艽白术丸",
+  "section_found": true,
+  "herbs": [
+   "归尾",
+   "桃仁",
+   "枳实",
+   "皂角子",
+   "桃仁润燥和血",
+   "受胃之湿邪也",
+   "治同",
+   "漏大便时疼痛"
+  ],
+  "flags": [
+   "low_coverage"
+  ],
+  "found_in_zone": 4,
+  "only_comment": [
+   "桃仁润燥和血",
+   "受胃之湿邪也",
+   "治同",
+   "漏大便时疼痛"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 8
+ },
+ {
+  "name": "涤痰汤",
+  "section_found": true,
+  "herbs": [
+   "半夏",
+   "胆星",
+   "橘红",
+   "枳实",
+   "茯苓",
+   "人参",
+   "菖蒲",
+   "熟地",
+   "天冬",
+   "麦冬",
+   "茯神",
+   "甘草",
+   "蒲远志"
+  ],
+  "flags": [],
+  "found_in_zone": 7,
+  "only_comment": [
+   "熟地",
+   "天冬",
+   "麦冬",
+   "茯神",
+   "甘草",
+   "蒲远志"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 3,
+  "n_herbs_extracted": 13
+ },
+ {
+  "name": "人参败毒散",
+  "section_found": true,
+  "herbs": [
+   "茯苓",
+   "甘草"
+  ],
+  "flags": [],
+  "found_in_zone": 2,
+  "only_comment": [],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 2
+ },
+ {
+  "name": "天王补心丹",
+  "section_found": true,
+  "herbs": [
+   "生地",
+   "人参",
+   "玄参",
+   "丹参",
+   "茯苓",
+   "桔梗",
+   "华盖而朝百脉",
+   "使天气下降也"
+  ],
+  "flags": [],
+  "found_in_zone": 6,
+  "only_comment": [
+   "华盖而朝百脉",
+   "使天气下降也"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 0,
+  "n_herbs_extracted": 8
+ },
+ {
+  "name": "补肝散",
+  "section_found": true,
+  "herbs": [
+   "夏枯草",
+   "香附"
+  ],
+  "flags": [],
+  "found_in_zone": 2,
+  "only_comment": [],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 2
+ },
+ {
+  "name": "清咽太平丸",
+  "section_found": true,
+  "herbs": [
+   "薄荷",
+   "川芎",
+   "防风",
+   "甘草",
+   "桔梗",
+   "消风散热",
+   "泻肺搜肝",
+   "散瘀"
+  ],
+  "flags": [],
+  "found_in_zone": 5,
+  "only_comment": [
+   "消风散热",
+   "泻肺搜肝",
+   "散瘀"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 3,
+  "n_herbs_extracted": 8
+ },
+ {
+  "name": "四七汤",
+  "section_found": true,
+  "herbs": [
+   "半夏",
+   "甘草",
+   "以制谋虑之郁",
+   "国老为之调停"
+  ],
+  "flags": [],
+  "found_in_zone": 2,
+  "only_comment": [
+   "以制谋虑之郁",
+   "国老为之调停"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 4
+ },
+ {
+  "name": "甘草黑豆汤",
+  "section_found": true,
+  "herbs": [
+   "甘草",
+   "黑豆"
+  ],
+  "flags": [],
+  "found_in_zone": 2,
+  "only_comment": [],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 2
+ },
+ {
+  "name": "大陷胸丸",
+  "section_found": true,
+  "herbs": [
+   "项强如柔痉状",
+   "大黄",
+   "芒硝",
+   "葶苈",
+   "杏仁"
+  ],
+  "flags": [],
+  "found_in_zone": 5,
+  "only_comment": [],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 5
+ },
+ {
+  "name": "消风养血汤",
+  "section_found": true,
+  "herbs": [
+   "桃仁",
+   "红花",
+   "川芎"
+  ],
+  "flags": [],
+  "found_in_zone": 3,
+  "only_comment": [],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 3
+ },
+ {
+  "name": "柴胡升麻汤",
+  "section_found": true,
+  "herbs": [
+   "前胡黄芩",
+   "升麻",
+   "葛根",
+   "桑白皮",
+   "荆芥",
+   "只宜和解",
+   "葛散阳明之邪"
+  ],
+  "flags": [],
+  "found_in_zone": 5,
+  "only_comment": [
+   "只宜和解",
+   "葛散阳明之邪"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 4,
+  "n_herbs_extracted": 7
+ },
+ {
+  "name": "枳实消痞丸",
+  "section_found": true,
+  "herbs": [
+   "枳实",
+   "黄连",
+   "厚朴",
+   "麦芽",
+   "行气破血",
+   "去恶血而通关"
+  ],
+  "flags": [],
+  "found_in_zone": 3,
+  "only_comment": [
+   "行气破血",
+   "去恶血而通关"
+  ],
+  "not_found": [
+   "厚朴"
+  ],
+  "status": "MISMATCH",
+  "dosage_annos_in_zone": 2,
+  "n_herbs_extracted": 6
+ },
+ {
+  "name": "当归龙荟丸",
+  "section_found": true,
+  "herbs": [
+   "亦治盗汗",
+   "当归",
+   "龙胆草",
+   "栀子",
+   "黄连",
+   "黄柏",
+   "黄芩",
+   "大黄",
+   "青黛",
+   "芦荟",
+   "木香",
+   "麝香",
+   "下三焦之火也"
+  ],
+  "flags": [],
+  "found_in_zone": 12,
+  "only_comment": [
+   "下三焦之火也"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 3,
+  "n_herbs_extracted": 13
+ },
+ {
+  "name": "大青龙汤",
+  "section_found": true,
+  "herbs": [
+   "麻黄",
+   "桂枝",
+   "甘草",
+   "杏仁",
+   "石膏",
+   "生姜",
+   "佐桂枝以解肌"
+  ],
+  "flags": [],
+  "found_in_zone": 6,
+  "only_comment": [
+   "佐桂枝以解肌"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 7
+ },
+ {
+  "name": "香连丸",
+  "section_found": true,
+  "herbs": [
+   "黄连",
+   "吴茱萸",
+   "木香"
+  ],
+  "flags": [],
+  "found_in_zone": 3,
+  "only_comment": [],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 0,
+  "n_herbs_extracted": 3
+ },
+ {
+  "name": "茯苓甘草汤",
+  "section_found": true,
+  "herbs": [
+   "桂枝",
+   "甘草",
+   "生姜"
+  ],
+  "flags": [],
+  "found_in_zone": 3,
+  "only_comment": [],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 3,
+  "n_herbs_extracted": 3
+ },
+ {
+  "name": "炒香散",
+  "section_found": true,
+  "herbs": [
+   "山药",
+   "人参",
+   "远志",
+   "茯苓",
+   "茯神",
+   "桔梗",
+   "甘草",
+   "木香",
+   "麝香"
+  ],
+  "flags": [],
+  "found_in_zone": 9,
+  "only_comment": [],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 5,
+  "n_herbs_extracted": 9
+ },
+ {
+  "name": "大补阴丸",
+  "section_found": true,
+  "herbs": [
+   "黄柏",
+   "知母",
+   "熟地黄",
+   "败龟板"
+  ],
+  "flags": [],
+  "found_in_zone": 4,
+  "only_comment": [],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 4
+ },
+ {
+  "name": "葛根汤",
+  "section_found": true,
+  "herbs": [
+   "葛根",
+   "麻黄",
+   "生姜",
+   "桂枝",
+   "芍药",
+   "甘草",
+   "大枣",
+   "桂枝加葛根汤",
+   "夏汤"
+  ],
+  "flags": [],
+  "found_in_zone": 7,
+  "only_comment": [
+   "桂枝加葛根汤",
+   "夏汤"
+  ],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 2,
+  "n_herbs_extracted": 9
+ },
+ {
+  "name": "黄连阿胶丸",
+  "section_found": true,
+  "herbs": [
+   "黄连",
+   "茯苓",
+   "阿胶"
+  ],
+  "flags": [],
+  "found_in_zone": 3,
+  "only_comment": [],
+  "not_found": [],
+  "status": "OK",
+  "dosage_annos_in_zone": 2,
+  "n_herbs_extracted": 3
+ },
+ {
+  "name": "苏子降气汤",
+  "section_found": true,
+  "herbs": [
+   "厚朴",
+   "橘红",
+   "当归",
+   "甘草",
+   "肉桂",
+   "兼以散外寒也"
+  ],
+  "flags": [],
+  "found_in_zone": 4,
+  "only_comment": [
+   "兼以散外寒也"
+  ],
+  "not_found": [
+   "厚朴"
+  ],
+  "status": "MISMATCH",
+  "dosage_annos_in_zone": 1,
+  "n_herbs_extracted": 6
+ }
+]

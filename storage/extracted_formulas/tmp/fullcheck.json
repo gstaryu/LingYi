@@ -1,0 +1,5380 @@
+[
+ {
+  "idx": 0,
+  "name": "疗伤寒五六日斑出以后汤",
+  "flags": [],
+  "comp_n": 11,
+  "probe": "OK",
+  "src_count": 10,
+  "boundary": "又疗",
+  "merged_suspect": [
+   "柴胡",
+   "知母",
+   "芍药",
+   "大黄"
+  ],
+  "dosage_mismatch": [
+   "半夏",
+   "葳蕤"
+  ]
+ },
+ {
+  "idx": 1,
+  "name": "抵当丸",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 2,
+  "name": "抵当汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4,
+  "dosage_mismatch": [
+   "水蛭",
+   "虻虫"
+  ]
+ },
+ {
+  "idx": 3,
+  "name": "疗伤寒头痛壮热百节疼痛汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 10,
+  "dosage_mismatch": [
+   "栀子仁"
+  ],
+  "missing": [
+   "柴胡",
+   "芍药"
+  ]
+ },
+ {
+  "idx": 4,
+  "name": "桔梗汤",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2,
+  "dosage_mismatch": [
+   "甘草"
+  ]
+ },
+ {
+  "idx": 5,
+  "name": "栀子生姜汤",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 6,
+  "name": "白虎加人参汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "粳米"
+  ],
+  "missing": [
+   "石膏"
+  ]
+ },
+ {
+  "idx": 7,
+  "name": "鼓汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 7,
+  "merged_suspect": [
+   "黄芩",
+   "人参"
+  ],
+  "dosage_mismatch": [
+   "甘草"
+  ]
+ },
+ {
+  "idx": 8,
+  "name": "疗伤寒雪煎",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 9,
+  "name": "干姜丸",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 10,
+  "name": "瞿麦汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 11,
+  "name": "桃仁苦酒汤",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 12,
+  "name": "麻黄汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "葱"
+  ]
+ },
+ {
+  "idx": 13,
+  "name": "麻黄解肌汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 7
+ },
+ {
+  "idx": 14,
+  "name": "服小柴胡汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 7
+ },
+ {
+  "idx": 15,
+  "name": "服大柴胡汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 8
+ },
+ {
+  "idx": 16,
+  "name": "大青消毒汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 6,
+  "merged_suspect": [
+   "干葛"
+  ],
+  "dosage_mismatch": [
+   "栀子"
+  ]
+ },
+ {
+  "idx": 17,
+  "name": "苦参吐毒热汤",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 18,
+  "name": "生地黄汤",
+  "flags": [],
+  "comp_n": 12,
+  "probe": "OK",
+  "src_count": 12,
+  "dosage_mismatch": [
+   "生地黄",
+   "竹叶"
+  ]
+ },
+ {
+  "idx": 19,
+  "name": "服苦参汤",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 20,
+  "name": "黄连龙骨汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4,
+  "dosage_mismatch": [
+   "熟艾"
+  ]
+ },
+ {
+  "idx": 21,
+  "name": "艾汤",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3,
+  "dosage_mismatch": [
+   "生艾"
+  ]
+ },
+ {
+  "idx": 22,
+  "name": "大黄汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 23,
+  "name": "水解散",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6
+ },
+ {
+  "idx": 24,
+  "name": "知母汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 25,
+  "name": "竹茹饮",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 26,
+  "name": "黄芩汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 27,
+  "name": "茵陈丸",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 10
+ },
+ {
+  "idx": 28,
+  "name": "瓜蒂散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2,
+  "dosage_mismatch": [
+   "瓜蒂"
+  ]
+ },
+ {
+  "idx": 29,
+  "name": "决计服此鳖甲汤",
+  "flags": [],
+  "comp_n": 11,
+  "probe": "OK",
+  "src_count": 11
+ },
+ {
+  "idx": 30,
+  "name": "大承气汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 31,
+  "name": "前胡汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 7
+ },
+ {
+  "idx": 32,
+  "name": "橘皮汤",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 33,
+  "name": "生芦根汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 34,
+  "name": "橘皮甘草汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 35,
+  "name": "小半夏汤",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 36,
+  "name": "黄连马通汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 37,
+  "name": "升麻汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "芦根"
+  ]
+ },
+ {
+  "idx": 38,
+  "name": "石膏蜜煎",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 39,
+  "name": "地黄汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "生地黄",
+   "麦门冬"
+  ],
+  "merged_suspect": [
+   "升麻",
+   "玄参",
+   "芍药",
+   "柴胡"
+  ]
+ },
+ {
+  "idx": 40,
+  "name": "柴胡汤",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 11
+ },
+ {
+  "idx": 41,
+  "name": "生姜煎",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 1,
+  "missing": [
+   "桑白皮",
+   "桔梗",
+   "肥干枣",
+   "麻黄",
+   "葶苈子"
+  ]
+ },
+ {
+  "idx": 42,
+  "name": "木香汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 43,
+  "name": "大青汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4,
+  "dosage_mismatch": [
+   "犀角"
+  ]
+ },
+ {
+  "idx": 44,
+  "name": "但当与竹叶汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "石膏",
+   "麦门冬"
+  ],
+  "merged_suspect": [
+   "人参"
+  ]
+ },
+ {
+  "idx": 45,
+  "name": "柴胡散",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 9
+ },
+ {
+  "idx": 46,
+  "name": "滑石汤",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 47,
+  "name": "黄连汤",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 48,
+  "name": "麝香丸",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 5,
+  "merged_suspect": [
+   "雄黄"
+  ],
+  "dosage_mismatch": [
+   "干姜"
+  ]
+ },
+ {
+  "idx": 49,
+  "name": "雄黄兑散",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "merged_suspect": [
+   "苦参"
+  ],
+  "dosage_mismatch": [
+   "黄连"
+  ]
+ },
+ {
+  "idx": 50,
+  "name": "青葙子散",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 51,
+  "name": "黄连丸",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 52,
+  "name": "鼠矢汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 53,
+  "name": "枳实汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "葱白"
+  ]
+ },
+ {
+  "idx": 54,
+  "name": "虎头杀鬼丸",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 7
+ },
+ {
+  "idx": 55,
+  "name": "蒜豉汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 56,
+  "name": "赤小豆丸",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 57,
+  "name": "豉汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 58,
+  "name": "黑膏",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 59,
+  "name": "香豉汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 8,
+  "dosage_mismatch": [
+   "葱须"
+  ]
+ },
+ {
+  "idx": 60,
+  "name": "黑奴丸",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 7
+ },
+ {
+  "idx": 61,
+  "name": "麻黄散",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 62,
+  "name": "瓜蒂汤",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 63,
+  "name": "茵陈汤及丸",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 64,
+  "name": "大黄丸",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 65,
+  "name": "地黄汁汤",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 66,
+  "name": "瓜丁散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 67,
+  "name": "三物茵陈蒿汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 68,
+  "name": "大黄散",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 69,
+  "name": "茵陈汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6,
+  "merged_suspect": [
+   "黄芩"
+  ],
+  "dosage_mismatch": [
+   "大黄"
+  ]
+ },
+ {
+  "idx": 70,
+  "name": "苦参散",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "葶苈子",
+   "大黄"
+  ],
+  "merged_suspect": [
+   "黄芩",
+   "黄柏"
+  ]
+ },
+ {
+  "idx": 71,
+  "name": "茵陈散",
+  "flags": [],
+  "comp_n": 12,
+  "probe": "OK",
+  "src_count": 14
+ },
+ {
+  "idx": 72,
+  "name": "黄汗吴蓝汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 7,
+  "merged_suspect": [
+   "芍药",
+   "桑白皮"
+  ],
+  "dosage_mismatch": [
+   "麦门冬",
+   "山栀子"
+  ]
+ },
+ {
+  "idx": 73,
+  "name": "赤小豆茯苓汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6
+ },
+ {
+  "idx": 74,
+  "name": "寒水石散",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6
+ },
+ {
+  "idx": 75,
+  "name": "苦参丸",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 76,
+  "name": "秦椒散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 77,
+  "name": "疗疟常山汤",
+  "flags": [],
+  "comp_n": 20,
+  "probe": "OK",
+  "src_count": 23,
+  "missing": [
+   "厚朴"
+  ]
+ },
+ {
+  "idx": 78,
+  "name": "疗疟丸",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 79,
+  "name": "敕赐长孙祥极效常山汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 80,
+  "name": "常山汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "常山苗一握"
+  ]
+ },
+ {
+  "idx": 81,
+  "name": "常山散",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6
+ },
+ {
+  "idx": 82,
+  "name": "芦根汤",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3,
+  "dosage_mismatch": [
+   "生芦根"
+  ]
+ },
+ {
+  "idx": 83,
+  "name": "生姜汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 84,
+  "name": "干姜茱萸汤",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2,
+  "dosage_mismatch": [
+   "干姜",
+   "茱萸"
+  ]
+ },
+ {
+  "idx": 85,
+  "name": "人参续气汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 12,
+  "dosage_mismatch": [
+   "橘皮",
+   "麦门冬",
+   "干姜"
+  ],
+  "merged_suspect": [
+   "茯苓"
+  ],
+  "missing": [
+   "人参",
+   "厚朴"
+  ]
+ },
+ {
+  "idx": 86,
+  "name": "茱萸丸",
+  "flags": [],
+  "comp_n": 11,
+  "probe": "OK",
+  "src_count": 11
+ },
+ {
+  "idx": 87,
+  "name": "当归鹤虱散",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 8
+ },
+ {
+  "idx": 88,
+  "name": "附子丸",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6
+ },
+ {
+  "idx": 89,
+  "name": "槟榔鹤虱散",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "当归",
+   "桔梗",
+   "芍药"
+  ],
+  "missing": [
+   "橘皮",
+   "鹤虱",
+   "人参",
+   "桂心",
+   "槟榔"
+  ]
+ },
+ {
+  "idx": 90,
+  "name": "当归汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "当归"
+  ],
+  "missing": [
+   "橘皮",
+   "细辛",
+   "甘草",
+   "生姜",
+   "大黄",
+   "鹤虱"
+  ]
+ },
+ {
+  "idx": 91,
+  "name": "鹤虱丸",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 92,
+  "name": "胡粉丸",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 93,
+  "name": "防风茯苓汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 7
+ },
+ {
+  "idx": 94,
+  "name": "乌头丸",
+  "flags": [],
+  "comp_n": 13,
+  "probe": "OK",
+  "src_count": 8,
+  "boundary": "张文仲",
+  "merged_suspect": [
+   "当归",
+   "桔梗",
+   "吴茱萸",
+   "人参",
+   "白术"
+  ],
+  "dosage_mismatch": [
+   "高良姜"
+  ]
+ },
+ {
+  "idx": 95,
+  "name": "桃仁大黄汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 13
+ },
+ {
+  "idx": 96,
+  "name": "茱萸煎",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 97,
+  "name": "苦参汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 98,
+  "name": "桂心汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 1,
+  "missing": [
+   "井花水",
+   "蜜"
+  ]
+ },
+ {
+  "idx": 99,
+  "name": "人参汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 11,
+  "dosage_mismatch": [
+   "桂心"
+  ],
+  "missing": [
+   "人参",
+   "栀子",
+   "黄芩",
+   "甘草"
+  ]
+ },
+ {
+  "idx": 100,
+  "name": "麝香散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 101,
+  "name": "高良姜汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 102,
+  "name": "雷丸鹤虱散",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 7
+ },
+ {
+  "idx": 103,
+  "name": "乌头赤石脂丸",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 8,
+  "missing": [
+   "赤石脂",
+   "椒",
+   "乌头",
+   "桃仁"
+  ]
+ },
+ {
+  "idx": 104,
+  "name": "茱萸汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 8,
+  "dosage_mismatch": [
+   "甘草",
+   "桂心"
+  ],
+  "merged_suspect": [
+   "人参"
+  ]
+ },
+ {
+  "idx": 105,
+  "name": "桔梗散",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 106,
+  "name": "野狼毒丸",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 107,
+  "name": "芍药丸",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 13,
+  "dosage_mismatch": [
+   "白术"
+  ],
+  "missing": [
+   "芍药",
+   "当归",
+   "鳖甲",
+   "诃黎勒",
+   "干姜",
+   "人参"
+  ]
+ },
+ {
+  "idx": 108,
+  "name": "鳖甲丸",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "鳖甲",
+   "枳实",
+   "槟榔",
+   "大黄"
+  ],
+  "merged_suspect": [
+   "芍药",
+   "人参"
+  ]
+ },
+ {
+  "idx": 109,
+  "name": "通草汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 13,
+  "dosage_mismatch": [
+   "茯苓",
+   "玄参",
+   "桑白皮",
+   "泽泻",
+   "郁李仁",
+   "叶"
+  ],
+  "missing": [
+   "通草",
+   "白薇",
+   "人参"
+  ]
+ },
+ {
+  "idx": 110,
+  "name": "茯苓汤",
+  "flags": [],
+  "comp_n": 13,
+  "probe": "OK",
+  "src_count": 13,
+  "dosage_mismatch": [
+   "泽漆叶"
+  ]
+ },
+ {
+  "idx": 111,
+  "name": "人参丸",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 112,
+  "name": "柴胡厚朴汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 113,
+  "name": "郁李仁丸",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 12,
+  "dosage_mismatch": [
+   "甘遂",
+   "槟榔",
+   "泽泻",
+   "泽漆叶",
+   "杏仁"
+  ],
+  "merged_suspect": [
+   "橘皮",
+   "茯苓"
+  ]
+ },
+ {
+  "idx": 114,
+  "name": "紫苏汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 7,
+  "merged_suspect": [
+   "当归"
+  ],
+  "dosage_mismatch": [
+   "生姜"
+  ]
+ },
+ {
+  "idx": 115,
+  "name": "厚朴汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 116,
+  "name": "半夏汤",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 117,
+  "name": "芫花丸",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 7,
+  "merged_suspect": [
+   "大黄",
+   "甘遂"
+  ],
+  "dosage_mismatch": [
+   "葶苈子",
+   "黄芩"
+  ]
+ },
+ {
+  "idx": 118,
+  "name": "附子粳米汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 119,
+  "name": "昆布散",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "人参",
+   "桂心"
+  ],
+  "missing": [
+   "昆布",
+   "海藻",
+   "玄参",
+   "橘皮",
+   "升麻",
+   "干姜",
+   "麦"
+  ]
+ },
+ {
+  "idx": 120,
+  "name": "槟榔汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 7,
+  "merged_suspect": [
+   "生姜",
+   "橘皮"
+  ],
+  "dosage_mismatch": [
+   "青木香",
+   "大黄"
+  ]
+ },
+ {
+  "idx": 121,
+  "name": "槟榔丸",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 7
+ },
+ {
+  "idx": 122,
+  "name": "诃黎勒散",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 123,
+  "name": "大黄附子汤",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 124,
+  "name": "服此柴胡汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "犀角"
+  ]
+ },
+ {
+  "idx": 125,
+  "name": "柴胡桂枝汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 9,
+  "merged_suspect": [
+   "桂心"
+  ],
+  "dosage_mismatch": [
+   "生姜"
+  ]
+ },
+ {
+  "idx": 126,
+  "name": "香豉丸",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 2,
+  "dosage_mismatch": [
+   "令赤即止"
+  ],
+  "missing": [
+   "桂心",
+   "茱萸",
+   "白薇",
+   "干姜",
+   "乌头",
+   "蜀椒"
+  ]
+ },
+ {
+  "idx": 127,
+  "name": "牡丹丸",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3,
+  "dosage_mismatch": [
+   "牡丹",
+   "桂心",
+   "乌头"
+  ]
+ },
+ {
+  "idx": 128,
+  "name": "桃仁汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 8,
+  "dosage_mismatch": [
+   "桃仁",
+   "海藻",
+   "蒺藜子"
+  ],
+  "merged_suspect": [
+   "吴茱萸",
+   "橘皮",
+   "生姜",
+   "茯苓",
+   "羌活"
+  ]
+ },
+ {
+  "idx": 129,
+  "name": "吴茱萸丸",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 10,
+  "merged_suspect": [
+   "细辛"
+  ],
+  "dosage_mismatch": [
+   "黄芩"
+  ]
+ },
+ {
+  "idx": 130,
+  "name": "白术八味等散",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 131,
+  "name": "通气噎汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 132,
+  "name": "紫菀七味汤",
+  "flags": [],
+  "comp_n": 11,
+  "probe": "OK",
+  "src_count": 7,
+  "boundary": "古今录验",
+  "merged_suspect": [
+   "茯苓"
+  ],
+  "dosage_mismatch": [
+   "生姜"
+  ]
+ },
+ {
+  "idx": 133,
+  "name": "前胡丸",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "乌头",
+   "干姜"
+  ],
+  "merged_suspect": [
+   "桔梗"
+  ]
+ },
+ {
+  "idx": 134,
+  "name": "款冬花煎",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "干姜",
+   "芫花根",
+   "紫菀"
+  ],
+  "merged_suspect": [
+   "五味子"
+  ],
+  "missing": [
+   "款冬花"
+  ]
+ },
+ {
+  "idx": 135,
+  "name": "杏仁饮",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 136,
+  "name": "干姜汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "麻黄"
+  ]
+ },
+ {
+  "idx": 137,
+  "name": "芫花煎",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 138,
+  "name": "桂心散",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 139,
+  "name": "杏仁煎",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 9,
+  "merged_suspect": [
+   "紫菀"
+  ],
+  "dosage_mismatch": [
+   "五味子",
+   "生姜"
+  ]
+ },
+ {
+  "idx": 140,
+  "name": "生姜五味子汤",
+  "flags": [],
+  "comp_n": 11,
+  "probe": "OK",
+  "src_count": 11
+ },
+ {
+  "idx": 141,
+  "name": "吸散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "天雄",
+   "钟乳"
+  ],
+  "merged_suspect": [
+   "石膏",
+   "款冬花"
+  ],
+  "missing": [
+   "细辛",
+   "紫菀"
+  ]
+ },
+ {
+  "idx": 142,
+  "name": "麻黄五味子汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 8
+ },
+ {
+  "idx": 143,
+  "name": "五愈丸",
+  "flags": [],
+  "comp_n": 11,
+  "probe": "OK",
+  "src_count": 2,
+  "dosage_mismatch": [
+   "干姜"
+  ],
+  "missing": [
+   "桂心",
+   "细辛",
+   "白前",
+   "甘草",
+   "蜀椒",
+   "通草",
+   "款冬花",
+   "花",
+   "紫菀",
+   "牡蛎"
+  ]
+ },
+ {
+  "idx": 144,
+  "name": "款冬花丸",
+  "flags": [],
+  "comp_n": 11,
+  "probe": "OK",
+  "src_count": 13
+ },
+ {
+  "idx": 145,
+  "name": "七星散",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 8,
+  "dosage_mismatch": [
+   "蜀椒",
+   "伏龙肝"
+  ],
+  "merged_suspect": [
+   "桑根白皮",
+   "款冬花",
+   "紫菀",
+   "细辛"
+  ]
+ },
+ {
+  "idx": 146,
+  "name": "贝母饮",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 8,
+  "dosage_mismatch": [
+   "石膏",
+   "麻黄",
+   "甘草"
+  ],
+  "merged_suspect": [
+   "桂心"
+  ]
+ },
+ {
+  "idx": 147,
+  "name": "海藻汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6
+ },
+ {
+  "idx": 148,
+  "name": "姜椒汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2,
+  "dosage_mismatch": [
+   "椒"
+  ],
+  "missing": [
+   "生姜"
+  ]
+ },
+ {
+  "idx": 149,
+  "name": "五味子汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 8,
+  "merged_suspect": [
+   "桂心"
+  ],
+  "dosage_mismatch": [
+   "甘草",
+   "细辛"
+  ]
+ },
+ {
+  "idx": 150,
+  "name": "游气汤",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 151,
+  "name": "补肺汤",
+  "flags": [],
+  "comp_n": 15,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 152,
+  "name": "四味石钟乳散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4,
+  "dosage_mismatch": [
+   "钟乳",
+   "石",
+   "桂心"
+  ],
+  "merged_suspect": [
+   "款冬花"
+  ]
+ },
+ {
+  "idx": 153,
+  "name": "鸡子汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 154,
+  "name": "款冬花散",
+  "flags": [],
+  "comp_n": 13,
+  "probe": "OK",
+  "src_count": 14,
+  "dosage_mismatch": [
+   "当归",
+   "附子",
+   "贝母",
+   "干地黄",
+   "甘草",
+   "杏仁"
+  ],
+  "merged_suspect": [
+   "桂心",
+   "五味子",
+   "细辛",
+   "干姜",
+   "白术"
+  ],
+  "missing": [
+   "款冬花"
+  ]
+ },
+ {
+  "idx": 155,
+  "name": "苏子汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 8,
+  "merged_suspect": [
+   "桂心",
+   "橘皮"
+  ],
+  "dosage_mismatch": [
+   "人参"
+  ]
+ },
+ {
+  "idx": 156,
+  "name": "炙甘草汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 9
+ },
+ {
+  "idx": 157,
+  "name": "半夏肺痿汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 158,
+  "name": "干地黄煎",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "桑根白皮",
+   "人参"
+  ],
+  "merged_suspect": [
+   "桂心"
+  ]
+ },
+ {
+  "idx": 159,
+  "name": "桂枝去芍药加皂荚汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 160,
+  "name": "防风散",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 24,
+  "dosage_mismatch": [
+   "附子"
+  ],
+  "merged_suspect": [
+   "杜仲"
+  ],
+  "missing": [
+   "防风",
+   "独活"
+  ]
+ },
+ {
+  "idx": 161,
+  "name": "紫菀汤",
+  "flags": [],
+  "comp_n": 12,
+  "probe": "OK",
+  "src_count": 12,
+  "dosage_mismatch": [
+   "生姜",
+   "白石英",
+   "人参",
+   "乳",
+   "麦门冬",
+   "桑根白皮"
+  ],
+  "merged_suspect": [
+   "款冬花",
+   "桂心"
+  ],
+  "missing": [
+   "紫菀",
+   "五味子"
+  ]
+ },
+ {
+  "idx": 162,
+  "name": "黄昏汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 1,
+  "dosage_mismatch": [
+   "黄昏"
+  ],
+  "missing": [
+   "葶苈"
+  ]
+ },
+ {
+  "idx": 163,
+  "name": "苇茎汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 164,
+  "name": "生地黄汁汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 8,
+  "merged_suspect": [
+   "当归"
+  ],
+  "dosage_mismatch": [
+   "甘草",
+   "白石英",
+   "人参"
+  ]
+ },
+ {
+  "idx": 165,
+  "name": "生姜泄肠汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "白术"
+  ],
+  "missing": [
+   "生姜",
+   "黄芩",
+   "栀子",
+   "生地黄"
+  ]
+ },
+ {
+  "idx": 166,
+  "name": "黄连补汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "龙肝"
+  ]
+ },
+ {
+  "idx": 167,
+  "name": "栀子煎",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 10,
+  "dosage_mismatch": [
+   "枳实",
+   "杏仁",
+   "芒硝",
+   "淡竹叶"
+  ],
+  "merged_suspect": [
+   "柴胡"
+  ],
+  "missing": [
+   "栀子"
+  ]
+ },
+ {
+  "idx": 168,
+  "name": "半夏苏子汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 7,
+  "merged_suspect": [
+   "橘皮"
+  ],
+  "dosage_mismatch": [
+   "桂心"
+  ]
+ },
+ {
+  "idx": 169,
+  "name": "投杯汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 170,
+  "name": "钟乳丸",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "干姜",
+   "附子",
+   "细辛"
+  ],
+  "merged_suspect": [
+   "款冬花"
+  ],
+  "missing": [
+   "人参",
+   "桂心"
+  ]
+ },
+ {
+  "idx": 171,
+  "name": "贝母散",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "麻黄",
+   "干姜",
+   "甘草"
+  ],
+  "merged_suspect": [
+   "桂心"
+  ]
+ },
+ {
+  "idx": 172,
+  "name": "白前汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4,
+  "merged_suspect": [
+   "紫菀"
+  ],
+  "dosage_mismatch": [
+   "半夏",
+   "大戟"
+  ]
+ },
+ {
+  "idx": 173,
+  "name": "贝母汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "甘草",
+   "麻黄",
+   "桂心",
+   "干姜"
+  ]
+ },
+ {
+  "idx": 174,
+  "name": "射干麻黄汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "麻黄",
+   "生姜"
+  ]
+ },
+ {
+  "idx": 175,
+  "name": "神验白前汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 176,
+  "name": "覆杯汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "甘草",
+   "贝母"
+  ],
+  "merged_suspect": [
+   "干姜",
+   "桂心"
+  ]
+ },
+ {
+  "idx": 177,
+  "name": "苏子煎",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "生姜",
+   "生地黄"
+  ]
+ },
+ {
+  "idx": 178,
+  "name": "射干煎",
+  "flags": [],
+  "comp_n": 12,
+  "probe": "OK",
+  "src_count": 12,
+  "merged_suspect": [
+   "桑根白皮"
+  ],
+  "dosage_mismatch": [
+   "款冬花"
+  ]
+ },
+ {
+  "idx": 179,
+  "name": "通气丸",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 10,
+  "dosage_mismatch": [
+   "参"
+  ]
+ },
+ {
+  "idx": 180,
+  "name": "一合汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6,
+  "merged_suspect": [
+   "桂心"
+  ],
+  "dosage_mismatch": [
+   "干姜",
+   "甘草",
+   "细辛"
+  ]
+ },
+ {
+  "idx": 181,
+  "name": "蜀椒散",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "merged_suspect": [
+   "桂心",
+   "通草"
+  ],
+  "dosage_mismatch": [
+   "甘草",
+   "半夏"
+  ]
+ },
+ {
+  "idx": 182,
+  "name": "紫苏子丸",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "橘皮",
+   "人参"
+  ],
+  "merged_suspect": [
+   "高良姜",
+   "桂心"
+  ],
+  "missing": [
+   "紫苏子"
+  ]
+ },
+ {
+  "idx": 183,
+  "name": "栝蒌汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "麦门冬",
+   "茅根",
+   "芦根"
+  ]
+ },
+ {
+  "idx": 184,
+  "name": "栝蒌散",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 185,
+  "name": "填骨煎",
+  "flags": [],
+  "comp_n": 16,
+  "probe": "OK",
+  "src_count": 16
+ },
+ {
+  "idx": 186,
+  "name": "疗消渴麦门冬丸",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 9
+ },
+ {
+  "idx": 187,
+  "name": "茯神汤",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 10
+ },
+ {
+  "idx": 188,
+  "name": "煮散",
+  "flags": [],
+  "comp_n": 13,
+  "probe": "OK",
+  "src_count": 13
+ },
+ {
+  "idx": 189,
+  "name": "枸杞汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 190,
+  "name": "补丸",
+  "flags": [],
+  "comp_n": 11,
+  "probe": "OK",
+  "src_count": 12
+ },
+ {
+  "idx": 191,
+  "name": "服肾沥汤",
+  "flags": [
+   "weak_indication"
+  ],
+  "comp_n": 12,
+  "probe": "OK",
+  "src_count": 16
+ },
+ {
+  "idx": 192,
+  "name": "并宜服此花苁蓉丸",
+  "flags": [],
+  "comp_n": 14,
+  "probe": "OK",
+  "src_count": 16
+ },
+ {
+  "idx": 193,
+  "name": "补养地黄丸",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "连"
+  ]
+ },
+ {
+  "idx": 194,
+  "name": "疗渴小便数散",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 195,
+  "name": "加减六物丸",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 2,
+  "boundary": "肘后"
+ },
+ {
+  "idx": 196,
+  "name": "麦门冬汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "芦根",
+   "根"
+  ]
+ },
+ {
+  "idx": 197,
+  "name": "巴豆丸",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 198,
+  "name": "膏髓酒",
+  "flags": [
+   "low_coverage",
+   "weak_indication"
+  ],
+  "comp_n": 13,
+  "probe": "OK",
+  "src_count": 14
+ },
+ {
+  "idx": 199,
+  "name": "枸杞子散",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6
+ },
+ {
+  "idx": 200,
+  "name": "调中五参丸",
+  "flags": [],
+  "comp_n": 12,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "人参"
+  ],
+  "missing": [
+   "玄参",
+   "丹参",
+   "苦参",
+   "大黄",
+   "附子",
+   "巴豆",
+   "蜀椒",
+   "干姜",
+   "防风",
+   "虫",
+   "葶苈"
+  ]
+ },
+ {
+  "idx": 201,
+  "name": "桔梗丸",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 11
+ },
+ {
+  "idx": 202,
+  "name": "炼中丸",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 4,
+  "dosage_mismatch": [
+   "杏仁",
+   "芒硝"
+  ]
+ },
+ {
+  "idx": 203,
+  "name": "艾煎丸",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 204,
+  "name": "四物丸",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 9,
+  "boundary": "古今录验"
+ },
+ {
+  "idx": 205,
+  "name": "蟹爪丸",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 8
+ },
+ {
+  "idx": 206,
+  "name": "理中汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 207,
+  "name": "细辛散",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "甘草",
+   "茯苓",
+   "枳实",
+   "实"
+  ],
+  "merged_suspect": [
+   "桂心",
+   "白术",
+   "生姜"
+  ],
+  "missing": [
+   "细辛",
+   "干地黄"
+  ]
+ },
+ {
+  "idx": 208,
+  "name": "薏苡仁散",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 209,
+  "name": "枳实散",
+  "flags": [
+   "weak_indication"
+  ],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 210,
+  "name": "贲豚汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 9
+ },
+ {
+  "idx": 211,
+  "name": "七气汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 12
+ },
+ {
+  "idx": 212,
+  "name": "奔豚汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 8
+ },
+ {
+  "idx": 213,
+  "name": "五蒸丸",
+  "flags": [],
+  "comp_n": 11,
+  "probe": "OK",
+  "src_count": 11,
+  "dosage_mismatch": [
+   "鸡骨",
+   "细辛",
+   "石",
+   "栝蒌"
+  ],
+  "merged_suspect": [
+   "紫菀",
+   "芍药",
+   "大黄",
+   "黄芩"
+  ],
+  "missing": [
+   "乌梅"
+  ]
+ },
+ {
+  "idx": 214,
+  "name": "竹叶饮",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 7
+ },
+ {
+  "idx": 215,
+  "name": "獭肝丸",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 8,
+  "dosage_mismatch": [
+   "天灵盖"
+  ]
+ },
+ {
+  "idx": 216,
+  "name": "朱砂丸",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 217,
+  "name": "丹砂丸",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "丹砂",
+   "芫花",
+   "乌头",
+   "桂心"
+  ],
+  "merged_suspect": [
+   "干姜",
+   "芍药"
+  ]
+ },
+ {
+  "idx": 218,
+  "name": "即是李子豫赤丸",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 8,
+  "merged_suspect": [
+   "牡丹皮"
+  ]
+ },
+ {
+  "idx": 219,
+  "name": "死人席汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 2,
+  "missing": [
+   "鹳骨",
+   "桂心",
+   "虻虫",
+   "巴豆",
+   "蝥"
+  ]
+ },
+ {
+  "idx": 220,
+  "name": "牛黄散",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 15,
+  "merged_suspect": [
+   "王不留行",
+   "干姜"
+  ]
+ },
+ {
+  "idx": 221,
+  "name": "当得杀鬼丸",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "丹砂",
+   "雄黄",
+   "鬼箭"
+  ]
+ },
+ {
+  "idx": 222,
+  "name": "四物鸢头散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 4,
+  "boundary": "文仲",
+  "dosage_mismatch": [
+   "龙骨"
+  ]
+ },
+ {
+  "idx": 223,
+  "name": "狸骨丸",
+  "flags": [
+   "weak_indication"
+  ],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 16,
+  "dosage_mismatch": [
+   "连翘",
+   "栝蒌"
+  ],
+  "merged_suspect": [
+   "山茱萸",
+   "玄参",
+   "黄芩",
+   "黄连",
+   "芍药",
+   "雄黄",
+   "青葙子",
+   "龙胆"
+  ]
+ },
+ {
+  "idx": 224,
+  "name": "止汗粉",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "栝蒌"
+  ],
+  "missing": [
+   "麻黄根"
+  ]
+ },
+ {
+  "idx": 225,
+  "name": "桂枝汤",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3,
+  "dosage_mismatch": [
+   "甘草"
+  ],
+  "missing": [
+   "桂心"
+  ]
+ },
+ {
+  "idx": 226,
+  "name": "得患即服此竹沥汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 227,
+  "name": "续命汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 13,
+  "dosage_mismatch": [
+   "麻黄",
+   "生姜",
+   "附子",
+   "甘草"
+  ],
+  "merged_suspect": [
+   "茯神",
+   "防己",
+   "细辛"
+  ]
+ },
+ {
+  "idx": 228,
+  "name": "青龙汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6,
+  "merged_suspect": [
+   "生姜"
+  ]
+ },
+ {
+  "idx": 229,
+  "name": "三阳汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6
+ },
+ {
+  "idx": 230,
+  "name": "扶金汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 231,
+  "name": "温脾汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 9
+ },
+ {
+  "idx": 232,
+  "name": "紫汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 233,
+  "name": "西州续命汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 11,
+  "dosage_mismatch": [
+   "麻黄",
+   "干姜",
+   "甘草"
+  ],
+  "merged_suspect": [
+   "防风",
+   "桂心",
+   "白术",
+   "人参"
+  ]
+ },
+ {
+  "idx": 234,
+  "name": "服此汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 14,
+  "merged_suspect": [
+   "防风",
+   "防己"
+  ],
+  "dosage_mismatch": [
+   "甘草"
+  ]
+ },
+ {
+  "idx": 235,
+  "name": "大豆散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3,
+  "merged_suspect": [
+   "干姜"
+  ],
+  "dosage_mismatch": [
+   "椒"
+  ]
+ },
+ {
+  "idx": 236,
+  "name": "竹沥汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 8,
+  "merged_suspect": [
+   "防风",
+   "防己",
+   "升麻",
+   "桂心"
+  ],
+  "dosage_mismatch": [
+   "羚羊角"
+  ]
+ },
+ {
+  "idx": 237,
+  "name": "姜附汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "附子",
+   "麻黄",
+   "桂心"
+  ],
+  "missing": [
+   "干姜"
+  ]
+ },
+ {
+  "idx": 238,
+  "name": "麻子汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 15,
+  "merged_suspect": [
+   "防风",
+   "生姜",
+   "橘皮",
+   "荆芥"
+  ]
+ },
+ {
+  "idx": 239,
+  "name": "次服枳实丸",
+  "flags": [],
+  "comp_n": 12,
+  "probe": "OK",
+  "src_count": 13,
+  "dosage_mismatch": [
+   "枳实",
+   "羚羊角",
+   "桂心",
+   "干地黄"
+  ],
+  "merged_suspect": [
+   "防风",
+   "羌活",
+   "人参",
+   "干葛",
+   "薏苡仁",
+   "茯苓",
+   "升麻",
+   "黄连"
+  ]
+ },
+ {
+  "idx": 240,
+  "name": "独活汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "甘草",
+   "栝蒌"
+  ],
+  "merged_suspect": [
+   "桂心",
+   "芍药"
+  ]
+ },
+ {
+  "idx": 241,
+  "name": "石膏散",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 242,
+  "name": "干葛散",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3,
+  "dosage_mismatch": [
+   "干地黄"
+  ],
+  "missing": [
+   "干葛"
+  ]
+ },
+ {
+  "idx": 243,
+  "name": "寒水石煮散",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 12,
+  "dosage_mismatch": [
+   "龙骨",
+   "甘草",
+   "牡蛎",
+   "大黄"
+  ],
+  "merged_suspect": [
+   "桂心",
+   "干姜"
+  ],
+  "missing": [
+   "石膏",
+   "滑石"
+  ]
+ },
+ {
+  "idx": 244,
+  "name": "五粒松酒",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 9,
+  "merged_suspect": [
+   "防风",
+   "独活"
+  ],
+  "dosage_mismatch": [
+   "秦艽"
+  ]
+ },
+ {
+  "idx": 245,
+  "name": "或梦寐不安镇心汤",
+  "flags": [],
+  "comp_n": 13,
+  "probe": "OK",
+  "src_count": 15,
+  "dosage_mismatch": [
+   "半夏",
+   "生姜",
+   "羚羊角",
+   "杏仁",
+   "桔梗",
+   "龙齿",
+   "石膏",
+   "桂心"
+  ],
+  "merged_suspect": [
+   "当归",
+   "人参",
+   "防风",
+   "防己"
+  ],
+  "missing": [
+   "茯神"
+  ]
+ },
+ {
+  "idx": 246,
+  "name": "镇心丸",
+  "flags": [],
+  "comp_n": 17,
+  "probe": "OK",
+  "src_count": 17,
+  "dosage_mismatch": [
+   "龙齿",
+   "石膏",
+   "薄",
+   "虎睛",
+   "枳实",
+   "甘草"
+  ],
+  "merged_suspect": [
+   "升麻",
+   "黄芩",
+   "茯苓",
+   "白蔹",
+   "玄参",
+   "芍药",
+   "葳蕤"
+  ],
+  "missing": [
+   "茯神",
+   "人参"
+  ]
+ },
+ {
+  "idx": 247,
+  "name": "疗之十黄散",
+  "flags": [],
+  "comp_n": 17,
+  "probe": "OK",
+  "src_count": 18,
+  "dosage_mismatch": [
+   "麻黄"
+  ]
+ },
+ {
+  "idx": 248,
+  "name": "六生散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "蜀附子"
+  ],
+  "missing": [
+   "防风"
+  ]
+ },
+ {
+  "idx": 249,
+  "name": "雄黄丸",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "雄黄",
+   "水银",
+   "雌黄"
+  ]
+ },
+ {
+  "idx": 250,
+  "name": "得热即发水银丸",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 11,
+  "probe": "OK",
+  "src_count": 11,
+  "dosage_mismatch": [
+   "水银",
+   "麦门冬",
+   "乌蛇脯",
+   "铁精",
+   "干地黄",
+   "角",
+   "升麻"
+  ],
+  "merged_suspect": [
+   "人参",
+   "防风",
+   "子芩"
+  ]
+ },
+ {
+  "idx": 251,
+  "name": "紫石汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 10,
+  "dosage_mismatch": [
+   "石膏",
+   "干姜",
+   "甘草",
+   "桂心"
+  ],
+  "missing": [
+   "紫石英",
+   "滑石",
+   "赤石脂",
+   "大黄",
+   "牡蛎"
+  ]
+ },
+ {
+  "idx": 252,
+  "name": "石膏汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "石膏"
+  ]
+ },
+ {
+  "idx": 253,
+  "name": "四味防风散",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 3,
+  "merged_suspect": [
+   "泽泻"
+  ],
+  "dosage_mismatch": [
+   "桂心"
+  ]
+ },
+ {
+  "idx": 254,
+  "name": "防风饮",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "橘皮",
+   "茯神"
+  ],
+  "merged_suspect": [
+   "白术"
+  ],
+  "missing": [
+   "防风",
+   "人参"
+  ]
+ },
+ {
+  "idx": 255,
+  "name": "粉散",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4,
+  "dosage_mismatch": [
+   "乌头",
+   "白术"
+  ],
+  "merged_suspect": [
+   "桔梗",
+   "细辛"
+  ]
+ },
+ {
+  "idx": 256,
+  "name": "洗汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "苦参",
+   "漏芦根",
+   "枳实",
+   "蒺藜",
+   "楮茎叶"
+  ],
+  "missing": [
+   "人参",
+   "独活",
+   "天门冬",
+   "白术"
+  ]
+ },
+ {
+  "idx": 257,
+  "name": "商陆散",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "生商陆根",
+   "天雄",
+   "黄芩"
+  ],
+  "merged_suspect": [
+   "白蔹"
+  ]
+ },
+ {
+  "idx": 258,
+  "name": "附子膏",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4,
+  "dosage_mismatch": [
+   "附子",
+   "天雄",
+   "乌头"
+  ]
+ },
+ {
+  "idx": 259,
+  "name": "生菖蒲酒",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 16,
+  "dosage_mismatch": [
+   "陆地菖蒲",
+   "远志"
+  ],
+  "merged_suspect": [
+   "干漆",
+   "干地黄",
+   "独活"
+  ]
+ },
+ {
+  "idx": 260,
+  "name": "泻肝汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "甘草"
+  ],
+  "missing": [
+   "人参"
+  ]
+ },
+ {
+  "idx": 261,
+  "name": "柴胡下热汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 8,
+  "dosage_mismatch": [
+   "黄芩",
+   "生地黄"
+  ],
+  "missing": [
+   "柴胡",
+   "泽泻",
+   "升麻",
+   "芒硝",
+   "玄参",
+   "淡竹叶",
+   "干姜"
+  ]
+ },
+ {
+  "idx": 262,
+  "name": "硫黄丸",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "吴茱萸"
+  ],
+  "missing": [
+   "硫黄",
+   "干姜",
+   "人参",
+   "当归",
+   "防风",
+   "石",
+   "乌头",
+   "桂心",
+   "细辛"
+  ]
+ },
+ {
+  "idx": 263,
+  "name": "猪膏酒",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 264,
+  "name": "真珠煎",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 265,
+  "name": "泻热栀子煎",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "橘皮"
+  ]
+ },
+ {
+  "idx": 266,
+  "name": "泻热半夏千里水汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 8,
+  "dosage_mismatch": [
+   "半夏",
+   "宿姜",
+   "茯苓"
+  ]
+ },
+ {
+  "idx": 267,
+  "name": "羌活补髓丸",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 10,
+  "dosage_mismatch": [
+   "当归"
+  ],
+  "missing": [
+   "羌活"
+  ]
+ },
+ {
+  "idx": 268,
+  "name": "柴胡发泄汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 10,
+  "dosage_mismatch": [
+   "升麻"
+  ],
+  "missing": [
+   "柴胡",
+   "黄芩",
+   "细辛",
+   "枳实",
+   "芒硝",
+   "泽泻",
+   "竹叶",
+   "生地黄"
+  ]
+ },
+ {
+  "idx": 269,
+  "name": "咽门伤破声嘶母姜酒",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "油",
+   "秦椒",
+   "活"
+  ],
+  "merged_suspect": [
+   "桂心"
+  ]
+ },
+ {
+  "idx": 270,
+  "name": "橘皮通气汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 8,
+  "merged_suspect": [
+   "白术",
+   "桂心",
+   "细辛",
+   "当归"
+  ],
+  "dosage_mismatch": [
+   "石膏",
+   "茯苓"
+  ]
+ },
+ {
+  "idx": 271,
+  "name": "丹参煮散",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 17,
+  "merged_suspect": [
+   "杜仲",
+   "续断",
+   "通草",
+   "当归",
+   "干地黄"
+  ],
+  "dosage_mismatch": [
+   "地骨皮"
+  ]
+ },
+ {
+  "idx": 272,
+  "name": "地黄煎",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 10
+ },
+ {
+  "idx": 273,
+  "name": "或为脚气牛膝汤",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 11,
+  "dosage_mismatch": [
+   "防风"
+  ],
+  "missing": [
+   "牛膝",
+   "丹参",
+   "前胡",
+   "石斛",
+   "杜仲",
+   "秦艽",
+   "续断",
+   "陈橘皮",
+   "大麻仁"
+  ]
+ },
+ {
+  "idx": 274,
+  "name": "麻黄止烦下气汤",
+  "flags": [],
+  "comp_n": 12,
+  "probe": "OK",
+  "src_count": 13,
+  "dosage_mismatch": [
+   "麻黄",
+   "白术",
+   "生地黄"
+  ],
+  "merged_suspect": [
+   "茯苓",
+   "子芩"
+  ]
+ },
+ {
+  "idx": 275,
+  "name": "大黄泄热汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 11,
+  "dosage_mismatch": [
+   "泽泻"
+  ],
+  "merged_suspect": [
+   "桂心"
+  ],
+  "missing": [
+   "大黄",
+   "黄芩",
+   "芒硝",
+   "大枣",
+   "甘草"
+  ]
+ },
+ {
+  "idx": 276,
+  "name": "雷丸丸",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 12,
+  "probe": "OK",
+  "src_count": 12,
+  "dosage_mismatch": [
+   "雷丸",
+   "石蚕",
+   "桃皮",
+   "荑",
+   "蜀漆"
+  ],
+  "merged_suspect": [
+   "橘皮",
+   "青葙子"
+  ]
+ },
+ {
+  "idx": 277,
+  "name": "磁石汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 9,
+  "merged_suspect": [
+   "茯苓",
+   "人参",
+   "白术"
+  ],
+  "dosage_mismatch": [
+   "芍药",
+   "竹叶"
+  ]
+ },
+ {
+  "idx": 278,
+  "name": "麦门冬饮",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4,
+  "dosage_mismatch": [
+   "淡竹叶"
+  ]
+ },
+ {
+  "idx": 279,
+  "name": "生地黄煎",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 10,
+  "dosage_mismatch": [
+   "石膏",
+   "子芩",
+   "葳蕤"
+  ],
+  "merged_suspect": [
+   "升麻",
+   "射干"
+  ]
+ },
+ {
+  "idx": 280,
+  "name": "茱萸根下虫酒",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3,
+  "dosage_mismatch": [
+   "东行茱萸根"
+  ]
+ },
+ {
+  "idx": 281,
+  "name": "牛髓补虚寒丸",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 14,
+  "dosage_mismatch": [
+   "枣肉",
+   "茯苓"
+  ],
+  "merged_suspect": [
+   "桂心",
+   "干姜",
+   "白术",
+   "甘草"
+  ],
+  "missing": [
+   "白蜜"
+  ]
+ },
+ {
+  "idx": 282,
+  "name": "通噫消食膏酒",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 283,
+  "name": "或梦歌乐而体重不能行泻热汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "茯苓",
+   "细辛",
+   "大青",
+   "叶"
+  ],
+  "merged_suspect": [
+   "龙胆",
+   "玄参"
+  ],
+  "missing": [
+   "前胡"
+  ]
+ },
+ {
+  "idx": 284,
+  "name": "令人光泽泻脾丸",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 13,
+  "dosage_mismatch": [
+   "杏仁",
+   "干姜",
+   "干地黄"
+  ],
+  "merged_suspect": [
+   "泽泻",
+   "通草",
+   "桂心",
+   "白术"
+  ],
+  "missing": [
+   "黄芩"
+  ]
+ },
+ {
+  "idx": 285,
+  "name": "乃服此汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 286,
+  "name": "温脾丸",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 287,
+  "name": "麻黄止汗通肉解风痹汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 10,
+  "dosage_mismatch": [
+   "麻黄",
+   "枳实",
+   "细辛",
+   "姜附子",
+   "甘草",
+   "桂心"
+  ],
+  "merged_suspect": [
+   "防风",
+   "白术"
+  ]
+ },
+ {
+  "idx": 288,
+  "name": "石南散",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 12,
+  "dosage_mismatch": [
+   "石南",
+   "天雄",
+   "甘草",
+   "茱萸",
+   "葳蕤"
+  ],
+  "merged_suspect": [
+   "薯蓣",
+   "菊花",
+   "升麻"
+  ]
+ },
+ {
+  "idx": 289,
+  "name": "越婢汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "甘草",
+   "附子"
+  ]
+ },
+ {
+  "idx": 290,
+  "name": "大半夏汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 9,
+  "merged_suspect": [
+   "白术",
+   "茯苓",
+   "人参"
+  ],
+  "dosage_mismatch": [
+   "甘草",
+   "附子",
+   "橘皮"
+  ]
+ },
+ {
+  "idx": 291,
+  "name": "小风引汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 10,
+  "missing": [
+   "独活",
+   "防风",
+   "甘草",
+   "人参",
+   "当归",
+   "干姜",
+   "附子",
+   "大豆"
+  ]
+ },
+ {
+  "idx": 292,
+  "name": "麻黄引气汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 11,
+  "dosage_mismatch": [
+   "麻黄",
+   "杏仁",
+   "半夏",
+   "桂心",
+   "竹叶"
+  ],
+  "merged_suspect": [
+   "生姜",
+   "细辛"
+  ]
+ },
+ {
+  "idx": 293,
+  "name": "麦门冬五膈下气丸",
+  "flags": [],
+  "comp_n": 11,
+  "probe": "OK",
+  "src_count": 13,
+  "dosage_mismatch": [
+   "附子",
+   "细辛"
+  ],
+  "merged_suspect": [
+   "干姜",
+   "桂心",
+   "人参",
+   "百部",
+   "白术"
+  ]
+ },
+ {
+  "idx": 294,
+  "name": "桑白皮根煎",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3,
+  "dosage_mismatch": [
+   "桑根东引白皮"
+  ]
+ },
+ {
+  "idx": 295,
+  "name": "沐头汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3,
+  "dosage_mismatch": [
+   "皂荚"
+  ]
+ },
+ {
+  "idx": 296,
+  "name": "五香膏",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 18,
+  "dosage_mismatch": [
+   "甲香",
+   "附子",
+   "乌喙"
+  ],
+  "merged_suspect": [
+   "续断",
+   "泽兰",
+   "细辛"
+  ]
+ },
+ {
+  "idx": 297,
+  "name": "生姜温中下气汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 8,
+  "dosage_mismatch": [
+   "桂心",
+   "附子"
+  ]
+ },
+ {
+  "idx": 298,
+  "name": "附子汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "附子",
+   "甘草",
+   "半夏"
+  ]
+ },
+ {
+  "idx": 299,
+  "name": "猪悬蹄青龙五生膏",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 13,
+  "merged_suspect": [
+   "龙胆"
+  ],
+  "dosage_mismatch": [
+   "雄黄"
+  ]
+ },
+ {
+  "idx": 300,
+  "name": "竹叶汤",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "竹叶",
+   "麦门冬",
+   "生地黄"
+  ]
+ },
+ {
+  "idx": 301,
+  "name": "羊肾补肾汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "羊肾",
+   "磁石",
+   "白术",
+   "干姜"
+  ],
+  "merged_suspect": [
+   "茯苓"
+  ]
+ },
+ {
+  "idx": 302,
+  "name": "麻黄根粉",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 303,
+  "name": "鳖甲汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "羚羊角",
+   "薤白"
+  ],
+  "merged_suspect": [
+   "香豉"
+  ],
+  "missing": [
+   "升麻",
+   "前胡"
+  ]
+ },
+ {
+  "idx": 304,
+  "name": "贯众散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "贯众",
+   "芜荑",
+   "胡粉",
+   "槐皮"
+  ]
+ },
+ {
+  "idx": 305,
+  "name": "干枣汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 9,
+  "merged_suspect": [
+   "大黄",
+   "甘遂"
+  ],
+  "dosage_mismatch": [
+   "大戟",
+   "甘草",
+   "黄芩"
+  ]
+ },
+ {
+  "idx": 306,
+  "name": "三黄汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "大黄",
+   "芒硝"
+  ],
+  "merged_suspect": [
+   "黄芩"
+  ]
+ },
+ {
+  "idx": 307,
+  "name": "肾沥汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 15,
+  "dosage_mismatch": [
+   "羊肾",
+   "麦门冬",
+   "当归"
+  ],
+  "merged_suspect": [
+   "芍药",
+   "干地黄",
+   "大枣"
+  ]
+ },
+ {
+  "idx": 308,
+  "name": "虎骨酒",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 309,
+  "name": "竹叶黄芩汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "竹叶",
+   "茯苓",
+   "麦门冬",
+   "甘草",
+   "大黄",
+   "生地黄"
+  ],
+  "merged_suspect": [
+   "黄芩"
+  ]
+ },
+ {
+  "idx": 310,
+  "name": "三物天雄散",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 8,
+  "boundary": "千金",
+  "merged_suspect": [
+   "当归"
+  ],
+  "dosage_mismatch": [
+   "甘草",
+   "石斛"
+  ]
+ },
+ {
+  "idx": 311,
+  "name": "尿精小便白浊梦泄韭子散",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 8,
+  "dosage_mismatch": [
+   "车前子",
+   "矾石"
+  ],
+  "merged_suspect": [
+   "当归"
+  ],
+  "missing": [
+   "菟丝子"
+  ]
+ },
+ {
+  "idx": 312,
+  "name": "干漆散",
+  "flags": [],
+  "comp_n": 11,
+  "probe": "OK",
+  "src_count": 10,
+  "merged_suspect": [
+   "远志"
+  ]
+ },
+ {
+  "idx": 313,
+  "name": "七味干漆散",
+  "flags": [],
+  "comp_n": 13,
+  "probe": "OK",
+  "src_count": 15,
+  "dosage_mismatch": [
+   "麦门"
+  ]
+ },
+ {
+  "idx": 314,
+  "name": "独活续断汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 15
+ },
+ {
+  "idx": 315,
+  "name": "杜仲酒",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 316,
+  "name": "大豆紫汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 1,
+  "missing": [
+   "桂心",
+   "丹皮",
+   "附子"
+  ]
+ },
+ {
+  "idx": 317,
+  "name": "重听丸",
+  "flags": [],
+  "comp_n": 12,
+  "probe": "OK",
+  "src_count": 12
+ },
+ {
+  "idx": 318,
+  "name": "枸杞子煎",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "生地黄"
+  ]
+ },
+ {
+  "idx": 319,
+  "name": "薯蓣丸",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 12
+ },
+ {
+  "idx": 320,
+  "name": "肾气丸",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 18
+ },
+ {
+  "idx": 321,
+  "name": "干地黄丸",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 7
+ },
+ {
+  "idx": 322,
+  "name": "千里流水汤",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 11
+ },
+ {
+  "idx": 323,
+  "name": "大竹叶汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 18
+ },
+ {
+  "idx": 324,
+  "name": "钟乳酒",
+  "flags": [],
+  "comp_n": 13,
+  "probe": "OK",
+  "src_count": 15
+ },
+ {
+  "idx": 325,
+  "name": "金牙散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 36,
+  "probe": "OK",
+  "src_count": 49,
+  "dosage_mismatch": [
+   "矾石",
+   "丹砂",
+   "雄黄",
+   "朴硝",
+   "寒水石",
+   "代赭",
+   "龙骨",
+   "犀角",
+   "獭肝",
+   "鹳骨",
+   "狸骨",
+   "巴豆",
+   "野葛皮",
+   "牛黄",
+   "麝香",
+   "心附子",
+   "鸢根",
+   "牡蛎",
+   "苏合香",
+   "龙胆",
+   "亭长"
+  ],
+  "merged_suspect": [
+   "大黄",
+   "升麻",
+   "常山",
+   "茯苓",
+   "知母",
+   "徐长卿",
+   "蜀漆",
+   "当归",
+   "桔梗"
+  ]
+ },
+ {
+  "idx": 326,
+  "name": "洗脚渍汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 327,
+  "name": "犀角麻黄汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 15
+ },
+ {
+  "idx": 328,
+  "name": "香豉酒",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 329,
+  "name": "加减青木香丸",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6
+ },
+ {
+  "idx": 330,
+  "name": "大犀角汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 14
+ },
+ {
+  "idx": 331,
+  "name": "犀角汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 332,
+  "name": "独活酒",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 333,
+  "name": "香豉散",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 334,
+  "name": "天门冬汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 8
+ },
+ {
+  "idx": 335,
+  "name": "冶葛膏",
+  "flags": [],
+  "comp_n": 15,
+  "probe": "OK",
+  "src_count": 15
+ },
+ {
+  "idx": 336,
+  "name": "神明膏",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 11,
+  "dosage_mismatch": [
+   "白术"
+  ]
+ },
+ {
+  "idx": 337,
+  "name": "木防己汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 6
+ },
+ {
+  "idx": 338,
+  "name": "大豆汤",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 11
+ },
+ {
+  "idx": 339,
+  "name": "茯苓杏仁煎",
+  "flags": [],
+  "comp_n": 11,
+  "probe": "OK",
+  "src_count": 11
+ },
+ {
+  "idx": 340,
+  "name": "疗两眼痛大黄汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "merged_suspect": [
+   "细辛"
+  ],
+  "dosage_mismatch": [
+   "甘草"
+  ]
+ },
+ {
+  "idx": 341,
+  "name": "疗眼赤饮",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "秦皮"
+  ],
+  "missing": [
+   "前胡",
+   "黄连",
+   "黄芩",
+   "栀子仁",
+   "决明子",
+   "蕤仁"
+  ]
+ },
+ {
+  "idx": 342,
+  "name": "前胡汤丸",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 8,
+  "dosage_mismatch": [
+   "细辛"
+  ],
+  "missing": [
+   "前胡",
+   "秦皮",
+   "黄芩",
+   "升麻",
+   "蕤仁",
+   "决明子",
+   "芒硝",
+   "叶",
+   "车前草"
+  ]
+ },
+ {
+  "idx": 343,
+  "name": "秦皮汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "秦皮",
+   "黄连"
+  ]
+ },
+ {
+  "idx": 344,
+  "name": "菖蒲散",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 345,
+  "name": "通草散",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 7,
+  "boundary": "崔氏"
+ },
+ {
+  "idx": 346,
+  "name": "香膏",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "白芷"
+  ],
+  "missing": [
+   "当归",
+   "细辛",
+   "辛夷",
+   "通草",
+   "桂心",
+   "薰草"
+  ]
+ },
+ {
+  "idx": 347,
+  "name": "皂荚散",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "merged_suspect": [
+   "细辛",
+   "辛夷",
+   "蜀椒"
+  ]
+ },
+ {
+  "idx": 348,
+  "name": "石黛散",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "甘草",
+   "蛇床子"
+  ],
+  "missing": [
+   "细辛",
+   "当归"
+  ]
+ },
+ {
+  "idx": 349,
+  "name": "含汤",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 350,
+  "name": "莽草汤",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 351,
+  "name": "升麻煎",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "黄柏",
+   "玄参"
+  ],
+  "merged_suspect": [
+   "射干"
+  ],
+  "missing": [
+   "升麻"
+  ]
+ },
+ {
+  "idx": 352,
+  "name": "海藻酒",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 353,
+  "name": "含丸",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 354,
+  "name": "疗瘿海藻散",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 7
+ },
+ {
+  "idx": 355,
+  "name": "昆布丸",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 356,
+  "name": "小麦汤",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 357,
+  "name": "疗喉痹塞射干丸",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "杏仁"
+  ]
+ },
+ {
+  "idx": 358,
+  "name": "口燥膏",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 359,
+  "name": "当归含丸",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 360,
+  "name": "疗咽喉中痛不利丸",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 8,
+  "dosage_mismatch": [
+   "甘草",
+   "丹砂"
+  ],
+  "merged_suspect": [
+   "射干"
+  ],
+  "missing": [
+   "升麻"
+  ]
+ },
+ {
+  "idx": 361,
+  "name": "大黄膏",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 362,
+  "name": "术桂散",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "桂心",
+   "菖蒲"
+  ],
+  "merged_suspect": [
+   "白术"
+  ],
+  "missing": [
+   "麻黄"
+  ]
+ },
+ {
+  "idx": 363,
+  "name": "疗发痈疽排脓散",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 364,
+  "name": "疗痈疽已溃白芷摩膏",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "甘草",
+   "青竹茹"
+  ],
+  "missing": [
+   "白芷"
+  ]
+ },
+ {
+  "idx": 365,
+  "name": "猪蹄洗汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 366,
+  "name": "笺汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4,
+  "dosage_mismatch": [
+   "白蔹"
+  ],
+  "missing": [
+   "大黄",
+   "黄芩"
+  ]
+ },
+ {
+  "idx": 367,
+  "name": "木占斯散",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "EXCERPT_NOT_LOCATED"
+ },
+ {
+  "idx": 368,
+  "name": "瘭疽漏芦汤",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "黄芩"
+  ],
+  "merged_suspect": [
+   "黄"
+  ],
+  "missing": [
+   "漏芦",
+   "白蔹",
+   "麻黄",
+   "白薇",
+   "枳实",
+   "升麻",
+   "芍药",
+   "甘草"
+  ]
+ },
+ {
+  "idx": 369,
+  "name": "升麻膏",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 13,
+  "dosage_mismatch": [
+   "升麻",
+   "黄芩"
+  ],
+  "missing": [
+   "白薇",
+   "漏芦",
+   "连翘",
+   "芒硝"
+  ]
+ },
+ {
+  "idx": 370,
+  "name": "胡粉散",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ },
+ {
+  "idx": 371,
+  "name": "为疮内漏大内塞排脓散",
+  "flags": [],
+  "comp_n": 19,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "茯苓"
+  ],
+  "missing": [
+   "山茱萸",
+   "五味子",
+   "干姜",
+   "当归",
+   "附子",
+   "肉苁蓉",
+   "石斛",
+   "菟丝子",
+   "巴戟天",
+   "瞿麦",
+   "远志",
+   "人参",
+   "甘草",
+   "麦门冬",
+   "石苇",
+   "芍药",
+   "干地黄",
+   "桂心"
+  ]
+ },
+ {
+  "idx": 372,
+  "name": "疗痈疽败坏生肉膏",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 10,
+  "merged_suspect": [
+   "辛夷",
+   "独活",
+   "当归",
+   "大黄",
+   "芍药",
+   "黄芩"
+  ],
+  "dosage_mismatch": [
+   "续断"
+  ]
+ },
+ {
+  "idx": 373,
+  "name": "莽草膏",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 14,
+  "dosage_mismatch": [
+   "附子",
+   "乌头",
+   "风杜蘅"
+  ],
+  "merged_suspect": [
+   "黄芩",
+   "牛膝",
+   "茯苓"
+  ],
+  "missing": [
+   "当归",
+   "细辛"
+  ]
+ },
+ {
+  "idx": 374,
+  "name": "疗发背发乳房及诸恶疮膏",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 11,
+  "dosage_mismatch": [
+   "薯蓣"
+  ],
+  "missing": [
+   "黄连",
+   "当归"
+  ]
+ },
+ {
+  "idx": 375,
+  "name": "丹参膏",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 10,
+  "merged_suspect": [
+   "当归"
+  ],
+  "missing": [
+   "丹参",
+   "防风",
+   "细辛",
+   "黄芩",
+   "芍药",
+   "牛膝",
+   "大黄",
+   "独活"
+  ]
+ },
+ {
+  "idx": 376,
+  "name": "黄连阿胶汤",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "阿胶"
+  ],
+  "missing": [
+   "黄连"
+  ]
+ },
+ {
+  "idx": 377,
+  "name": "蓝青丸",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 8,
+  "dosage_mismatch": [
+   "蓝青"
+  ],
+  "merged_suspect": [
+   "白术",
+   "地榆",
+   "地肤子"
+  ]
+ },
+ {
+  "idx": 378,
+  "name": "马蔺散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 3,
+  "missing": [
+   "干姜",
+   "牛骨灰",
+   "神曲",
+   "鸡子",
+   "黄腊"
+  ]
+ },
+ {
+  "idx": 379,
+  "name": "服调中散",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "阿胶",
+   "黄柏"
+  ],
+  "missing": [
+   "人参",
+   "黄连"
+  ]
+ },
+ {
+  "idx": 380,
+  "name": "生犀角散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3,
+  "dosage_mismatch": [
+   "生犀角",
+   "酸石榴皮",
+   "枳实"
+  ]
+ },
+ {
+  "idx": 381,
+  "name": "犀角煎",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "dosage_mismatch": [
+   "犀角",
+   "当归"
+  ],
+  "merged_suspect": [
+   "人参"
+  ]
+ },
+ {
+  "idx": 382,
+  "name": "犀角散",
+  "flags": [],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5
+ },
+ {
+  "idx": 383,
+  "name": "蒲黄散",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 384,
+  "name": "柏皮汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4,
+  "dosage_mismatch": [
+   "阿胶"
+  ]
+ },
+ {
+  "idx": 385,
+  "name": "赤石脂汤",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 8,
+  "merged_suspect": [
+   "白术"
+  ],
+  "dosage_mismatch": [
+   "麻"
+  ]
+ },
+ {
+  "idx": 386,
+  "name": "猪肝丸",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 5,
+  "merged_suspect": [
+   "黄连"
+  ],
+  "dosage_mismatch": [
+   "阿胶",
+   "乌梅肉"
+  ]
+ },
+ {
+  "idx": 387,
+  "name": "疗淋榆皮汤",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 6,
+  "dosage_mismatch": [
+   "瞿麦"
+  ]
+ },
+ {
+  "idx": 388,
+  "name": "难淋沥汤",
+  "flags": [],
+  "comp_n": 12,
+  "probe": "OK",
+  "src_count": 2,
+  "missing": [
+   "桑螵蛸",
+   "黄芩",
+   "蒲黄",
+   "滑石",
+   "石苇",
+   "瞿麦",
+   "王不留行",
+   "葵子",
+   "钟乳",
+   "桂心",
+   "通草"
+  ]
+ },
+ {
+  "idx": 389,
+  "name": "疗堕落瘀血桃枝汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 9,
+  "merged_suspect": [
+   "当归"
+  ],
+  "dosage_mismatch": [
+   "桂心"
+  ]
+ },
+ {
+  "idx": 390,
+  "name": "冶葛蛇衔膏",
+  "flags": [],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 11,
+  "dosage_mismatch": [
+   "冶葛",
+   "附子",
+   "泽兰",
+   "柏脂"
+  ],
+  "merged_suspect": [
+   "当归",
+   "防风",
+   "黄芩"
+  ],
+  "missing": [
+   "续断"
+  ]
+ },
+ {
+  "idx": 391,
+  "name": "疗金疮生肌白膏",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 8,
+  "merged_suspect": [
+   "当归"
+  ],
+  "dosage_mismatch": [
+   "蔹附子"
+  ]
+ },
+ {
+  "idx": 392,
+  "name": "常服散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 5,
+  "probe": "OK",
+  "src_count": 6,
+  "missing": [
+   "生大豆黄"
+  ]
+ },
+ {
+  "idx": 393,
+  "name": "漏芦汤",
+  "flags": [],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 10,
+  "dosage_mismatch": [
+   "漏芦",
+   "白薇",
+   "枳实",
+   "升麻",
+   "甘草"
+  ],
+  "merged_suspect": [
+   "白蔹",
+   "黄芩",
+   "麻黄",
+   "芍药"
+  ]
+ },
+ {
+  "idx": 394,
+  "name": "七宣丸",
+  "flags": [],
+  "comp_n": 6,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "枳实",
+   "诃黎勒皮"
+  ],
+  "merged_suspect": [
+   "柴胡"
+  ]
+ },
+ {
+  "idx": 395,
+  "name": "代茶新饮",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 14,
+  "dosage_mismatch": [
+   "通草",
+   "干葛",
+   "忍冬",
+   "薏苡仁"
+  ],
+  "merged_suspect": [
+   "茯苓",
+   "干姜"
+  ]
+ },
+ {
+  "idx": 396,
+  "name": "解毒药散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 2,
+  "missing": [
+   "甘草",
+   "白梁粉",
+   "蜜"
+  ]
+ },
+ {
+  "idx": 397,
+  "name": "面膏",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 18,
+  "probe": "OK",
+  "src_count": 29,
+  "boundary": "又方",
+  "merged_suspect": [
+   "防风",
+   "葳蕤",
+   "白芷",
+   "商陆",
+   "麝香"
+  ],
+  "dosage_mismatch": [
+   "白附子",
+   "白术",
+   "玉屑",
+   "丁香"
+  ],
+  "missing": [
+   "细辛",
+   "当归",
+   "独活",
+   "白茯苓",
+   "天门冬",
+   "菟丝子",
+   "防己",
+   "蘼芜花",
+   "青木香"
+  ]
+ },
+ {
+  "idx": 398,
+  "name": "木兰散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 1,
+  "missing": [
+   "雄黄",
+   "硝粉",
+   "水银"
+  ]
+ },
+ {
+  "idx": 399,
+  "name": "主风头沐汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 5,
+  "merged_suspect": [
+   "麻黄根",
+   "细辛"
+  ],
+  "dosage_mismatch": [
+   "防风"
+  ]
+ },
+ {
+  "idx": 400,
+  "name": "生发膏",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 14,
+  "probe": "OK",
+  "src_count": 14,
+  "dosage_mismatch": [
+   "防风",
+   "叶",
+   "松叶"
+  ],
+  "missing": [
+   "细辛",
+   "续断",
+   "辛夷仁",
+   "寄生",
+   "泽兰",
+   "零陵香",
+   "蔓荆子",
+   "桑根汁",
+   "韭根汁",
+   "乌麻油",
+   "白芷"
+  ]
+ },
+ {
+  "idx": 401,
+  "name": "服防风蔓荆子丸",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 9,
+  "dosage_mismatch": [
+   "干地黄"
+  ],
+  "missing": [
+   "防风",
+   "黄连"
+  ]
+ },
+ {
+  "idx": 402,
+  "name": "飞乌膏散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2,
+  "dosage_mismatch": [
+   "作水银上黑烟"
+  ]
+ },
+ {
+  "idx": 403,
+  "name": "黄连胡粉膏散",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 404,
+  "name": "疗疮上须贴膏",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 11,
+  "dosage_mismatch": [
+   "大黄",
+   "续断",
+   "蜡"
+  ],
+  "merged_suspect": [
+   "当归"
+  ],
+  "missing": [
+   "白芷"
+  ]
+ },
+ {
+  "idx": 405,
+  "name": "黑散",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3
+ },
+ {
+  "idx": 406,
+  "name": "紫丸",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 4,
+  "dosage_mismatch": [
+   "赤石脂"
+  ]
+ },
+ {
+  "idx": 407,
+  "name": "杏仁汤",
+  "flags": [],
+  "comp_n": 2,
+  "probe": "OK",
+  "src_count": 2
+ },
+ {
+  "idx": 408,
+  "name": "服生麦门冬汤",
+  "flags": [],
+  "comp_n": 11,
+  "probe": "OK",
+  "src_count": 7,
+  "dosage_mismatch": [
+   "桂心",
+   "甘草"
+  ],
+  "merged_suspect": [
+   "通草"
+  ],
+  "missing": [
+   "芒硝",
+   "麻黄",
+   "人参",
+   "葱白",
+   "豉",
+   "麦奴"
+  ]
+ },
+ {
+  "idx": 409,
+  "name": "五香连翘汤",
+  "flags": [],
+  "comp_n": 12,
+  "probe": "OK",
+  "src_count": 13,
+  "merged_suspect": [
+   "沉香",
+   "独活",
+   "连翘"
+  ],
+  "dosage_mismatch": [
+   "升麻",
+   "薰陆香",
+   "鸡舌香"
+  ]
+ },
+ {
+  "idx": 410,
+  "name": "疗石气在皮肤肿热膏",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 10,
+  "probe": "OK",
+  "src_count": 12,
+  "dosage_mismatch": [
+   "生麦门冬",
+   "石膏",
+   "沙参"
+  ],
+  "merged_suspect": [
+   "葳蕤",
+   "青葙子"
+  ]
+ },
+ {
+  "idx": 411,
+  "name": "蚀恶肉散",
+  "flags": [],
+  "comp_n": 7,
+  "probe": "OK",
+  "src_count": 8
+ },
+ {
+  "idx": 412,
+  "name": "痈疽蚀恶肉膏",
+  "flags": [
+   "low_coverage"
+  ],
+  "comp_n": 8,
+  "probe": "OK",
+  "src_count": 11,
+  "dosage_mismatch": [
+   "附子",
+   "雄黄",
+   "雌黄",
+   "真珠",
+   "石",
+   "茹"
+  ],
+  "merged_suspect": [
+   "黄芩"
+  ],
+  "missing": [
+   "大黄"
+  ]
+ },
+ {
+  "idx": 413,
+  "name": "别法随事择用解散",
+  "flags": [],
+  "comp_n": 3,
+  "probe": "OK",
+  "src_count": 3,
+  "dosage_mismatch": [
+   "葱白"
+  ]
+ },
+ {
+  "idx": 414,
+  "name": "淡竹叶汤",
+  "flags": [],
+  "comp_n": 9,
+  "probe": "OK",
+  "src_count": 8,
+  "dosage_mismatch": [
+   "淡竹叶",
+   "甘草",
+   "枳实",
+   "人参"
+  ],
+  "merged_suspect": [
+   "茯苓",
+   "白术",
+   "栀子"
+  ]
+ },
+ {
+  "idx": 415,
+  "name": "涂飞雪汤",
+  "flags": [],
+  "comp_n": 4,
+  "probe": "OK",
+  "src_count": 4
+ }
+]

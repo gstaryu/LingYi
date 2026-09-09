@@ -1,0 +1,414 @@
+sampled flagged: 30 clean: 30
+==================== FLAGGED ====================
+
+[906] 茯苓酥方 (卷二十七养性\服食法第六) flags=['low_coverage', 'weak_indication'] cov=0.4
+   pian_at_excerpt=茯苓酥方 pian_ok=False
+   ind_ok=None ind=
+   comp(5): [('茯苓', '五斤'), ('松脂', '五斤'), ('白蜜', '三斤'), ('生天门冬', '五斤'), ('酥', '三斤')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[251] 熏衣香方 (卷六上七窍病上\口病第三) flags=['low_coverage'] cov=0.2
+   pian_at_excerpt=熏衣香方 pian_ok=False
+   ind_ok=False ind=鸡骨煎香零陵香丁香青桂皮青木香枫香。
+   comp(7): [('郁金香', '三两'), ('苏合香', '二两'), ('甘松香', '二两'), ('沉水香', '五两'), ('安息香', ''), ('艾纳香', '一两'), ('麝香', '半两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[27] 滑胎令易产方 (卷二妇人方上\养胎第三) flags=['weak_indication'] cov=1.0
+   pian_at_excerpt=滑胎令易产方 pian_ok=False
+   ind_ok=None ind=
+   comp(3): [('阿胶', '八两'), ('滑石', '二两'), ('车前子', '一升')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[467] 野狼毒丸 (卷十一肝脏\坚症积聚第五) flags=['weak_indication'] cov=0.75
+   pian_at_excerpt=野狼毒丸 pian_ok=False
+   ind_ok=None ind=
+   comp(7): [('野狼毒', '五两'), ('半夏', '三两'), ('杏仁', '三两'), ('桂心', '四两'), ('附子', '二两'), ('蜀椒', '二两'), ('细辛', '二两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[402] 承气汤方 (卷九伤寒方上\宜下第八) flags=['weak_indication'] cov=1.0
+   pian_at_excerpt=承气汤方 pian_ok=False
+   ind_ok=None ind=
+   comp(4): [('枳实', '五枚'), ('芒硝', '半斤'), ('大黄', '四两'), ('甘草', '二两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[371] 杀鬼烧药方 (卷九伤寒方上\辟温第二) flags=['low_coverage', 'weak_indication'] cov=0.333
+   pian_at_excerpt=杀鬼烧药方 pian_ok=False
+   ind_ok=None ind=
+   comp(6): [('雌黄', '一斤'), ('羚羊角', '三两'), ('人', '三两'), ('马悬蹄', '三两'), ('白术', '八两'), ('蜡', '八斤')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[261] 五香散 (卷六上七窍病上\面药第九) flags=['low_coverage'] cov=0.333
+   pian_at_excerpt=五香散 pian_ok=False
+   ind_ok=True ind=治黑运赤气，令人白光润方。
+   comp(13): [('毕豆', '四两'), ('白茯苓', '二两'), ('葳蕤', '二两'), ('商陆', '二两'), ('大豆黄卷', '二两'), ('白芷', '三两'), ('当归', '三两'), ('附子', '三两'), ('防风', '三两'), ('杏仁', '三两'), ('天门冬', '三两'), ('白术', '三两'), ('土瓜根', '三两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[214] 八味生姜煎 (卷五下少小婴孺方下\咳嗽第六) flags=['weak_indication'] cov=1.0
+   pian_at_excerpt=八味生姜煎 pian_ok=False
+   ind_ok=None ind=
+   comp(7): [('生姜', '七两'), ('干姜', '四两'), ('桂心', '二两'), ('甘草', '三两'), ('款冬花', '三两'), ('紫菀', '三两'), ('杏仁', '')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[837] 瘭疽第六 (卷二十二痈肿毒方) flags=['low_coverage'] cov=0.286
+   pian_at_excerpt=瘭疽第六 pian_ok=False
+   ind_ok=True ind=治，专去其热取瘥。
+   comp(19): [('敷升麻膏', '八分'), ('宜五香连翘汤', '八分'), ('血仍敷丹参膏', '八分'), ('服五香汤主之', '八分'), ('味甘草散敷之', '八分'), ('小豆散', '八分'), ('以其无破', '八分'), ('服五香连翘汤', '八分'), ('温赤龙皮汤渍', '八分'), ('长敷家猪屎散', '八分'), ('射干', '八分'), ('甘草', '八分'), ('枳实', '八分'), ('升麻', '八分'), ('干地黄', '八分'), ('黄芩', '八分'), ('麝香', '二分'), ('前胡', '三分'), ('大黄', '十分')]
+   missing_herbs_in_window=['服五香汤主之', '味甘草散敷之', '小豆散', '以其无破', '服五香连翘汤', '温赤龙皮汤渍', '长敷家猪屎散', '射干', '甘草', '枳实', '干地黄', '黄芩', '麝香', '前胡', '大黄'] bad_dosage_pairs=[('敷升麻膏', '八分'), ('宜五香连翘汤', '八分'), ('血仍敷丹参膏', '八分'), ('服五香汤主之', '八分'), ('味甘草散敷之', '八分'), ('小豆散', '八分'), ('以其无破', '八分'), ('服五香连翘汤', '八分'), ('温赤龙皮汤渍', '八分'), ('长敷家猪屎散', '八分'), ('射干', '八分'), ('甘草', '八分'), ('枳实', '八分'), ('升麻', '八分'), ('干地黄', '八分'), ('黄芩', '八分'), ('麝香', '二分'), ('前胡', '三分'), ('大黄', '十分')]
+   src_pairs_not_extracted=[]
+
+[181] 大黄朴硝汤 (卷四妇人方下\月经不调第二十一) flags=['low_coverage'] cov=0.4
+   pian_at_excerpt=大黄朴硝汤 pian_ok=False
+   ind_ok=True ind=治经年月水不利，胞中有风冷所致，宜下之方。
+   comp(10): [('牛膝', '五两'), ('朴硝', '三两'), ('甘草', '三两'), ('紫菀', '三两'), ('代赭', '一两'), ('水蛭', '二两'), ('干姜', '二两'), ('细辛', '二两'), ('焰硝', '二两'), ('麻仁', '五合')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[873] 栝蒌根汤方 (卷二十四解毒杂治方\解五石毒第三) flags=['weak_indication'] cov=0.75
+   pian_at_excerpt=栝蒌根汤方 pian_ok=False
+   ind_ok=None ind=
+   comp(4): [('大麦奴', '四两'), ('甘草', '二两'), ('豉', '二升'), ('葱白', '半斤')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[682] 龙牙散 (卷十七肺脏方\飞尸鬼疰第八) flags=['low_coverage'] cov=0.429
+   pian_at_excerpt=龙牙散 pian_ok=False
+   ind_ok=True ind=治百疰邪鬼飞尸万病方。
+   comp(21): [('茯苓', '二两'), ('雄黄', '五分'), ('芍药', '五分'), ('枣膏', '五分'), ('干地黄', '一两'), ('石斛', '一两'), ('胡燕屎', '三分'), ('乌头', '一两'), ('羌活', '一两'), ('桂心', '一两'), ('杏仁', '一两'), ('防风', '一两'), ('鹳骨', '一两'), ('人参', '一两'), ('大黄', '一两'), ('白术', '二两'), ('苏子', '四合'), ('橘皮', ''), ('甘草', ''), ('川芎', ''), ('远志', '')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[68] 三物黄芩汤方 (卷三妇人方中\中风第十二) flags=['weak_indication'] cov=1.0
+   pian_at_excerpt=三物黄芩汤方 pian_ok=False
+   ind_ok=None ind=
+   comp(2): [('苦参', '二两'), ('干地黄', '四两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[61] 小独活汤 (卷三妇人方中\中风第十二) flags=['weak_indication'] cov=1.0
+   pian_at_excerpt=小独活汤 pian_ok=False
+   ind_ok=None ind=
+   comp(4): [('独活', '八两'), ('葛根', '六两'), ('生姜', '六两'), ('甘草', '二两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[196] 茵芋丸 (卷五上少小婴孺方上\惊痫第三) flags=['low_coverage'] cov=0.4
+   pian_at_excerpt=茵芋丸 pian_ok=False
+   ind_ok=True ind=治少小有风痫疾，至长不除，或遇天阴节变便发动，食饮坚强亦发。
+   comp(5): [('防葵', '一两'), ('黄芩', '一两'), ('松萝', '半两'), ('蜣螂', '十枚'), ('甘草', '三两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[358] 独活煮散 (卷八治诸风方\风痱第五) flags=['weak_indication'] cov=1.0
+   pian_at_excerpt=独活煮散 pian_ok=False
+   ind_ok=None ind=
+   comp(15): [('独活', '八两'), ('川芎', '一两'), ('芍药', '一两'), ('茯苓', '一两'), ('防风', '一两'), ('防己', '一两'), ('葛根', '一两'), ('羚羊角', '四两'), ('当归', '四两'), ('桂心', '四两'), ('麦门冬', '四两'), ('石膏', '四两'), ('磁石', '十两'), ('甘草', '三两'), ('白术', '三两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[373] 辟温杀鬼丸 (卷九伤寒方上\辟温第二) flags=['low_coverage'] cov=0.0
+   pian_at_excerpt=辟温杀鬼丸 pian_ok=False
+   ind_ok=True ind=熏百鬼恶气方。
+   comp(8): [('雌黄', '二两'), ('龟甲', '三两'), ('皮', '三两'), ('虎骨', '七两'), ('樗鸡', '十五枚'), ('空青', '一两'), ('真珠', '五两'), ('东门上鸡头', '一两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[792] 石硫黄散 (卷二十膀胱腑方\杂补第七) flags=['low_coverage'] cov=0.0
+   pian_at_excerpt=石硫黄散 pian_ok=False
+   ind_ok=True ind=治下筛，酒服方寸匕，日三。
+   comp(6): [('萝摩', '六两'), ('五味子', '三两'), ('酸枣仁', '三两'), ('柏子仁', '三两'), ('干地黄', '三两'), ('枸杞根皮', '三两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[908] 西岳真人灵飞散方 (卷二十七养性\服食法第六) flags=['weak_indication'] cov=0.6
+   pian_at_excerpt=西岳真人灵飞散方 pian_ok=False
+   ind_ok=None ind=
+   comp(8): [('云母粉', '一斤'), ('茯苓', '八两'), ('柏子仁', '七两'), ('人参', '七两'), ('续断', '七两'), ('桂心', '七两'), ('花', '十五两'), ('干地黄', '十二两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[854] 五痔第三 (卷二十三痔漏方) flags=['low_coverage'] cov=0.333
+   pian_at_excerpt=五痔第三 pian_ok=False
+   ind_ok=True ind=牡痔生肉如鼠乳在孔中，颇出见外，妨于更衣，鳖甲主之。
+   comp(7): [('牝痔', '一两'), ('秦艽', '一两'), ('白芷', '一两'), ('厚朴', '一两'), ('紫菀', '一两'), ('雷丸', '二两'), ('本', '二两')]
+   missing_herbs_in_window=['厚朴'] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[315] 卫侯青膏 (卷七风毒香港脚方\诸膏第五) :: EXCERPT NOT FOUND in txt
+   comp: [('川椒', '六两'), ('半夏', '七合'), ('桂心', '一两'), ('川芎', '一两'), ('细辛', '一两'), ('黄芩', '一两'), ('桔梗', '一两'), ('皂荚', '一两'), ('厚朴', '三两'), ('乌头', '三两'), ('干姜', '三两'), ('黄连', '三两'), ('戎盐', '三两'), ('黄野葛', '二分'), ('生竹茹', '六升'), ('巴豆', '二十枚'), ('杏仁', '一两'), ('猪脂', '三斗'), ('苦酒', '一斗')]
+   ind: 治百病久风，头眩鼻塞，清涕泪出，霍乱吐逆，伤寒咽痛，脊背头项强，偏枯拘挛。
+
+[886] 八物茜根汤 (卷二十四解毒杂治方\蛊毒第四论) flags=['low_coverage'] cov=0.333
+   pian_at_excerpt=八物茜根汤 pian_ok=False
+   ind_ok=True ind=治下血状如鸡肝，腹中绞痛难忍者方。
+   comp(6): [('犀角', '三两'), ('桔梗', '二两'), ('黄柏', '二两'), ('黄芩', '二两'), ('地榆', '四两'), ('荷', '四两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[675] 桃皮汤 (卷十七肺脏方\飞尸鬼疰第八) flags=['low_coverage'] cov=0.4
+   pian_at_excerpt=桃皮汤 pian_ok=False
+   ind_ok=True ind=治中恶气心腹痛，胸胁胀满短气方。
+   comp(5): [('桃白皮', '一握'), ('附子', '一两'), ('栀子仁', '十四枚'), ('当归', '三两'), ('萸', '五合')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[370] 雄黄散 (卷九伤寒方上\辟温第二) flags=['weak_indication'] cov=0.5
+   pian_at_excerpt=雄黄散 pian_ok=False
+   ind_ok=None ind=
+   comp(3): [('雄黄', '五两'), ('朱砂', '二两'), ('鬼臼', '二两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[705] 通声膏方 (卷十八大肠腑方\咳嗽第五) flags=['low_coverage'] cov=0.333
+   pian_at_excerpt=通声膏方 pian_ok=False
+   ind_ok=False ind=五味子款冬花。
+   comp(9): [('通草', '三两'), ('人参', '二两'), ('细辛', '二两'), ('桂心', '二两'), ('菖蒲', '二两'), ('姜汁', '一升'), ('白蜜', '二升'), ('枣膏', '三升'), ('酥', '五升')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[471] 大黄汤方 (卷十一肝脏\坚症积聚第五) flags=['weak_indication'] cov=0.6
+   pian_at_excerpt=大黄汤方 pian_ok=False
+   ind_ok=None ind=
+   comp(5): [('茯苓', '半两'), ('乌贼骨', '二枚'), ('皂荚', '六枚'), ('甘草', '一尺'), ('芒硝', '一枚')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[1] 论合和第七 (卷一诸论) flags=['low_coverage'] cov=0.211
+   pian_at_excerpt=论合和第七 pian_ok=False
+   ind_ok=False ind=治诸草石虫兽，用水升数消杀之法则云何？答曰∶凡草有根、茎、枝、叶、皮、骨、花、实，诸虫有毛、翅、皮、甲、头、足、尾、骨之
+   comp(29): [('朱砂', ''), ('阳起石', ''), ('矾石', ''), ('硫黄', ''), ('孔公孽', ''), ('石', ''), ('卤咸', ''), ('巴豆', ''), ('踯躅', ''), ('皂荚', ''), ('葳', ''), ('薇衔', ''), ('辛夷', ''), ('石南', ''), ('虎杖', ''), ('羊桃', ''), ('野狼跋子', ''), ('地肤子', ''), ('蛇床子', ''), ('青葙子', ''), ('茺蔚子', ''), ('王不留行', ''), ('菟丝子', ''), ('僵蚕', ''), ('蜈蚣', ''), ('斑蝥', ''), ('生龟', ''), ('诸鸟兽', ''), ('以半两为正', '一两')]
+   missing_herbs_in_window=['诸鸟兽', '以半两为正'] bad_dosage_pairs=[('以半两为正', '一两')]
+   src_pairs_not_extracted=[('钟乳', '入酒'), ('公鬼臼莽草蒴', '入酒'), ('云实槐子', '入酒')]
+
+[266] 面脂 (卷六上七窍病上\面药第九) flags=['low_coverage'] cov=0.429
+   pian_at_excerpt=面脂 pian_ok=False
+   ind_ok=True ind=主悦泽人面，耐老方。
+   comp(12): [('冬瓜仁', '三两'), ('葳蕤', '一两'), ('细辛', '一两'), ('防风', '一两'), ('商陆', '三两'), ('川芎', '三两'), ('土瓜根', '一两'), ('桃仁', '一两'), ('辛夷', ''), ('麝香', ''), ('零陵香', '半两'), ('猪胰', '')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[880] 理中汤 (卷二十四解毒杂治方\解五石毒第三) flags=['weak_indication'] cov=1.0
+   pian_at_excerpt=理中汤 pian_ok=False
+   ind_ok=None ind=
+   comp(2): [('甘草', '三两'), ('干姜', '二两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[552] 虎睛汤 (卷十四小肠腑方\风癫第五) flags=['low_coverage'] cov=0.25
+   pian_at_excerpt=虎睛汤 pian_ok=False
+   ind_ok=True ind=治狂邪发无常，披发大叫唤，欲杀人，不避水火方。
+   comp(8): [('露蜂房', '三两'), ('茯苓', '三两'), ('桂心', '三两'), ('防风', '三两'), ('人参', ''), ('甘草', ''), ('石长生', '六分'), ('枫上寄生', '五分')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+==================== CLEAN ====================
+
+[338] 干姜附子汤 (卷八治诸风方\贼风第三) flags=[] cov=1.0
+   pian_at_excerpt=干姜附子汤 pian_ok=False
+   ind_ok=True ind=治心虚寒风，半身不遂、骨节离解、缓弱不收，便利无度，口面邪斜方。
+   comp(4): [('附子', '八两'), ('桂心', '四两'), ('麻黄', '四两'), ('川芎', '三两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[182] 茱萸虻虫汤 (卷四妇人方下\月经不调第二十一) flags=[] cov=0.75
+   pian_at_excerpt=茱萸虻虫汤 pian_ok=False
+   ind_ok=True ind=治久寒月经不利，或多或少方。
+   comp(6): [('吴茱萸', '三升'), ('水蛭', '一两'), ('牡丹', '一两'), ('生姜', '一斤'), ('半夏', '一升'), ('芍药', '')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[248] 鼻病第二 (卷六上七窍病上) flags=[] cov=1.0
+   pian_at_excerpt=鼻病第二 pian_ok=False
+   ind_ok=True ind=治鼻塞，脑冷，清涕出方。
+   comp(6): [('辛夷', '半两'), ('细辛', '一两'), ('甘遂', '一两'), ('桂心', '一两'), ('川芎', '一两'), ('附子', '一两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[407] 四物甘草汤 (卷九伤寒方上\发汗吐下后第九) flags=[] cov=1.0
+   pian_at_excerpt=四物甘草汤 pian_ok=False
+   ind_ok=True ind=治伤寒发汗出而喘，无大热，与此方。
+   comp(4): [('甘草', '二两'), ('麻黄', '四两'), ('石膏', '半斤'), ('杏仁', '五十枚')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[114] 石苇汤 (卷三妇人方中\淋渴第十六) flags=[] cov=0.6
+   pian_at_excerpt=石苇汤 pian_ok=False
+   ind_ok=True ind=治产后猝淋、气淋、血淋、石淋方。
+   comp(5): [('甘草', '二两'), ('榆皮', '五两'), ('大枣', '三十枚'), ('葵子', '二升'), ('生姜', '三两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[('白术', '《产宝》用芍药')]
+
+[104] 鳖甲汤 (卷三妇人方中\下痢第十五) flags=[] cov=1.0
+   pian_at_excerpt=鳖甲汤 pian_ok=False
+   ind_ok=True ind=治产后早起中风冷，泄痢及带下方。
+   comp(5): [('鳖甲', '二两'), ('当归', '二两'), ('黄连', '二两'), ('干姜', '二两'), ('黄柏', '一尺')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[458] 筋极第四 (卷十一肝脏) flags=[] cov=1.0
+   pian_at_excerpt=筋极第四 pian_ok=False
+   ind_ok=True ind=主肝也，肝应筋，筋与肝合，肝有病从筋生。
+   comp(20): [('橘皮', '四两'), ('白术', '五两'), ('石膏', '五两'), ('细辛', '二两'), ('当归', '二两'), ('桂心', '二两'), ('茯苓', '二两'), ('香豉', '一升'), ('丹参', '三两'), ('川芎', '二两'), ('杜仲', '二两'), ('续断', '二两'), ('地骨皮', '二两'), ('通草', '一两'), ('干地黄', '一两'), ('麦门冬', '一两'), ('麻黄', '一两'), ('牛膝', '二两'), ('生姜', ''), ('牡蛎', '二两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[109] 赤散 (卷三妇人方中\下痢第十五) flags=[] cov=0.5
+   pian_at_excerpt=赤散 pian_ok=False
+   ind_ok=True ind=治产后下痢方。
+   comp(2): [('代赭', '三两'), ('桂心', '一两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[432] 大茵陈汤 (卷十伤寒方下\伤寒发黄第十四) flags=[] cov=0.75
+   pian_at_excerpt=大茵陈汤 pian_ok=False
+   ind_ok=True ind=治内实热盛发黄，黄如金色，脉浮大滑实紧数者。
+   comp(9): [('黄柏', '一两'), ('大黄', '三两'), ('白术', '三两'), ('黄芩', '一两'), ('甘草', '一两'), ('茯苓', '一两'), ('前胡', '一两'), ('实', '一两'), ('栀子', '二十枚')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[416] 白虎汤 (卷九伤寒方上\发汗吐下后第九) flags=[] cov=1.0
+   pian_at_excerpt=白虎汤 pian_ok=False
+   ind_ok=True ind=治伤寒吐下后七八日不解，结热在里，表里俱热，时时恶风大渴，舌上干燥而烦，欲饮水数升者方。
+   comp(4): [('石膏', '一升'), ('知母', '六两'), ('甘草', '二两'), ('粳米', '六合')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[740] 禁精汤 (卷十九肾脏方\精极第四) flags=[] cov=0.5
+   pian_at_excerpt=禁精汤 pian_ok=False
+   ind_ok=True ind=治失精羸瘦，酸削少气，目视不明，恶闻人声方。
+   comp(2): [('韭子', '二升'), ('粳米', '一合')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[321] 小续命汤 (卷八治诸风方\诸风第二) flags=[] cov=1.0
+   pian_at_excerpt=小续命汤 pian_ok=False
+   ind_ok=True ind=治猝中风欲死，身体缓急口目不正，舌强不能语，奄奄忽忽，神情闷乱。
+   comp(11): [('防己', ''), ('人参', ''), ('黄芩', ''), ('桂心', ''), ('白芍药', ''), ('甘草', ''), ('川芎', ''), ('杏仁', '一两'), ('防风', '一两'), ('附子', '一枚'), ('生姜', '五两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[51] 猪膏煎 (卷三妇人方中\虚损第十) flags=[] cov=1.0
+   pian_at_excerpt=猪膏煎 pian_ok=False
+   ind_ok=True ind=治产后体虚，寒热自汗出方。
+   comp(2): [('白蜜', '一升'), ('清酒', '五合')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[558] 小镇心散 (卷十四小肠腑方\风癫第五) flags=[] cov=0.5
+   pian_at_excerpt=小镇心散 pian_ok=False
+   ind_ok=True ind=治心气不足，虚悸恐畏，悲思恍惚，心神不定惕惕然惊者方。
+   comp(2): [('菖蒲', '二两'), ('茯苓', '四两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[652] 七气汤 (卷十七肺脏方\积气第五) :: EXCERPT NOT FOUND in txt
+   comp: [('厚朴', ''), ('半夏', ''), ('甘草', ''), ('地黄', ''), ('芍药', ''), ('栝蒌根', '一两'), ('川椒', '三两'), ('枳实', '五枚'), ('人参', '一两'), ('吴萸', '五合')]
+   ind: 治寒气、热气、忧气、劳气、愁气或饮食为膈气，或劳气内伤，五脏不调，气衰少力方。
+
+[142] 大平胃泽兰丸 (卷四妇人方下\补益第十八) :: EXCERPT NOT FOUND in txt
+   comp: [('钟乳', '三两'), ('柏子仁', '二两'), ('干地黄', '二两'), ('大黄', '二两'), ('前胡', '二两'), ('紫石英', '二两'), ('川芎', '一两'), ('白术', '一两'), ('川椒', '一两'), ('白芷', '一两'), ('丹参', '一两'), ('枳实', '一两'), ('桂心', '一两'), ('厚朴', '一两'), ('石斛', '一两'), ('苦参', '一两'), ('人参', '一两'), ('麦门冬', '一两'), ('干姜', '一两'), ('附子', '一枚'), ('吴茱萸', ''), ('陈曲', '一升'), ('枣', '五十枚')]
+   ind: 治男子女人五劳七伤诸不足，定志意，除烦满，手足虚冷羸瘦，及月水往来不调，体不能动等病方。
+
+[456] 槟榔汤方 (卷十一肝脏\肝虚实第二) flags=[] cov=0.8
+   pian_at_excerpt=槟榔汤方 pian_ok=False
+   ind_ok=True ind=治肝虚寒，胁下痛、胀满气急，目昏浊、视物不明。
+   comp(7): [('槟榔', '二十四枚'), ('母姜', '七两'), ('附子', '七枚'), ('茯苓', '三两'), ('橘皮', '三两'), ('桂心', '三两'), ('吴茱萸', '五两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[('桔梗白术', '各四两')]
+
+[89] 吴茱萸汤 (卷三妇人方中\心腹痛第十三) flags=[] cov=1.0
+   pian_at_excerpt=吴茱萸汤 pian_ok=False
+   ind_ok=True ind=治妇人先有寒冷，胸满痛，或心腹刺痛，或呕吐食少，或肿，或寒，或下痢，气息绵欲绝，产后益剧，皆主之方。
+   comp(8): [('吴茱萸', '二两'), ('防风', '十二铢'), ('桔梗', '十二铢'), ('干姜', '十二铢'), ('甘草', '十二铢'), ('细辛', '十二铢'), ('当归', '十二铢'), ('干地黄', '十八铢')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[672] 桂枝去芍药加皂荚汤 (卷十七肺脏方\肺痈第七) flags=[] cov=0.75
+   pian_at_excerpt=桂枝去芍药加皂荚汤 pian_ok=False
+   ind_ok=True ind=治肺痈吐涎沫不止方。
+   comp(4): [('生姜', '三两'), ('甘草', '二两'), ('皂荚', '一两'), ('大枣', '十五枚')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[355] 菊花酒 (卷八治诸风方\偏风第四) flags=[] cov=1.0
+   pian_at_excerpt=菊花酒 pian_ok=False
+   ind_ok=True ind=治男女风虚寒冷腰背痛，食少羸瘦无颜色、嘘吸少气，去风冷补不足方。
+   comp(7): [('杜仲', '一斤'), ('防风', '四两'), ('附子', '四两'), ('干姜', '四两'), ('桂心', '四两'), ('当归', '四两'), ('石斛', '四两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[771] 榆皮通滑泄热煎 (卷二十膀胱腑方\胞囊论第三) flags=[] cov=0.667
+   pian_at_excerpt=榆皮通滑泄热煎 pian_ok=False
+   ind_ok=True ind=治肾热应胞囊涩热，小便黄赤，苦不通方。
+   comp(4): [('葵子', '一升'), ('滑石', '三两'), ('通草', '三两'), ('车前子', '五两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[757] 大薯蓣丸 (卷十九肾脏方\补肾第八) flags=[] cov=0.8
+   pian_at_excerpt=大薯蓣丸 pian_ok=False
+   ind_ok=True ind=治男子女人虚损伤绝，头目眩，骨节烦疼，饮食减少，羸瘦百病方。
+   comp(21): [('附子', '八分'), ('人参', '八分'), ('泽泻', '八分'), ('天冬', '二分'), ('地黄', '二分'), ('黄芩', '二分'), ('归', '十分'), ('干漆', '二分'), ('杏仁', '二分'), ('阿胶', '二分'), ('白术', '三分'), ('白蔹', '三分'), ('芍药', '三分'), ('石膏', '三分'), ('胡', '三分'), ('桔梗', '四分'), ('干姜', '四分'), ('桂心', '四分'), ('大黄', '六分'), ('五味子', '十六分'), ('甘草', '二十分')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[435] 大黄黄柏栀子芒硝汤 (卷十伤寒方下\伤寒发黄第十四) flags=[] cov=1.0
+   pian_at_excerpt=大黄黄柏栀子芒硝汤 pian_ok=False
+   ind_ok=True ind=治发黄腹满，小便不利而赤，自汗出，此为表和里实当下之方。
+   comp(4): [('大黄', '三两'), ('黄柏', '四两'), ('芒硝', '四两'), ('栀子', '十五枚')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[709] 紫菀丸 (卷十八大肠腑方\咳嗽第五) flags=[] cov=0.75
+   pian_at_excerpt=紫菀丸 pian_ok=False
+   ind_ok=True ind=治积年咳嗽，喉中呀声一发不得坐卧方。
+   comp(6): [('五味子', '五分'), ('干姜', '四分'), ('款冬花', '四分'), ('鬼督邮', '四分'), ('杏仁', '八分'), ('蜈蚣', '二枚')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[223] 芫花丸 (卷五下少小婴孺方下\癖结胀满第七) flags=[] cov=1.0
+   pian_at_excerpt=芫花丸 pian_ok=False
+   ind_ok=True ind=治小儿心下痞，痰癖结聚，腹大胀满，身体壮热，不欲哺乳方。
+   comp(3): [('黄芩', '一两'), ('大黄', '二两'), ('雄黄', '二两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[872] 生麦门冬汤 (卷二十四解毒杂治方\解五石毒第三) flags=[] cov=0.667
+   pian_at_excerpt=生麦门冬汤 pian_ok=False
+   ind_ok=True ind=治主胃通主脾肾。
+   comp(4): [('生麦门冬', '四两'), ('甘草', '二两'), ('麻黄', '二两'), ('豉', '二升')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[80] 干地黄汤 (卷三妇人方中\心腹痛第十三) flags=[] cov=0.8
+   pian_at_excerpt=干地黄汤 pian_ok=False
+   ind_ok=True ind=治产后两胁满痛，兼治百病方。
+   comp(6): [('芍药', '三两'), ('当归', '二两'), ('蒲黄', '二两'), ('生姜', '五两'), ('桂心', '六两'), ('草', '一两')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[53] 薤白汤 (卷三妇人方中\虚烦第十一) flags=[] cov=0.667
+   pian_at_excerpt=薤白汤 pian_ok=False
+   ind_ok=True ind=治产后胸中烦热逆气方。
+   comp(4): [('知母', '二两'), ('石膏', '四两'), ('栝蒌根', '三两'), ('麦门冬', '')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[810] 麻黄煎 (卷二十一消渴淋闭方\水肿第四) flags=[] cov=0.714
+   pian_at_excerpt=麻黄煎 pian_ok=False
+   ind_ok=True ind=治风水，通身肿欲裂，利小便方。
+   comp(9): [('泽泻', '四两'), ('防风', '五两'), ('白术', '五两'), ('杏仁', '一升'), ('大戟', '一升'), ('猪苓', '三两'), ('独活', '八两'), ('大豆', '二升'), ('清酒', '一升')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]
+
+[279] 第三服兼补厚朴汤 (卷七风毒香港脚方\汤液第二) flags=[] cov=1.0
+   pian_at_excerpt=第三服兼补浓朴汤 pian_ok=False
+   ind_ok=True ind=治诸气咳嗽，逆气呕吐方。
+   comp(5): [('人参', '二两'), ('甘草', '三两'), ('茱萸', '二升'), ('半夏', '七两'), ('生姜', '一斤')]
+   missing_herbs_in_window=[] bad_dosage_pairs=[]
+   src_pairs_not_extracted=[]

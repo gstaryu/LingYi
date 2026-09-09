@@ -1,0 +1,114 @@
+{
+ "name_missing": [
+  [
+   112,
+   "柴胡厚朴汤"
+  ],
+  [
+   115,
+   "厚朴汤"
+  ],
+  [
+   273,
+   "或为脚气牛膝汤"
+  ]
+ ],
+ "shangwei_mismatch": [
+  [
+   41,
+   "生姜煎",
+   "source上一味",
+   "extracted 6 herbs"
+  ],
+  [
+   83,
+   "生姜汤",
+   "source上二味",
+   "extracted 4 herbs"
+  ],
+  [
+   98,
+   "桂心汤",
+   "source上一味",
+   "extracted 3 herbs"
+  ],
+  [
+   103,
+   "乌头赤石脂丸",
+   "source上五味",
+   "extracted 6 herbs"
+  ],
+  [
+   126,
+   "香豉丸",
+   "source上二味",
+   "extracted 7 herbs"
+  ],
+  [
+   162,
+   "黄昏汤",
+   "source上一味",
+   "extracted 2 herbs"
+  ],
+  [
+   219,
+   "死人席汤",
+   "source上二味",
+   "extracted 6 herbs"
+  ],
+  [
+   256,
+   "洗汤",
+   "source上五味",
+   "extracted 9 herbs"
+  ],
+  [
+   316,
+   "大豆紫汤",
+   "source上一味",
+   "extracted 4 herbs"
+  ],
+  [
+   326,
+   "洗脚渍汤",
+   "source上一味",
+   "extracted 3 herbs"
+  ],
+  [
+   378,
+   "马蔺散",
+   "source上三味",
+   "extracted 6 herbs"
+  ],
+  [
+   388,
+   "难淋沥汤",
+   "source上二味",
+   "extracted 12 herbs"
+  ],
+  [
+   392,
+   "常服散",
+   "source上六味",
+   "extracted 5 herbs"
+  ],
+  [
+   396,
+   "解毒药散",
+   "source上二味",
+   "extracted 4 herbs"
+  ],
+  [
+   398,
+   "木兰散",
+   "source上一味",
+   "extracted 4 herbs"
+  ],
+  [
+   408,
+   "服生麦门冬汤",
+   "source上七味",
+   "extracted 11 herbs"
+  ]
+ ]
+}

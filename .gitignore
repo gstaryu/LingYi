@@ -19,12 +19,12 @@ venv/
 *.swp
 
 # 运行时数据
-storage/*.db
-storage/*.db-shm
-storage/*.db-wal
-storage/chroma_db/
-storage/chroma_smoke/
-storage/chunks/
+# storage/*.db
+# storage/*.db-shm
+# storage/*.db-wal
+# storage/chroma_db/
+# storage/chroma_smoke/
+# storage/chunks/
 storage/uploads/
 storage/temp_uploads/
 storage/test_report.txt
@@ -60,8 +60,8 @@ storage/e2e_*.txt
 storage/e2e_backend.log
 storage/test_ckpt.db
 storage/__pycache__/
-storage/classics_src/
-storage/extracted_formulas/
+# storage/classics_src/
+# storage/extracted_formulas/
 evaluation/
 本草库数据.txt
 知识库数据清单.txt
