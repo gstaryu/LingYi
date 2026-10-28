@@ -19,16 +19,15 @@ venv/
 *.swp
 
 # 运行时数据
-# storage/*.db
-# storage/*.db-shm
-# storage/*.db-wal
+# storage/*.db 已在版本库中（含知识库种子数据，供新环境直接运行），保留跟踪
+storage/*.db-shm
+storage/*.db-wal
 # storage/chroma_db/
 # storage/chroma_smoke/
 # storage/chunks/
 storage/uploads/
 storage/temp_uploads/
 storage/test_report.txt
-storage/mock_rag_data.json
 
 # Ruff
 .ruff_cache/

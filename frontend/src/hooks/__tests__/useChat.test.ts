@@ -133,3 +133,40 @@ describe("useChat stages 持久化", () => {
     expect(msgs[3].content).toBe("");
   });
 });
+
+describe("useChat 主动打断", () => {
+  it("stop() 把最后一条助手消息标记为已停止并保留截断内容", async () => {
+    const { result } = renderHook(() => useChat(""));
+
+    await act(async () => {
+      result.current.send("腹痛");
+    });
+    act(() => {
+      emit?.({ type: "token", content: "部分" });
+      emit?.({ type: "token", content: "回答" });
+    });
+    act(() => {
+      result.current.stop();
+    });
+
+    const last = result.current.messages[result.current.messages.length - 1];
+    expect(last.role).toBe("assistant");
+    expect(last.content).toBe("部分回答");
+    expect(last.stopped).toBe(true);
+    expect(result.current.streaming).toBe(false);
+  });
+
+  it("stop() 时若助手消息为空则移除该气泡", async () => {
+    const { result } = renderHook(() => useChat(""));
+
+    await act(async () => {
+      result.current.send("腹痛");
+    });
+    act(() => {
+      result.current.stop();
+    });
+
+    const assistants = result.current.messages.filter((m) => m.role === "assistant");
+    expect(assistants).toHaveLength(0);
+  });
+});

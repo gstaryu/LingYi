@@ -183,12 +183,13 @@ def create_app() -> FastAPI:
     )
 
     # 注册路由
-    from lingyi.api.routes import auth, chat, health, profiles, threads, upload
+    from lingyi.api.routes import auth, chat, health, members, profiles, threads, upload
 
     app.include_router(health.router, prefix="/api", tags=["health"])
     app.include_router(auth.router, prefix="/api", tags=["auth"])
     app.include_router(chat.router, prefix="/api", tags=["chat"])
     app.include_router(threads.router, prefix="/api", tags=["threads"])
+    app.include_router(members.router, prefix="/api", tags=["members"])
     app.include_router(profiles.router, prefix="/api", tags=["profiles"])
     app.include_router(upload.router, prefix="/api", tags=["upload"])
 

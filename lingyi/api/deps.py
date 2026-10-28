@@ -105,3 +105,32 @@ def get_current_user(
         HTTPException 401 - 未提供凭据或 Token 无效
     """
     return decode_access_token(credentials.credentials if credentials else None)
+
+
+async def resolve_member_id(
+    storage: Any, username: str, member_id: str | None
+) -> str:
+    """
+    把请求中的 member_id 解析为可信的咨询人 ID。
+
+    - None：未指定，回退到主成员（member_id == username）
+    - ""：显式"不结合咨询人"，原样返回空串（不加载、不写入画像）
+    - 其他值：必须是当前账号下的咨询人，否则 404（不区分"不存在"与"不归属"，
+      避免暴露他人咨询人是否存在）
+
+    Raises:
+        HTTPException 404 - 咨询人不存在或不归属当前账号
+    """
+    if member_id == "":
+        return ""
+    if member_id is None:
+        primary = await storage.ensure_primary_member(username)
+        return primary.member_id
+
+    member = await storage.get_member(member_id)
+    if member is None or member.username != username:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="咨询人不存在或不归属当前账号",
+        )
+    return member.member_id

@@ -4,7 +4,7 @@ import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, Copy, Check, Loader2 } from "lucide-react";
+import { AlertTriangle, Copy, Check, Loader2, CircleStop } from "lucide-react";
 import type { MessageItem } from "@/lib/types";
 import type { Components } from "react-markdown";
 import { PrescriptionCard } from "./PrescriptionCard";
@@ -198,6 +198,12 @@ export function MessageBubble({
             )
           )}
         </div>
+        {message.stopped && (
+          <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
+            <CircleStop className="h-3.5 w-3.5" aria-hidden />
+            已停止生成（内容不完整）
+          </div>
+        )}
         {herbs.length > 0 && <PrescriptionCard herbs={herbs} rawText={cleaned} />}
         {symptoms && symptoms.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1">

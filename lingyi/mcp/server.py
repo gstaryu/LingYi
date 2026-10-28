@@ -92,12 +92,16 @@ def _formula_to_dict(formula: Any) -> dict:
 
 
 def _profile_to_dict(profile: Any) -> dict:
-    """UserProfile -> dict（体质/过敏/既往史）。"""
+    """UserProfile -> dict（体质/过敏/年龄性别/病史/既往诊疗）。"""
     return {
         "patient_id": profile.patient_id,
         "constitution": profile.constitution,
         "allergies": profile.allergies,
         "past_history": list(profile.past_history),
+        "birth_year": profile.birth_year,
+        "age": profile.age,
+        "gender": profile.gender,
+        "medical_history": list(profile.medical_history),
     }
 
 

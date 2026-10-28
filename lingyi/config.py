@@ -8,12 +8,15 @@
 - 所有配置项有合理默认值，可通过环境变量覆盖
 """
 
+import logging
 import os
 from functools import lru_cache
 from pathlib import Path
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+logger = logging.getLogger(__name__)
 
 
 # 项目根目录（lingyi/ 的父目录）
@@ -72,6 +75,11 @@ class Settings(BaseSettings):
         default=1,
         description="专家/综合/审查者 LLM API 最大重试次数（低于 llm_max_retries，"
         "避免网关抖动时静默 3x 重试风暴拖慢会诊）",
+    )
+    llm_extra_headers: str = Field(
+        default="",
+        description="LLM 请求附加 HTTP 头（JSON 字符串）。部分 OpenAI 兼容网关需要专用头"
+        "才能路由，如 opencode 网关要求 {\"x-opencode-session\": \"<uuid>\"}",
     )
 
     # 多智能体专家模型配置（留空则回退到 model_name）
@@ -214,6 +222,24 @@ class Settings(BaseSettings):
     def effective_api_key(self) -> str:
         """获取有效的 API Key（优先 DashScope，回退 OpenAI）。"""
         return self.dashscope_api_key or self.openai_api_key
+
+    @property
+    def llm_extra_headers_map(self) -> dict[str, str]:
+        """解析 llm_extra_headers（JSON）为请求头字典；空或格式错误时返回空字典。"""
+        import json
+
+        raw = (self.llm_extra_headers or "").strip()
+        if not raw:
+            return {}
+        try:
+            parsed = json.loads(raw)
+        except json.JSONDecodeError:
+            logger.warning("LLM_EXTRA_HEADERS 不是合法 JSON，已忽略: %s", raw)
+            return {}
+        if not isinstance(parsed, dict):
+            logger.warning("LLM_EXTRA_HEADERS 必须是 JSON 对象，已忽略: %s", raw)
+            return {}
+        return {str(k): str(v) for k, v in parsed.items()}
 
     @property
     def db_path(self) -> str:

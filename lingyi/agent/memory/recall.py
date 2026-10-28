@@ -45,7 +45,17 @@ class MemRecallSkill:
         if not self.storage:
             return {"patient_profile": {}}
 
-        patient_id = state.get("username") or state.get("thread_id", "default_user")
+        # member_id 显式为 "" 表示"不结合咨询人"：不加载任何画像。
+        # （键缺失时回退到 username，兼容多成员上线前的状态）
+        if state.get("member_id") == "":
+            logger.debug("本轮不结合咨询人，跳过画像加载")
+            return {"patient_profile": {}}
+
+        patient_id = (
+            state.get("member_id")
+            or state.get("username")
+            or state.get("thread_id", "default_user")
+        )
         try:
             profile = await self.storage.get_profile(patient_id)
             logger.debug("画像加载成功: %s", patient_id)
@@ -54,6 +64,10 @@ class MemRecallSkill:
                     "constitution": profile.constitution,
                     "allergies": profile.allergies,
                     "past_history": profile.past_history,
+                    "birth_year": profile.birth_year,
+                    "age": profile.age,
+                    "gender": profile.gender,
+                    "medical_history": profile.medical_history,
                 }
             }
         except Exception as e:

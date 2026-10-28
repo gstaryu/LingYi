@@ -1,14 +1,45 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useChat } from "@/hooks/useChat";
 import { MessageBubble } from "./MessageBubble";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { NO_MEMBER_ID, useMemberStore } from "@/stores/member";
 import { api, ApiError } from "@/lib/api";
 import type { MessageItem } from "@/lib/types";
 import { toast } from "sonner";
-import { Send, Square, Paperclip, Leaf, X } from "lucide-react";
+import {
+  Send,
+  Square,
+  Paperclip,
+  Leaf,
+  X,
+  UserRound,
+  ChevronDown,
+  Check,
+  UserPlus,
+  UserX,
+} from "lucide-react";
 
 interface UploadedFile {
   path: string;
@@ -51,12 +82,85 @@ export function mergeAssistantMessages(msgs: MessageItem[]): MessageItem[] {
 }
 
 export function ChatWindow({ threadId }: { threadId: string }) {
-  const { messages, streaming, send, stop } = useChat(threadId);
+  const { messages, streaming, send, stop, currentThreadId } = useChat(threadId);
   const [input, setInput] = useState("");
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [uploading, setUploading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // ==================== 咨询人 ====================
+  const { activeMemberId, setActiveMember } = useMemberStore();
+  const qc = useQueryClient();
+  const router = useRouter();
+  const { data: members } = useQuery({ queryKey: ["members"], queryFn: api.listMembers });
+  const { data: threads } = useQuery({ queryKey: ["threads"], queryFn: api.listThreads });
+  const [addingMember, setAddingMember] = useState(false);
+  const [newMemberName, setNewMemberName] = useState("");
+
+  // 成员列表就绪后：显式 none → null；具体 id 失效（换账号/被删）→ 回退主成员
+  const memberReady = Array.isArray(members) && members.length > 0;
+  const primaryMember = members?.find((m) => m.is_primary) ?? members?.[0];
+  const selectedMember = memberReady
+    ? activeMemberId === NO_MEMBER_ID
+      ? null
+      : (members!.find((m) => m.member_id === activeMemberId) ?? primaryMember)
+    : undefined;
+  /** 发给后端的 member_id：undefined=主成员（本人），""=不结合咨询人 */
+  const sendMemberId = memberReady ? (selectedMember ? selectedMember.member_id : "") : undefined;
+  const memberLabel = memberReady
+    ? (selectedMember?.display_name ?? "不结合咨询人")
+    : "本人";
+
+  const createMemberMut = useMutation({
+    mutationFn: (name: string) => api.createMember(name),
+    onSuccess: (m) => {
+      qc.invalidateQueries({ queryKey: ["members"] });
+      setAddingMember(false);
+      setNewMemberName("");
+      toast.success(`已新增咨询人：${m.display_name}`);
+      handleSelectMember(m.member_id);
+    },
+    onError: (e) => toast.error(e instanceof ApiError ? e.message : "新增失败"),
+  });
+
+  const newThreadMut = useMutation({
+    mutationFn: ({ title, memberId }: { title: string; memberId: string }) =>
+      api.createThread(title, memberId),
+    onSuccess: (t) => {
+      qc.invalidateQueries({ queryKey: ["threads"] });
+      router.push(`/chat/${t.thread_id}`);
+    },
+    onError: (e) => toast.error(e instanceof ApiError ? e.message : "创建会话失败"),
+  });
+
+  // 打开会话时恢复其绑定的咨询人（会话与咨询人 1:1）
+  useEffect(() => {
+    if (!threadId || !threads) return;
+    const bound = threads.find((t) => t.thread_id === threadId)?.member_id;
+    if (bound === undefined) return;
+    setActiveMember(bound === "" ? NO_MEMBER_ID : bound);
+  }, [threadId, threads, setActiveMember]);
+
+  /**
+   * 切换咨询人。
+   *
+   * 会话与咨询人 1:1 绑定：当前会话已有消息时切换，会为该咨询人新开一个会话，
+   * 避免上一轮的症状进入新咨询人的上下文，或被提取进新咨询人的画像。
+   */
+  function handleSelectMember(id: string) {
+    const currentId = selectedMember ? selectedMember.member_id : NO_MEMBER_ID;
+    const nextId = id === NO_MEMBER_ID ? NO_MEMBER_ID : id;
+    if (nextId === currentId) return;
+    setActiveMember(nextId);
+    // 用 currentThreadId：在 /chat 新会话刚发出首条消息时，URL 尚无 threadId
+    if (currentThreadId && messages.length > 0) {
+      newThreadMut.mutate({
+        title: "新对话",
+        memberId: nextId === NO_MEMBER_ID ? "" : nextId,
+      });
+    }
+  }
 
   // 新消息时自动滚到底部
   useEffect(() => {
@@ -78,7 +182,7 @@ export function ChatWindow({ threadId }: { threadId: string }) {
 
   function handleSend() {
     if (!input.trim() || streaming) return;
-    send(input, files.map((f) => f.path));
+    send(input, files.map((f) => f.path), sendMemberId);
     setInput("");
     setFiles([]);
   }
@@ -151,6 +255,66 @@ export function ChatWindow({ threadId }: { threadId: string }) {
               ))}
             </div>
           )}
+          {/* 咨询人选择器 */}
+          <div className="mb-2 flex items-center gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label="选择咨询人"
+                title="选择本次问诊的咨询人"
+              >
+                {memberReady && !selectedMember ? (
+                  <UserX className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
+                ) : (
+                  <UserRound className="h-3.5 w-3.5 text-primary" aria-hidden />
+                )}
+                <span className="text-muted-foreground">咨询人</span>
+                <span className={selectedMember ? "text-foreground" : "text-muted-foreground"}>
+                  {memberLabel}
+                </span>
+                <ChevronDown className="h-3 w-3 text-muted-foreground" aria-hidden />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-60">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+                    选择咨询人
+                  </DropdownMenuLabel>
+                  {members?.map((m) => (
+                    <DropdownMenuItem
+                      key={m.member_id}
+                      onClick={() => handleSelectMember(m.member_id)}
+                    >
+                      <UserRound className="mr-2 h-3.5 w-3.5 text-primary/70" aria-hidden />
+                      <span className="flex-1 truncate">
+                        {m.display_name}
+                        {m.is_primary && m.display_name !== "本人" ? "（本人）" : ""}
+                      </span>
+                      {selectedMember?.member_id === m.member_id && (
+                        <Check className="h-3.5 w-3.5 text-primary" aria-hidden />
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setAddingMember(true)}>
+                  <UserPlus className="mr-2 h-3.5 w-3.5" aria-hidden /> 新增咨询人
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleSelectMember(NO_MEMBER_ID)}>
+                  <UserX className="mr-2 h-3.5 w-3.5" aria-hidden />
+                  <span className="flex-1">不结合咨询人</span>
+                  {memberReady && !selectedMember && (
+                    <Check className="h-3.5 w-3.5 text-primary" aria-hidden />
+                  )}
+                </DropdownMenuItem>
+                <p className="px-2 pb-1.5 pt-1 text-[11px] leading-snug text-muted-foreground">
+                  不结合咨询人时生成通用回答，不读取也不保存任何记忆。
+                </p>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {memberReady && !selectedMember && (
+              <span className="text-[11px] text-muted-foreground">通用回答 · 不读写记忆</span>
+            )}
+          </div>
           <div className="flex items-end gap-2">
             <input
               ref={fileInputRef}
@@ -195,6 +359,41 @@ export function ChatWindow({ threadId }: { threadId: string }) {
           <p className="mt-1.5 text-center text-xs text-muted-foreground">
             ⚠️ 内容仅供参考，不能替代执业中医师面诊，请勿自行抓药。
           </p>
+
+          {/* 新增咨询人 */}
+          <Dialog open={addingMember} onOpenChange={(o) => !o && setAddingMember(false)}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>新增咨询人</DialogTitle>
+              </DialogHeader>
+              <p className="text-sm text-muted-foreground">
+                为家人建立独立的画像与病史，问诊时按所选咨询人分别记录，互不影响。
+              </p>
+              <Input
+                value={newMemberName}
+                onChange={(e) => setNewMemberName(e.target.value)}
+                placeholder="例如：母亲、父亲、孩子"
+                maxLength={30}
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && newMemberName.trim()) {
+                    createMemberMut.mutate(newMemberName.trim());
+                  }
+                }}
+              />
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setAddingMember(false)}>
+                  取消
+                </Button>
+                <Button
+                  disabled={!newMemberName.trim() || createMemberMut.isPending}
+                  onClick={() => createMemberMut.mutate(newMemberName.trim())}
+                >
+                  创建
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 """聊天路由 - POST /api/chat（REST/SSE）+ WebSocket /api/ws/chat（流式）。"""
 
+import asyncio
 import json
 import logging
 import uuid
@@ -11,7 +12,13 @@ from langchain_core.messages import AIMessage, AIMessageChunk, BaseMessage, Huma
 from pydantic import BaseModel
 
 from lingyi.agent.session_naming import DEFAULT_THREAD_TITLE
-from lingyi.api.deps import decode_access_token, get_agent, get_current_user, get_storage
+from lingyi.api.deps import (
+    decode_access_token,
+    get_agent,
+    get_current_user,
+    get_storage,
+    resolve_member_id,
+)
 from lingyi.api.schemas import ChatRequest, ChatResponse
 
 logger = logging.getLogger(__name__)
@@ -38,6 +45,8 @@ class MessageItem(BaseModel):
     content: str
     # 会诊笔记（仅最近一轮诊断，取自 checkpointer 状态；前端刷新后据此恢复会诊轨迹摘要条）
     notes: list[dict[str, Any]] | None = None
+    # 该条助手消息是否因用户主动中断而被截断（true 时前端显示"已停止"）
+    stopped: bool = False
 
 
 def _extract_last_ai_response(messages: list[BaseMessage]) -> str:
@@ -51,6 +60,42 @@ def _extract_last_ai_response(messages: list[BaseMessage]) -> str:
         if getattr(msg, "type", "") in ("ai", "assistant") and getattr(msg, "content", ""):
             return msg.content
     return messages[-1].content if messages else ""
+
+
+async def _persist_partial_answer(
+    agent: Any, config: dict, text: str, thread_id: str
+) -> None:
+    """
+    用户中断时，把已推送给前端的截断内容写回会话状态。
+
+    - shield 保护：外层生成器被取消时，写回任务仍在后台跑完（最多等 5 秒）
+    - 幂等：图恰好已完成（最后一条已是 AI 消息）时跳过，避免双写
+    - 失败只记日志：写回失败等价于旧行为（截断内容不保存），不影响中断本身
+    """
+    if not text.strip():
+        return
+
+    async def _write() -> None:
+        try:
+            snapshot = await agent.aget_state(config)
+            messages = (snapshot.values or {}).get("messages", []) if snapshot else []
+            last = messages[-1] if messages else None
+            if last is not None and getattr(last, "type", "") in ("ai", "assistant"):
+                logger.info("中断写回跳过（图已完成）: thread=%s", thread_id)
+                return
+            await agent.aupdate_state(
+                config,
+                {"messages": [AIMessage(content=text, additional_kwargs={"stopped": True})]},
+            )
+            logger.info("已保存中断截断内容: thread=%s chars=%d", thread_id, len(text))
+        except Exception as e:  # noqa: BLE001 - 写回失败不影响中断
+            logger.warning("中断内容写回失败: thread=%s err=%s", thread_id, e)
+
+    task = asyncio.ensure_future(_write())
+    try:
+        await asyncio.wait_for(asyncio.shield(task), timeout=5)
+    except (asyncio.CancelledError, asyncio.TimeoutError):
+        logger.info("中断写回转入后台: thread=%s", thread_id)
 
 
 async def _session_rename_task(
@@ -134,14 +179,16 @@ async def chat(
       {done:true,thread_id,elapsed_ms,notes?}     - 完成（notes=会诊笔记，仅多智能体）
       {error:"..."}                               - 错误
     """
+    member_id = await resolve_member_id(storage, username, request.member_id)
     thread_id = request.thread_id or str(uuid.uuid4())
-    await storage.add_thread(username, thread_id)
+    await storage.add_thread(username, thread_id, member_id)
 
     state_input = {
         "messages": [HumanMessage(content=request.message)],
         "input_files": request.files,
         "thread_id": thread_id,
         "username": username,
+        "member_id": member_id,
         "intent_type": "chat",
     }
     config = {"configurable": {"thread_id": thread_id}, "recursion_limit": _RECURSION_LIMIT}
@@ -153,6 +200,7 @@ async def chat(
         async def event_generator():
             t_start = time.perf_counter()
             seq = 0
+            emitted: list[str] = []
             try:
                 # 多模式流：messages（LLM token）+ custom（阶段进度事件）
                 # langgraph 1.2.6: 多模式时每个 chunk 为 (mode, data) 元组
@@ -175,6 +223,7 @@ async def chat(
                         continue
                     if isinstance(msg, AIMessageChunk) and msg.content:
                         seq += 1
+                        emitted.append(msg.content)
                         logger.debug(
                             "SSE token: node=%s step=%s seq=%d len=%d", node, step, seq, len(msg.content)
                         )
@@ -200,6 +249,18 @@ async def chat(
 
                 # 会话命名：首条消息后异步生成标题（fire-and-forget，不阻塞响应）
                 _maybe_schedule_session_rename(http_request, storage, thread_id, username, request.message, diagnosis)
+            except asyncio.CancelledError:
+                elapsed_ms = int((time.perf_counter() - t_start) * 1000)
+                partial = "".join(emitted)
+                logger.info(
+                    "流式中断: thread=%s chars=%d elapsed=%dms",
+                    thread_id,
+                    len(partial),
+                    elapsed_ms,
+                )
+                # 保存截断内容（本轮未走完 → 画像写入不会发生），随后继续传播取消
+                await _persist_partial_answer(agent, config, partial, thread_id)
+                raise
             except Exception as e:
                 logger.error("流式聊天失败: %s", e, exc_info=True)
                 yield f"data: {json.dumps({'error': str(e)}, ensure_ascii=False)}\n\n"
@@ -236,6 +297,11 @@ async def websocket_chat(websocket: WebSocket):
     遵循 LangGraph 流式接口（stream_mode="messages"），不使用 ainvoke 阻塞等待。
     鉴权：通过 query 参数 ?token=<JWT> 传入，复用 decode_access_token 校验，
     拒绝匿名连接（不再使用 default_user）。
+
+    注：本通道**暂不支持主动取消生成**，也没有截断内容写回（SSE 通道有
+    `_persist_partial_answer`）。客户端断开时 Starlette 会取消生成器，图随之停止，
+    但已推送的部分回答不落库。如需 WS 取消，走 issue #15 的 P2 方案：
+    用 asyncio.Task 包住 astream 循环 + `{"type": "cancel"}` 控制帧触发 task.cancel()。
     """
     # WS 无法直接用 Depends，从 query 参数取 token 并校验
     token = websocket.query_params.get("token")
@@ -264,11 +330,21 @@ async def websocket_chat(websocket: WebSocket):
                 await websocket.send_json({"type": "error", "message": "Agent 未初始化"})
                 continue
 
-            await storage.add_thread(username, thread_id)
+            # 咨询人：None=主成员；""=不结合咨询人；其他值须归属当前账号
+            try:
+                member_id = await resolve_member_id(
+                    storage, username, data.get("member_id")
+                )
+            except HTTPException as e:
+                await websocket.send_json({"type": "error", "message": e.detail})
+                continue
+
+            await storage.add_thread(username, thread_id, member_id)
             state_input = {
                 "messages": [HumanMessage(content=message)],
                 "thread_id": thread_id,
                 "username": username,
+                "member_id": member_id,
                 "intent_type": "chat",
             }
             config = {"configurable": {"thread_id": thread_id}, "recursion_limit": _RECURSION_LIMIT}
@@ -336,7 +412,12 @@ async def get_thread_messages(thread_id: str, agent: Any = Depends(get_agent)):
             if isinstance(msg, HumanMessage) and msg.content:
                 result.append(MessageItem(role="user", content=msg.content))
             elif isinstance(msg, AIMessage) and msg.content:
-                result.append(MessageItem(role="assistant", content=msg.content))
+                stopped = bool(
+                    (getattr(msg, "additional_kwargs", None) or {}).get("stopped", False)
+                )
+                result.append(
+                    MessageItem(role="assistant", content=msg.content, stopped=stopped)
+                )
         if result and notes:
             for item in reversed(result):
                 if item.role == "assistant":

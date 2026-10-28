@@ -12,6 +12,7 @@ from typing import Any
 
 from langchain_core.messages import BaseMessage
 
+from lingyi.agent.profile_format import format_profile
 from lingyi.agent.skills.base import BaseSkill
 
 logger = logging.getLogger(__name__)
@@ -65,12 +66,9 @@ class TreatmentSkill(BaseSkill):
         if diagnosis:
             context_parts.append(f"辨证结果:\n{diagnosis}")
 
-        profile = state.get("patient_profile", {})
-        if profile:
-            context_parts.append(
-                f"患者画像: 体质={profile.get('constitution', '未知')}, "
-                f"过敏={profile.get('allergies', '无')}"
-            )
+        profile_text = format_profile(state.get("patient_profile"))
+        if profile_text:
+            context_parts.append(profile_text)
 
         safety_errors = state.get("safety_errors", "")
         if safety_errors:

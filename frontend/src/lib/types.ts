@@ -7,6 +7,16 @@ export interface ChatRequest {
   message: string;
   thread_id?: string;
   files?: string[];
+  /** 咨询人：undefined=主成员（本人）；""=不结合咨询人；其他为具体 member_id */
+  member_id?: string;
+}
+
+/** 咨询人（账号下的就诊对象）。 */
+export interface Member {
+  member_id: string;
+  display_name: string;
+  created_at: string;
+  is_primary: boolean;
 }
 
 export interface ChatResponse {
@@ -20,6 +30,8 @@ export interface ThreadInfo {
   thread_id: string;
   title: string;
   created_at: string;
+  /** 该会话绑定的咨询人（""=不结合咨询人） */
+  member_id?: string;
 }
 
 export interface MessageItem {
@@ -30,6 +42,16 @@ export interface MessageItem {
   stages?: Stage[];
   /** 单轮响应用时（毫秒，来自 done 事件） */
   elapsedMs?: number;
+  /** 该条助手消息因用户主动中断而被截断 */
+  stopped?: boolean;
+}
+
+/** 既往病史条目（名称 + 状态 + 起病年份）。 */
+export interface MedicalHistoryItem {
+  name: string;
+  status: "active" | "history" | string;
+  since_year?: number | null;
+  note?: string;
 }
 
 export interface UserProfile {
@@ -37,11 +59,20 @@ export interface UserProfile {
   constitution: string;
   allergies: string;
   past_history: string[];
+  birth_year?: number | null;
+  /** 后端按当前年份换算好的年龄，只读 */
+  age?: number | null;
+  gender?: string;
+  medical_history?: MedicalHistoryItem[];
 }
 
 export interface ProfileUpdate {
   constitution?: string;
   allergies?: string;
+  birth_year?: number;
+  age?: number;
+  gender?: string;
+  medical_history?: MedicalHistoryItem[];
 }
 
 export interface TokenResponse {

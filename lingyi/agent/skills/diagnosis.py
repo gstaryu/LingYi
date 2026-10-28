@@ -10,6 +10,7 @@ from typing import Any
 
 from langchain_core.messages import BaseMessage
 
+from lingyi.agent.profile_format import format_profile
 from lingyi.agent.skills.base import BaseSkill
 
 logger = logging.getLogger(__name__)
@@ -38,14 +39,9 @@ class DiagnosisSkill(BaseSkill):
         context_parts: list[str] = []
 
         # 患者画像
-        profile = state.get("patient_profile", {})
-        if profile:
-            context_parts.append(
-                f"患者画像:\n"
-                f"  体质: {profile.get('constitution', '未知')}\n"
-                f"  过敏史: {profile.get('allergies', '无')}\n"
-                f"  既往史: {', '.join(profile.get('past_history', [])) or '无'}"
-            )
+        profile_text = format_profile(state.get("patient_profile"))
+        if profile_text:
+            context_parts.append(profile_text)
 
         # 上传文件内容
         file_content = state.get("extracted_file_content", "")

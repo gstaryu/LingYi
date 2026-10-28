@@ -30,6 +30,7 @@ class DashScopeLLM(BaseLLM):
         temperature: float = 0.7,
         timeout: int = 30,
         max_retries: int = 3,
+        extra_headers: dict[str, str] | None = None,
     ):
         """
         初始化 DashScope LLM。
@@ -41,6 +42,7 @@ class DashScopeLLM(BaseLLM):
             temperature: 默认温度参数
             timeout: API 超时时间（秒）
             max_retries: 最大重试次数
+            extra_headers: 附加 HTTP 头（部分 OpenAI 兼容网关需专用头才能路由）
         """
         self._model_name = model_name
         self._temperature = temperature
@@ -55,6 +57,7 @@ class DashScopeLLM(BaseLLM):
             max_tokens=self._max_tokens,
             timeout=timeout,
             max_retries=max_retries,
+            default_headers=extra_headers or None,
         )
         logger.info("DashScopeLLM 初始化完成: model=%s, base_url=%s, timeout=%ds", model_name, base_url, timeout)
 

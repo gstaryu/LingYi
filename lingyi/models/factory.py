@@ -40,6 +40,7 @@ def create_llm(settings: "Settings") -> BaseLLM:
         temperature=settings.llm_temperature,
         timeout=settings.llm_timeout,
         max_retries=settings.llm_max_retries,
+        extra_headers=settings.llm_extra_headers_map,
     )
 
 
@@ -93,6 +94,7 @@ def create_chat_model(
         max_tokens=8192,
         timeout=settings.llm_timeout,
         max_retries=max_retries,
+        default_headers=settings.llm_extra_headers_map or None,
     )
 
 

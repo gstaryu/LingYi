@@ -9,6 +9,7 @@
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from datetime import date
 from typing import Any
 
 from lingyi.knowledge.models import Contraindication, Formula, Herb
@@ -33,6 +34,39 @@ class UserProfile:
     constitution_history: list[str] = field(default_factory=list)
     """体质变更历史（旧体质值按时间追加，便于追溯；空表示从未变更）。"""
 
+    birth_year: int | None = None
+    """出生年份。存年份而非年龄，避免随时间过期；年龄由 `age` 属性按当前年份换算。"""
+
+    gender: str = ""
+    """性别："" | "male" | "female"。空表示未采集，禁止推断。"""
+
+    medical_history: list[dict[str, Any]] = field(default_factory=list)
+    """既往病史：[{"name": "高血压", "status": "active|history", "since_year": 2018, "note": ""}]。"""
+
+    @property
+    def age(self) -> int | None:
+        """按当前年份换算年龄；未采集出生年份时返回 None。"""
+        if not self.birth_year:
+            return None
+        return date.today().year - self.birth_year
+
+
+@dataclass
+class Member:
+    """咨询人（账号下的家庭成员）。"""
+
+    member_id: str
+    """成员唯一标识（主成员等于 username，兼容多成员上线前的历史数据）。"""
+
+    username: str
+    """归属账号。"""
+
+    display_name: str
+    """显示名（如"本人"、"母亲"）。"""
+
+    created_at: str = ""
+    """创建时间。"""
+
 
 @dataclass
 class ThreadInfo:
@@ -49,6 +83,9 @@ class ThreadInfo:
 
     created_at: str = ""
     """创建时间。"""
+
+    member_id: str = ""
+    """该会话使用的咨询人（空表示不结合咨询人的通用问答）。"""
 
 
 class BaseUserStore(ABC):
@@ -79,6 +116,38 @@ class BaseUserStore(ABC):
         Returns:
             True 验证通过
         """
+
+
+class BaseMemberStore(ABC):
+    """咨询人（家庭成员）管理抽象基类。"""
+
+    @abstractmethod
+    async def list_members(self, username: str) -> list[Member]:
+        """列出账号下所有咨询人（主成员在前，其余按创建时间升序）。"""
+
+    @abstractmethod
+    async def get_member(self, member_id: str) -> Member | None:
+        """按 ID 获取咨询人；不存在返回 None。"""
+
+    @abstractmethod
+    async def create_member(
+        self, username: str, display_name: str, member_id: str | None = None
+    ) -> Member:
+        """创建咨询人（member_id 为空时生成 uuid4）。"""
+
+    @abstractmethod
+    async def rename_member(
+        self, member_id: str, display_name: str, username: str
+    ) -> bool:
+        """重命名咨询人（仅限归属账号）；返回是否命中。"""
+
+    @abstractmethod
+    async def delete_member(self, member_id: str, username: str) -> bool:
+        """删除咨询人及其画像与会话（仅限归属账号）；返回是否命中。"""
+
+    @abstractmethod
+    async def ensure_primary_member(self, username: str) -> Member:
+        """确保账号存在主成员（member_id == username），返回该成员。"""
 
 
 class BaseProfileStore(ABC):
@@ -120,9 +189,12 @@ class BaseProfileStore(ABC):
         """
 
     @abstractmethod
-    async def list_profiles(self) -> list[dict[str, str]]:
+    async def list_profiles(self, username: str | None = None) -> list[dict[str, str]]:
         """
-        列出所有患者画像（按最后更新时间降序）。
+        列出患者画像（按最后更新时间降序）。
+
+        Args:
+            username: 限定为该账号下咨询人的画像；None 表示不限（仅供运维脚本使用）
 
         Returns:
             [{"patient_id": "...", "last_update": "..."}]
@@ -133,22 +205,29 @@ class BaseThreadStore(ABC):
     """会话线程管理抽象基类。"""
 
     @abstractmethod
-    async def add_thread(self, username: str, thread_id: str) -> None:
+    async def add_thread(
+        self, username: str, thread_id: str, member_id: str = "", title: str = "新对话"
+    ) -> None:
         """
-        创建新会话线程。
+        创建新会话线程（已存在时只更新咨询人归属，不改标题）。
 
         Args:
             username: 用户名
             thread_id: 线程 ID
+            member_id: 该会话使用的咨询人；空表示不结合咨询人
+            title: 初始标题（仅在新建时生效）
         """
 
     @abstractmethod
-    async def get_threads(self, username: str) -> list[ThreadInfo]:
+    async def get_threads(
+        self, username: str, member_id: str | None = None
+    ) -> list[ThreadInfo]:
         """
-        获取用户的所有会话线程。
+        获取用户的会话线程。
 
         Args:
             username: 用户名
+            member_id: 仅返回该咨询人的会话；None 表示不筛选
 
         Returns:
             ThreadInfo 列表（按创建时间降序）

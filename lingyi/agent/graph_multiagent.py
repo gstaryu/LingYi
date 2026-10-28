@@ -25,6 +25,7 @@ from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Send
 
+from lingyi.agent.profile_format import format_profile
 from lingyi.agent.state import AgentState
 
 if TYPE_CHECKING:
@@ -265,17 +266,14 @@ def _make_synthesis_node(chat_model: Any, safety_engine: Any = None):
         notes = state.get("consultation_notes", [])
         notes_text = json.dumps(notes, ensure_ascii=False, indent=2)
         symptoms = state.get("symptoms", [])
-        profile = state.get("patient_profile", {})
         safety_errors = state.get("safety_errors", "")
 
         context_parts: list[str] = [f"【会诊笔记】\n{notes_text}"]
         if symptoms:
             context_parts.append(f"【患者症状】{', '.join(symptoms)}")
-        if profile:
-            context_parts.append(
-                f"【患者画像】体质: {profile.get('constitution', '未知')}, "
-                f"过敏: {profile.get('allergies', '无')}"
-            )
+        profile_text = format_profile(state.get("patient_profile"))
+        if profile_text:
+            context_parts.append(profile_text)
         if safety_errors:
             context_parts.append(
                 f"【安全校验失败 - 必须修正】\n{safety_errors}\n"

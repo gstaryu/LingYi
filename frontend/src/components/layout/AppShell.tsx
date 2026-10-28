@@ -33,6 +33,11 @@ import {
   HeartPulse,
 } from "lucide-react";
 import type { ProfileUpdate } from "@/lib/types";
+import {
+  formatHistoryInline,
+  historyIssue,
+  type HistoryDraft,
+} from "@/lib/profileHistory";
 
 /** 应用外壳：路由守卫 + 侧边栏（会话/画像）+ 主区域。 */
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -116,15 +121,22 @@ function SidebarContent({
   const [renaming, setRenaming] = useState<{ id: string; title: string } | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState("");
-  const [editingAllergies, setEditingAllergies] = useState(false);
-  const [allergyInput, setAllergyInput] = useState("");
+  const [editingProfile, setEditingProfile] = useState(false);
+  const [profileForm, setProfileForm] = useState({
+    allergies: "",
+    age: "",
+    gender: "",
+  });
+  const [historyDraft, setHistoryDraft] = useState<HistoryDraft[]>([]);
+  const currentYear = new Date().getFullYear();
+  const hasHistoryIssue = historyDraft.some((r) => historyIssue(r, currentYear) !== null);
 
   const updateProfileMut = useMutation({
     mutationFn: ({ user, data }: { user: string; data: ProfileUpdate }) =>
       api.updateProfile(user, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["profile", username] });
-      toast.success("过敏史已更新");
+      toast.success("画像已更新");
     },
     onError: (e) => toast.error(e instanceof ApiError ? e.message : "更新失败"),
   });
@@ -202,27 +214,49 @@ function SidebarContent({
       <div className="p-3">
         <div className="mb-2 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
           <HeartPulse className="h-3.5 w-3.5" aria-hidden /> 用户画像
+          <button
+            className="ml-auto rounded p-0.5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            onClick={() => {
+              setProfileForm({
+                allergies: profile?.allergies ?? "无",
+                age: profile?.age != null ? String(profile.age) : "",
+                gender: profile?.gender ?? "",
+              });
+              setHistoryDraft(
+                (profile?.medical_history ?? []).map((i) => ({
+                  name: i.name,
+                  since_year: i.since_year ? String(i.since_year) : "",
+                  status: i.status === "history" ? "history" : "active",
+                }))
+              );
+              setEditingProfile(true);
+            }}
+            aria-label="编辑画像"
+            title="编辑画像"
+          >
+            <Pencil className="h-3 w-3" />
+          </button>
         </div>
         <dl className="space-y-1 text-sm">
-          <div className="flex justify-between">
-            <dt className="text-muted-foreground">体质</dt>
-            <dd>{profile?.constitution ?? "未知"}</dd>
+          <div className="flex justify-between gap-2">
+            <dt className="shrink-0 text-muted-foreground">年龄/性别</dt>
+            <dd className="truncate text-right">
+              {profile?.age != null ? `${profile.age} 岁` : "—"}
+              {profile?.gender === "male" ? " · 男" : profile?.gender === "female" ? " · 女" : ""}
+            </dd>
           </div>
-          <div className="flex items-center justify-between gap-1">
+          <div className="flex justify-between gap-2">
+            <dt className="shrink-0 text-muted-foreground">体质</dt>
+            <dd className="truncate text-right">{profile?.constitution ?? "未知"}</dd>
+          </div>
+          <div className="flex justify-between gap-2">
             <dt className="shrink-0 text-muted-foreground">过敏史</dt>
-            <dd className="flex min-w-0 items-center gap-1 text-right">
-              <span className="min-w-0 truncate">{profile?.allergies ?? "无"}</span>
-              <button
-                className="shrink-0 rounded p-0.5 text-muted-foreground hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                onClick={() => {
-                  setAllergyInput(profile?.allergies ?? "无");
-                  setEditingAllergies(true);
-                }}
-                aria-label="编辑过敏史"
-                title="编辑过敏史"
-              >
-                <Pencil className="h-3 w-3" />
-              </button>
+            <dd className="min-w-0 truncate text-right">{profile?.allergies ?? "无"}</dd>
+          </div>
+          <div className="flex justify-between gap-2">
+            <dt className="shrink-0 text-muted-foreground">既往病史</dt>
+            <dd className="min-w-0 truncate text-right">
+              {formatHistoryInline(profile?.medical_history) || "—"}
             </dd>
           </div>
         </dl>
@@ -294,32 +328,170 @@ function SidebarContent({
         </DialogContent>
       </Dialog>
 
-      {/* 编辑过敏史 */}
-      <Dialog open={editingAllergies} onOpenChange={(o) => !o && setEditingAllergies(false)}>
+      {/* 编辑画像 */}
+      <Dialog open={editingProfile} onOpenChange={(o) => !o && setEditingProfile(false)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>编辑过敏史</DialogTitle>
+            <DialogTitle>编辑画像</DialogTitle>
           </DialogHeader>
-          <p className="text-sm text-muted-foreground">
-            输入您的过敏药物或食物，用顿号分隔（如"青霉素、海鲜"）。输入"无"表示无过敏。
-          </p>
-          <Input
-            value={allergyInput}
-            onChange={(e) => setAllergyInput(e.target.value)}
-            placeholder="如：青霉素、海鲜"
-          />
+          <div className="space-y-3">
+            <div className="space-y-1">
+              <label className="text-xs text-muted-foreground" htmlFor="pf-age">
+                年龄
+              </label>
+              <Input
+                id="pf-age"
+                inputMode="numeric"
+                value={profileForm.age}
+                onChange={(e) => setProfileForm((f) => ({ ...f, age: e.target.value }))}
+                placeholder="如：32（留空表示不修改）"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs text-muted-foreground" htmlFor="pf-gender">
+                性别
+              </label>
+              <select
+                id="pf-gender"
+                className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                value={profileForm.gender}
+                onChange={(e) => setProfileForm((f) => ({ ...f, gender: e.target.value }))}
+              >
+                <option value="">未设置</option>
+                <option value="male">男</option>
+                <option value="female">女</option>
+              </select>
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs text-muted-foreground" htmlFor="pf-allergies">
+                过敏史
+              </label>
+              <Input
+                id="pf-allergies"
+                value={profileForm.allergies}
+                onChange={(e) => setProfileForm((f) => ({ ...f, allergies: e.target.value }))}
+                placeholder="如：青霉素、海鲜；输入「无」表示无过敏"
+              />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">既往病史</span>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-7 px-2 text-xs"
+                  onClick={() =>
+                    setHistoryDraft((rows) => [
+                      ...rows,
+                      { name: "", since_year: "", status: "active" as const },
+                    ])
+                  }
+                >
+                  <Plus className="mr-1 h-3 w-3" /> 添加
+                </Button>
+              </div>
+              {historyDraft.length === 0 && (
+                <p className="text-[11px] text-muted-foreground">
+                  暂无记录，可点「添加」录入慢性病、手术史等。
+                </p>
+              )}
+              <div className="space-y-2">
+                {historyDraft.map((row, idx) => {
+                  const issue = historyIssue(row, currentYear);
+                  return (
+                    <div key={idx} className="space-y-1">
+                      <div className="flex items-center gap-1.5">
+                        <Input
+                          value={row.name}
+                          placeholder="病名，如 高血压"
+                          aria-label={`病史名称 ${idx + 1}`}
+                          className="h-8 flex-1 text-sm"
+                          onChange={(e) =>
+                            setHistoryDraft((rows) =>
+                              rows.map((r, i) => (i === idx ? { ...r, name: e.target.value } : r))
+                            )
+                          }
+                        />
+                        <Input
+                          value={row.since_year}
+                          placeholder="年份"
+                          inputMode="numeric"
+                          aria-label={`病史年份 ${idx + 1}`}
+                          className="h-8 w-20 text-sm"
+                          onChange={(e) =>
+                            setHistoryDraft((rows) =>
+                              rows.map((r, i) =>
+                                i === idx ? { ...r, since_year: e.target.value } : r
+                              )
+                            )
+                          }
+                        />
+                        <select
+                          value={row.status}
+                          aria-label={`病史状态 ${idx + 1}`}
+                          className="h-8 rounded-md border border-input bg-background px-1.5 text-sm"
+                          onChange={(e) =>
+                            setHistoryDraft((rows) =>
+                              rows.map((r, i) =>
+                                i === idx
+                                  ? { ...r, status: e.target.value as HistoryDraft["status"] }
+                                  : r
+                              )
+                            )
+                          }
+                        >
+                          <option value="active">现患</option>
+                          <option value="history">既往</option>
+                        </select>
+                        <button
+                          type="button"
+                          aria-label={`删除病史 ${idx + 1}`}
+                          className="rounded p-1 text-muted-foreground hover:text-destructive"
+                          onClick={() =>
+                            setHistoryDraft((rows) => rows.filter((_, i) => i !== idx))
+                          }
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                      {issue && <p className="text-[11px] text-destructive">{issue}</p>}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingAllergies(false)}>
+            <Button variant="outline" onClick={() => setEditingProfile(false)}>
               取消
             </Button>
             <Button
-              disabled={updateProfileMut.isPending}
+              disabled={updateProfileMut.isPending || hasHistoryIssue}
               onClick={() => {
-                const trimmed = allergyInput.trim() || "无";
-                updateProfileMut.mutate(
-                  { user: username, data: { allergies: trimmed } },
-                );
-                setEditingAllergies(false);
+                const data: ProfileUpdate = {
+                  allergies: profileForm.allergies.trim() || "无",
+                  gender: profileForm.gender,
+                  medical_history: historyDraft
+                    .filter((r) => r.name.trim())
+                    .map((r) => ({
+                      name: r.name.trim(),
+                      status: r.status,
+                      since_year: r.since_year.trim() ? Number(r.since_year.trim()) : null,
+                      note: "",
+                    })),
+                };
+                const ageNum = Number(profileForm.age.trim());
+                if (
+                  profileForm.age.trim() &&
+                  Number.isFinite(ageNum) &&
+                  ageNum > 0 &&
+                  ageNum < 130
+                ) {
+                  data.age = Math.round(ageNum);
+                }
+                updateProfileMut.mutate({ user: username, data });
+                setEditingProfile(false);
               }}
             >
               保存

@@ -14,6 +14,7 @@ import asyncio
 import json
 import logging
 import re
+from datetime import date
 from typing import Any
 
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
@@ -68,9 +69,31 @@ class ProfileWriterSkill(BaseSkill):
         if not messages:
             return {}
 
+        # member_id 显式为 "" 表示"不结合咨询人"：不写任何画像。
+        if state.get("member_id") == "":
+            logger.debug("本轮不结合咨询人，跳过画像写入")
+            return {}
+
         # 复制消息列表，防止后台任务执行期间原引用被修改
         messages_snapshot = list(messages)
-        patient_id = state.get("username") or state.get("thread_id", "default_user")
+        patient_id = (
+            state.get("member_id")
+            or state.get("username")
+            or state.get("thread_id", "default_user")
+        )
+
+        # 守卫：会话绑定的咨询人与本轮不一致时不写入。
+        # 方案 A 下会话与咨询人 1:1，正常路径不会触发；此处防止其他入口复用导致跨成员污染。
+        get_thread = getattr(self.storage, "get_thread", None)
+        if get_thread is not None:
+            thread = await get_thread(state.get("thread_id", ""))
+            if thread is not None and thread.member_id != patient_id:
+                logger.warning(
+                    "画像写入已跳过：会话成员(%s)与本轮成员(%s)不一致",
+                    thread.member_id,
+                    patient_id,
+                )
+                return {}
 
         # 后台执行提取+写库；用 timeout 包裹防止单任务无限挂起
         task = asyncio.create_task(
@@ -125,16 +148,27 @@ class ProfileWriterSkill(BaseSkill):
                 content=(
                     "你是一个医疗信息提取助手。从以下对话中提取患者的关键信息。\n"
                     "请以 JSON 格式输出：\n"
-                    '{"constitution": "体质类型", "allergies": "新增过敏原", "allergies_remove": "要移除的过敏原", "new_record": "本次诊疗摘要"}\n'
+                    '{"constitution": "体质类型", "allergies": "新增过敏原", '
+                    '"allergies_remove": "要移除的过敏原", "new_record": "本次诊疗摘要", '
+                    '"birth_year": 1990, "gender": "male", '
+                    '"medical_history": [{"name": "高血压", "status": "active", "since_year": 2018}]}\n'
                     "重要规则：\n"
-                    "1. 如果某项信息未提及，对应字段留空字符串（体质和过敏原**不要**写'未知'或'无'）。\n"
+                    "1. 如果某项信息未提及，对应字段留空（体质和过敏原**不要**写'未知'或'无'）。\n"
                     "2. 过敏原只填物质名本身（如'青霉素'、'白芷'、'党参'），**不要**写成'白芷过敏'、'党参及相关制品'这类描述；体质用具体证型（如'阳虚体质'、'阴虚体质'）。\n"
                     f"3. 当前患者过敏史: {current_allergies}\n"
                     "4. 当患者表示不再对某物过敏时（如'我对党参不过敏了'、'我不再对白芷过敏'、'之前对X过敏现在好了'），"
                     "将需要移除的过敏原填入 allergies_remove 字段（只写物质名，如'党参'、'白芷'），**不要**填入 allergies。\n"
                     "5. allergies 字段只填**新增**的过敏原（患者新报告的过敏物）。\n"
                     "6. allergies_remove 和 allergies 可以同时有值（既有新增又有移除）。\n"
-                    "7. 存储层会自动合并新增过敏原（只增不减）；allergies_remove 会从列表中移除对应项。"
+                    "7. 存储层会自动合并新增过敏原（只增不减）；allergies_remove 会从列表中移除对应项。\n"
+                    "8. birth_year 只在患者**明确说出**年龄或出生年份时填写；说年龄时按当前年份换算"
+                    f"（当前年份 {date.today().year}）。未提及必须留空，**严禁**根据症状或语气推断。\n"
+                    "9. gender 只能是 \"male\" 或 \"female\"；仅在患者明确自述性别时填写"
+                    "（男/女/男性/女性/先生/女士）。**严禁**根据称呼、症状或药方推断。\n"
+                    "10. medical_history 只在患者明确说到既往疾病、手术或长期用药时填写；status 现患填 "
+                    "\"active\"，已治愈或术后填 \"history\"；since_year 只在明确提到年份时填写，否则 null；"
+                    "name 用患者原话里的病名，不要扩写或推测。\n"
+                    "11. 不要从症状反推疾病（如'头痛'不得写成'偏头痛'）。"
                 )
             ),
             HumanMessage(content=f"对话内容：\n{conversation}"),
@@ -153,11 +187,109 @@ class ProfileWriterSkill(BaseSkill):
                 return {
                     k: v
                     for k, v in data.items()
-                    if k in ("constitution", "allergies", "allergies_remove", "new_record") and v
+                    if k
+                    in (
+                        "constitution",
+                        "allergies",
+                        "allergies_remove",
+                        "new_record",
+                        "birth_year",
+                        "gender",
+                        "medical_history",
+                    )
+                    and v
                 }
         except (json.JSONDecodeError, AttributeError, TypeError):
             pass
         return {}
+
+    @staticmethod
+    def _validate_demographics(profile_data: dict[str, Any], text: str) -> None:
+        """
+        确定性校验年龄/性别/病史：提取结果必须在原文中找到依据，否则丢弃。
+
+        背景：LLM 曾出现"幻觉患者妊娠"的事故，因此人口学字段不信任模型输出，
+        一律回到原文做字符串核对（年龄数字、性别词、病名）。
+        """
+        year_now = date.today().year
+
+        # --- 出生年份：优先 birth_year，其次由 age 换算 ---
+        birth_year = profile_data.get("birth_year")
+        resolved: int | None = None
+        if isinstance(birth_year, int) and 1900 <= birth_year <= year_now:
+            # 原文出现年份，或出现换算出的年龄，才采信
+            if str(birth_year) in text or str(year_now - birth_year) in text:
+                resolved = birth_year
+        elif isinstance(birth_year, str):
+            m = re.search(r"(19|20)\d{2}", birth_year)
+            if m and 1900 <= int(m.group()) <= year_now and m.group() in text:
+                resolved = int(m.group())
+
+        if resolved is None:
+            age = profile_data.pop("age", None)
+            digits = re.search(r"\d{1,3}", str(age or ""))
+            if digits and digits.group() in text and 0 < int(digits.group()) < 130:
+                guess = year_now - int(digits.group())
+                if 1900 <= guess <= year_now:
+                    resolved = guess
+
+        if resolved is not None:
+            profile_data["birth_year"] = resolved
+        else:
+            profile_data.pop("birth_year", None)
+
+        # --- 性别：只接受 male/female，且原文出现**对应**的性别词 ---
+        raw_gender = str(profile_data.get("gender") or "").strip().lower()
+        normalized = ""
+        if raw_gender in ("male", "男", "男性", "先生"):
+            normalized = "male"
+        elif raw_gender in ("female", "女", "女性", "女士"):
+            normalized = "female"
+        evidence = {
+            "male": r"男|先生",
+            "female": r"女|女士",
+        }.get(normalized, "")
+        if evidence and re.search(evidence, text):
+            profile_data["gender"] = normalized
+        else:
+            profile_data.pop("gender", None)
+
+        # --- 既往病史：每条名称必须出现在原文 ---
+        items = profile_data.get("medical_history")
+        if not isinstance(items, list):
+            profile_data.pop("medical_history", None)
+            return
+
+        kept: list[dict[str, Any]] = []
+        for item in items:
+            if isinstance(item, str):
+                item = {"name": item}
+            if not isinstance(item, dict):
+                continue
+            name = str(item.get("name") or "").strip()
+            if not name or name not in text:
+                continue
+            status_raw = str(item.get("status") or "").strip().lower()
+            status = (
+                "history"
+                if status_raw in ("history", "既往", "已愈", "resolved")
+                else "active"
+            )
+            since = item.get("since_year")
+            since = since if isinstance(since, int) and 1900 <= since <= year_now else None
+            kept.append(
+                {
+                    "name": name,
+                    "status": status,
+                    "since_year": since,
+                    "note": str(item.get("note") or "").strip(),
+                }
+            )
+
+        if kept:
+            profile_data["medical_history"] = kept
+        else:
+            profile_data.pop("medical_history", None)
 
     @staticmethod
     def _normalize_allergy_item(item: str) -> str:
@@ -242,6 +374,12 @@ class ProfileWriterSkill(BaseSkill):
 
         if not profile_data:
             return
+
+        # 人口学/病史字段一律回原文核对，防止 LLM 编造
+        recent_text = "\n".join(
+            str(getattr(m, "content", "")) for m in messages[-6:]
+        )
+        self._validate_demographics(profile_data, recent_text)
 
         # 处理过敏原移除：LLM 提取 + 确定性规则兜底（规范化后去重）
         detected_removes = self._detect_allergy_removal(messages)

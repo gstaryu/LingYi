@@ -66,7 +66,7 @@ export function useChat(threadId: string, initialMessages: MessageItem[] = []) {
   }, [threadId]);
 
   const send = useCallback(
-    async (text: string, files: string[] = []) => {
+    async (text: string, files: string[] = [], memberId?: string) => {
       if (!text.trim() || streaming) return;
       const myTurn = ++turnSeqRef.current;
       const userMsg: MessageItem = { role: "user", content: text };
@@ -78,7 +78,7 @@ export function useChat(threadId: string, initialMessages: MessageItem[] = []) {
 
       try {
         await streamChat(
-          { message: text, thread_id: currentThreadId || undefined, files },
+          { message: text, thread_id: currentThreadId || undefined, files, member_id: memberId },
           {
             signal: controller.signal,
             onEvent: (ev) => {
@@ -208,9 +208,21 @@ export function useChat(threadId: string, initialMessages: MessageItem[] = []) {
     [streaming, currentThreadId, qc]
   );
 
+  /** 主动中断：中止流，并把最后一条助手消息标记为"已停止"（空内容则整条移除）。 */
   const stop = useCallback(() => {
     abortRef.current?.abort();
     setStreaming(false);
+    setMessages((m) => {
+      const copy = [...m];
+      for (let i = copy.length - 1; i >= 0; i--) {
+        if (copy[i].role === "assistant") {
+          if (!copy[i].content.trim()) copy.splice(i, 1);
+          else copy[i] = { ...copy[i], stopped: true };
+          break;
+        }
+      }
+      return copy;
+    });
   }, []);
 
   return { messages, streaming, send, stop, currentThreadId };

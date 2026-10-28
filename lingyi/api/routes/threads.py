@@ -4,9 +4,9 @@ import logging
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 
-from lingyi.api.deps import get_current_user, get_storage
+from lingyi.api.deps import get_current_user, get_storage, resolve_member_id
 from lingyi.api.schemas import ThreadCreate, ThreadRename, ThreadResponse
 
 logger = logging.getLogger(__name__)
@@ -15,13 +15,21 @@ router = APIRouter()
 
 @router.get("/threads", response_model=list[ThreadResponse])
 async def list_threads(
+    member_id: str | None = Query(
+        default=None, description="仅返回该咨询人的会话；不传则返回全部"
+    ),
     storage: Any = Depends(get_storage),
     username: str = Depends(get_current_user),
 ):
-    """获取当前认证用户的所有会话线程。"""
-    threads = await storage.get_threads(username)
+    """获取当前认证用户的会话线程（可按咨询人筛选）。"""
+    threads = await storage.get_threads(username, member_id)
     return [
-        ThreadResponse(thread_id=t.thread_id, title=t.title, created_at=t.created_at)
+        ThreadResponse(
+            thread_id=t.thread_id,
+            title=t.title,
+            created_at=t.created_at,
+            member_id=t.member_id,
+        )
         for t in threads
     ]
 
@@ -32,10 +40,13 @@ async def create_thread(
     storage: Any = Depends(get_storage),
     username: str = Depends(get_current_user),
 ):
-    """创建新会话线程，归属当前认证用户。"""
+    """创建新会话线程，归属当前认证用户与指定咨询人。"""
+    member_id = await resolve_member_id(storage, username, request.member_id)
     thread_id = str(uuid.uuid4())
-    await storage.add_thread(username, thread_id)
-    return ThreadResponse(thread_id=thread_id, title=request.title, created_at="")
+    await storage.add_thread(username, thread_id, member_id, title=request.title)
+    return ThreadResponse(
+        thread_id=thread_id, title=request.title, created_at="", member_id=member_id
+    )
 
 
 @router.put("/threads/{thread_id}")

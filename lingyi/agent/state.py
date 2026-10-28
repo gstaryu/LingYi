@@ -121,4 +121,7 @@ class AgentState(TypedDict, total=False):
     """会话线程 ID。"""
 
     username: str
-    """当前认证用户名（用作画像 key，跨会话共享）。"""
+    """当前认证用户名（会话归属账号）。"""
+
+    member_id: str
+    """当前咨询人 ID（画像 key）。空字符串表示"不结合咨询人"：不加载也不写入画像。"""

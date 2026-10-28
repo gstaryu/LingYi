@@ -79,7 +79,7 @@ LingYi/
 
 - Python 3.12（conda 环境名 `lingyi`）
 - Node.js 18+（前端）
-- DashScope API Key（模型与嵌入）
+- 任意 OpenAI 兼容模型服务：DashScope（默认）或第三方网关（如 opencode），需提供 API Key
 
 ### 1. 安装
 
@@ -95,19 +95,34 @@ npm install
 
 ### 2. 配置
 
-在项目根目录创建 `.env`（不提交）：
+复制模板后填入自己的 Key（`.env` 不提交）：
 
-```env
-DASHSCOPE_API_KEY=sk-xxxxxxxx
-MODEL_NAME=qwen-max
-RAG_MODE=mock                 # mock（开发）/ chroma（生产）
-EMBEDDING_MODE=local          # local（HuggingFace）/ online（DashScope）
-AGENT_MODE=multiagent         # workflow / multiagent
+```bash
+cp .env.example .env
 ```
 
-完整配置项见 [docs/deployment.md](docs/deployment.md)。
+最小配置（DashScope）：
 
-### 3. 初始化知识库
+```env
+OPENAI_API_KEY=sk-xxxxxxxx
+OPENAI_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+MODEL_NAME=qwen-max
+```
+
+使用第三方 OpenAI 兼容网关时，若网关要求专用请求头，用 `LLM_EXTRA_HEADERS` 传入（JSON）：
+
+```env
+OPENAI_BASE_URL=https://opencode.ai/zen/go/v1
+MODEL_NAME=deepseek-v4.1-flash
+LLM_EXTRA_HEADERS={"x-opencode-session":"<任意 uuid4>"}
+```
+
+完整配置项见 [docs/deployment.md](docs/deployment.md) 与 `.env.example`。
+
+### 3. 知识库（仓库已内置，通常可跳过）
+
+`storage/patient_profiles.db` 随仓库提供，已含本草 614 味、方剂 1855 首、禁忌 38 条，
+新环境**无需初始化即可启动**。仅在需要重建时执行：
 
 ```bash
 # 结构化知识库（本草/方剂/禁忌，幂等）
@@ -120,6 +135,9 @@ python -m data_pipeline.seed_pharmacopoeia
 #   提取产物与校验 drop 名单位于 storage/extracted_formulas/
 python -m data_pipeline.seed_formulas_classics
 
+# RAG mock 模式语料（storage/mock_rag_data.json，仓库已提供）
+python -m data_pipeline.ingest --mode mock
+
 # RAG 经典语料入库（chroma 模式，本地 Qwen3-Embedding）
 python -m data_pipeline.ingest --mode chroma
 ```
@@ -130,7 +148,7 @@ python -m data_pipeline.ingest --mode chroma
 |---|---|---|
 | herbs 表 | **614 味** | 手工整理 33 味（《神农本草经》/《中药学》教材）+ 2015 版《中国药典》581 味（`seed_pharmacopoeia.py`，字段映射自药典"功能与主治/用法与用量"，别名/炮制/禁忌留空由 SafetyEngine 兜底） |
 | formulas 表 | **1855 首** | 手工整理 22 首 + 四部古籍全量提取 1833 首：**《备急千金要方》901、《太平惠民和剂局方》569、《外台秘要》242、《医方集解》121** |
-| contraindications 表 | 14 条 | 手工整理（体质/配伍禁忌） |
+| contraindications 表 | **38 条** | 手工整理（十八反/十九畏配伍禁忌，`seed_knowledge.py`） |
 
 **方剂古籍来源**（文本取自 [jobkoko/tcm-database](https://github.com/jobkoko/tcm-database) `tcm/` 文件 F-009/F-011/F-025/F-091，仅取处方条目）：
 《备急千金要方》（唐·孙思邈）、《外台秘要》（唐·王焘）、《太平惠民和剂局方》（宋·官修）、《医方集解》（清·汪昂）。

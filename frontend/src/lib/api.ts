@@ -2,6 +2,7 @@ import { useAuthStore } from "@/stores/auth";
 import type {
   ChatRequest,
   ChatResponse,
+  Member,
   MessageItem,
   ProfileUpdate,
   ThreadInfo,
@@ -53,7 +54,13 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     let msg = `请求失败 (${res.status})`;
     try {
       const d = await res.json();
-      msg = d.detail || msg;
+      // FastAPI 校验错误 detail 是数组，直接展示会变成 [object Object]
+      if (typeof d.detail === "string") msg = d.detail;
+      else if (Array.isArray(d.detail)) {
+        msg = d.detail
+          .map((e: { msg?: string; loc?: unknown[] }) => e?.msg ?? String(e))
+          .join("；");
+      }
     } catch {
       /* 非 JSON 错误体 */
     }
@@ -77,20 +84,38 @@ export const api = {
 
   // 会话
   listThreads: () => request<ThreadInfo[]>("/threads"),
-  createThread: (title: string) =>
-    request<ThreadInfo>("/threads", { method: "POST", body: JSON.stringify({ title }) }),
+  createThread: (title: string, memberId?: string) =>
+    request<ThreadInfo>("/threads", {
+      method: "POST",
+      body: JSON.stringify({ title, member_id: memberId }),
+    }),
   renameThread: (id: string, title: string) =>
     request(`/threads/${id}`, { method: "PUT", body: JSON.stringify({ new_title: title }) }),
   deleteThread: (id: string) => request(`/threads/${id}`, { method: "DELETE" }),
   getMessages: (id: string) => request<MessageItem[]>(`/threads/${id}/messages`),
 
   // 画像
-  getProfile: (username: string) => request<UserProfile>(`/profiles/${username}`),
-  updateProfile: (username: string, data: ProfileUpdate) =>
-    request<UserProfile>(`/profiles/${username}`, {
+  getProfile: (patientId: string) => request<UserProfile>(`/profiles/${patientId}`),
+  updateProfile: (patientId: string, data: ProfileUpdate) =>
+    request<UserProfile>(`/profiles/${patientId}`, {
       method: "PATCH",
       body: JSON.stringify(data),
     }),
+
+  // 咨询人
+  listMembers: () => request<Member[]>("/members"),
+  createMember: (displayName: string) =>
+    request<Member>("/members", {
+      method: "POST",
+      body: JSON.stringify({ display_name: displayName }),
+    }),
+  renameMember: (memberId: string, displayName: string) =>
+    request<Member>(`/members/${memberId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ display_name: displayName }),
+    }),
+  deleteMember: (memberId: string) =>
+    request(`/members/${memberId}`, { method: "DELETE" }),
 
   // 对话（非流式，流式见 lib/stream.ts）
   chat: (req: ChatRequest) =>

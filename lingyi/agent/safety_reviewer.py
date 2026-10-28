@@ -18,6 +18,7 @@ from typing import Any
 from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
+from lingyi.agent.profile_format import format_profile
 from lingyi.agent.specialists.base import SpecialistBase
 
 logger = logging.getLogger(__name__)
@@ -163,12 +164,9 @@ class SafetyReviewerAgent(SpecialistBase):
             parts.append(f"【辨证结论】\n{diagnosis}")
 
         # 患者画像
-        profile = state.get("patient_profile", {})
-        if profile:
-            parts.append(
-                f"【患者画像】体质: {profile.get('constitution', '未知')}, "
-                f"过敏: {profile.get('allergies', '无')}"
-            )
+        profile_text = format_profile(state.get("patient_profile"))
+        if profile_text:
+            parts.append(profile_text)
 
         # 完整处方文本（供审查者参考剂量、用法等）
         if treatment_plan:

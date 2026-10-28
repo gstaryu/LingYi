@@ -16,6 +16,8 @@ from typing import Any
 
 from langchain_core.messages import HumanMessage, SystemMessage
 
+from lingyi.agent.profile_format import format_profile
+
 logger = logging.getLogger(__name__)
 
 
@@ -104,12 +106,9 @@ class SpecialistBase:
         if symptoms:
             parts.append(f"【患者症状】\n{', '.join(symptoms)}")
 
-        profile = state.get("patient_profile", {})
-        if profile:
-            parts.append(
-                f"【患者画像】体质: {profile.get('constitution', '未知')}, "
-                f"过敏: {profile.get('allergies', '无')}"
-            )
+        profile_text = format_profile(state.get("patient_profile"))
+        if profile_text:
+            parts.append(profile_text)
 
         # 最近的对话上下文（取最近 6 条消息中的用户主诉）
         messages = state.get("messages", [])
