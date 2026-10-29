@@ -16,7 +16,7 @@ class BaseLLM(ABC):
     """
     大语言模型抽象基类。
 
-    所有 LLM 实现（DashScope、本地 vLLM 等）都继承此类。
+    所有 LLM 实现（OpenAI 兼容服务、本地 vLLM 等）都继承此类。
     接受 LangChain BaseMessage 对象或 dict 格式的消息。
     """
 
@@ -80,7 +80,7 @@ class BaseEmbedding(ABC):
 
     支持两种模式:
     - local: 本地 HuggingFace 模型（如 BGE-M3）
-    - online: 第三方 API（如 DashScope Embedding API）
+    - online: 第三方 API（任意 OpenAI 兼容 Embedding 服务）
     """
 
     @abstractmethod

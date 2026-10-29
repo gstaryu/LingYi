@@ -1,12 +1,12 @@
 """
-DashScope / OpenAI 兼容模型实现。
+OpenAI 兼容模型实现。
 
-支持阿里云 DashScope API 和任何 OpenAI 兼容接口。
-通过 langchain-openai 的 ChatOpenAI 实现异步调用。
+面向任何提供 OpenAI 兼容接口的服务（OpenAI、DashScope、DeepSeek、Moonshot、
+本地 vLLM / Ollama 等），通过 langchain-openai 的 ChatOpenAI / OpenAIEmbeddings
+完成异步调用。厂商差异只体现在 base_url / model / 附加请求头上。
 """
 
 import logging
-from typing import Any
 
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
@@ -15,38 +15,44 @@ from lingyi.models.base import BaseEmbedding, BaseLLM
 logger = logging.getLogger(__name__)
 
 
-class DashScopeLLM(BaseLLM):
+class OpenAICompatLLM(BaseLLM):
     """
-    DashScope / OpenAI 兼容 LLM。
+    基于 OpenAI 兼容协议的 LLM 实现。
 
-    使用 langchain-openai 的 ChatOpenAI 封装，支持 DashScope 的 OpenAI 兼容模式。
+    使用 langchain-openai 的 ChatOpenAI 封装；换厂商只需改配置，不改代码。
     """
 
     def __init__(
         self,
         api_key: str,
         base_url: str,
-        model_name: str = "qwen-max",
+        model_name: str = "gpt-4o-mini",
         temperature: float = 0.7,
         timeout: int = 30,
         max_retries: int = 3,
+        max_tokens: int = 8192,
         extra_headers: dict[str, str] | None = None,
+        structured_output_method: str = "function_calling",
     ):
         """
-        初始化 DashScope LLM。
+        初始化 LLM。
 
         Args:
-            api_key: API Key
-            base_url: API Base URL
+            api_key: API Key（无鉴权的本地服务可填任意占位值）
+            base_url: OpenAI 兼容 API 的 Base URL
             model_name: 模型名称
             temperature: 默认温度参数
             timeout: API 超时时间（秒）
             max_retries: 最大重试次数
-            extra_headers: 附加 HTTP 头（部分 OpenAI 兼容网关需专用头才能路由）
+            max_tokens: 单次生成的最大 token 数（各厂商上限不同，由配置传入）
+            extra_headers: 附加 HTTP 头（部分网关需专用头才能路由）
+            structured_output_method: 结构化输出方式（function_calling / json_schema
+                / json_mode），需与服务端能力匹配
         """
         self._model_name = model_name
         self._temperature = temperature
-        self._max_tokens = 8192
+        self._max_tokens = max_tokens
+        self._structured_output_method = structured_output_method
         # Token 用量累计器（供评测/监控读取；reset_usage() 清零）
         self.total_usage: dict[str, int] = {"input_tokens": 0, "output_tokens": 0, "calls": 0}
         self._client = ChatOpenAI(
@@ -54,12 +60,18 @@ class DashScopeLLM(BaseLLM):
             base_url=base_url,
             model=model_name,
             temperature=temperature,
-            max_tokens=self._max_tokens,
+            max_tokens=max_tokens,
             timeout=timeout,
             max_retries=max_retries,
             default_headers=extra_headers or None,
         )
-        logger.info("DashScopeLLM 初始化完成: model=%s, base_url=%s, timeout=%ds", model_name, base_url, timeout)
+        logger.info(
+            "OpenAICompatLLM 初始化完成: model=%s, base_url=%s, timeout=%ds, max_tokens=%d",
+            model_name,
+            base_url,
+            timeout,
+            max_tokens,
+        )
 
     async def ainvoke(
         self,
@@ -68,7 +80,7 @@ class DashScopeLLM(BaseLLM):
         max_tokens: int = 8192,
     ) -> str:
         """
-        异步调用 DashScope LLM。
+        异步调用 LLM。
 
         支持两种消息格式:
         - LangChain BaseMessage 对象列表（直接传递，无转换开销）
@@ -84,8 +96,16 @@ class DashScopeLLM(BaseLLM):
 
             lc_messages = []
             for msg in messages:
-                role = msg.get("role", "user") if isinstance(msg, dict) else getattr(msg, "type", "user")
-                content = msg.get("content", "") if isinstance(msg, dict) else getattr(msg, "content", "")
+                role = (
+                    msg.get("role", "user")
+                    if isinstance(msg, dict)
+                    else getattr(msg, "type", "user")
+                )
+                content = (
+                    msg.get("content", "")
+                    if isinstance(msg, dict)
+                    else getattr(msg, "content", "")
+                )
                 if role == "system":
                     lc_messages.append(SystemMessage(content=content))
                 elif role in ("assistant", "ai"):
@@ -93,8 +113,7 @@ class DashScopeLLM(BaseLLM):
                 else:
                     lc_messages.append(HumanMessage(content=content))
 
-        # 仅当请求参数与默认配置不同时，绑定临时参数（LangChain 惯用 bind()，
-        # 避免每次调用都 model_copy，且消除原先与魔数 2048 比较的错误条件）
+        # 仅当请求参数与默认配置不同时绑定临时参数（LangChain 惯用 bind()）
         if temperature != self._temperature or max_tokens != self._max_tokens:
             client = self._client.bind(temperature=temperature, max_tokens=max_tokens)
         else:
@@ -117,34 +136,50 @@ class DashScopeLLM(BaseLLM):
         """
         返回结构化输出 Runnable（ainvoke 返回 Pydantic 实例）。
 
-        DashScope 的 OpenAI 兼容模式对 Qwen 系列支持 function calling，
-        故用 method="function_calling"（比 json_schema 兼容性更好）。
+        具体方式由 structured_output_method 决定：
+        - function_calling（默认，兼容性最好）
+        - json_schema（OpenAI 等支持严格 schema 的服务）
+        - json_mode（仅支持 JSON 模式的服务）
         """
-        return self._client.with_structured_output(schema, method="function_calling")
+        return self._client.with_structured_output(
+            schema, method=self._structured_output_method
+        )
 
 
-class DashScopeEmbedding(BaseEmbedding):
+class OpenAICompatEmbedding(BaseEmbedding):
     """
-    DashScope / OpenAI 兼容 Embedding 模型。
+    基于 OpenAI 兼容协议的 Embedding 实现。
 
     用于 RAG 检索时的文档和查询向量化。
     """
 
-    def __init__(self, api_key: str, base_url: str, model_name: str = "text-embedding-v3"):
+    def __init__(
+        self,
+        api_key: str,
+        base_url: str,
+        model_name: str = "text-embedding-3-small",
+        extra_headers: dict[str, str] | None = None,
+    ):
         """
-        初始化 DashScope Embedding。
+        初始化 Embedding。
 
         Args:
-            api_key: API Key
-            base_url: API Base URL
+            api_key: API Key（无鉴权的本地服务可填任意占位值）
+            base_url: OpenAI 兼容 API 的 Base URL
             model_name: Embedding 模型名称
+            extra_headers: 附加 HTTP 头（部分网关需专用头才能路由）
+
+        check_embedding_ctx_length=False: 直接发送原始文本，避免 langchain-openai
+        默认的 tiktoken 分词 + base64 编码流程——多数第三方兼容网关不支持该格式。
         """
         self._client = OpenAIEmbeddings(
             api_key=api_key,
             base_url=base_url,
             model=model_name,
+            check_embedding_ctx_length=False,
+            default_headers=extra_headers or None,
         )
-        logger.info("DashScopeEmbedding 初始化完成: model=%s", model_name)
+        logger.info("OpenAICompatEmbedding 初始化完成: model=%s, base_url=%s", model_name, base_url)
 
     async def aembed_documents(self, texts: list[str]) -> list[list[float]]:
         """异步批量嵌入文档。"""

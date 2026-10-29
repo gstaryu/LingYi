@@ -59,7 +59,7 @@ ChromaDB 原生不支持 async，使用 `asyncio.get_running_loop().run_in_execu
 | 模式 | 配置值 | 模型 | 说明 |
 |---|---|---|---|
 | 本地 | `local`（默认） | HuggingFace Qwen3-Embedding-0.6B | 1024 维，instruction-aware |
-| 在线 | `online` | DashScope text-embedding-v4 | API 调用，无需本地 GPU |
+| 在线 | `online` | 任意 OpenAI 兼容 Embedding（默认 text-embedding-3-small） | API 调用，无需本地 GPU |
 
 ### 本地模式
 
@@ -70,8 +70,10 @@ ChromaDB 原生不支持 async，使用 `asyncio.get_running_loop().run_in_execu
 
 ### 在线模式
 
-- 模型：`text-embedding-v4`（`EMBEDDING_ONLINE_MODEL_NAME` 可配置）
-- 通过 DashScope API 调用
+- 模型：`text-embedding-3-small`（`EMBEDDING_ONLINE_MODEL_NAME` 可配置）
+- 通过任意 OpenAI 兼容 Embedding API 调用；`EMBEDDING_ONLINE_API_KEY` / `EMBEDDING_ONLINE_BASE_URL` 可独立配置端点（留空回退 `OPENAI_API_KEY` / `OPENAI_BASE_URL`）
+- 客户端显式关闭 `check_embedding_ctx_length`，直接发送原始文本，兼容不支持 tiktoken/base64 编码的第三方网关
+- 切换在线模型会改变向量维度，需重建 Chroma 集合（`python -m data_pipeline.ingest --mode chroma`）
 
 ### 入库与查询一致性
 

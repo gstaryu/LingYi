@@ -33,11 +33,11 @@
 |---|---|
 | Agent 编排 | LangGraph 1.x（StateGraph / Send 并行 / Checkpointer） |
 | LLM 框架 | LangChain 1.x（ChatOpenAI / create_agent / 结构化输出） |
-| LLM | Qwen3 系列（DashScope），按角色可配不同模型 |
+| LLM | 任意 OpenAI 兼容服务（OpenAI / DashScope / DeepSeek / 本地网关），按角色可配不同模型 |
 | 后端 | FastAPI + Uvicorn，JWT 鉴权，SSE / WebSocket 流式 |
 | 前端 | Next.js 16 + React 19 + Tailwind v4 + @base-ui/shadcn |
 | 向量库 | ChromaDB（生产）/ Mock（开发） |
-| 嵌入 | Qwen3-Embedding-0.6B（本地 HuggingFace / 在线 DashScope） |
+| 嵌入 | Qwen3-Embedding-0.6B（本地 HuggingFace）/ 任意 OpenAI 兼容在线 Embedding |
 | 持久化 | SQLite（aiosqlite 异步） |
 | 安全 | SafetyEngine 规则引擎 + 对抗审查者 |
 
@@ -79,7 +79,7 @@ LingYi/
 
 - Python 3.12（conda 环境名 `lingyi`）
 - Node.js 18+（前端）
-- 任意 OpenAI 兼容模型服务：DashScope（默认）或第三方网关（如 opencode），需提供 API Key
+- 任意 OpenAI 兼容模型服务：OpenAI、DashScope、DeepSeek、本地 vLLM/Ollama 或第三方网关，需提供 API Key
 
 ### 1. 安装
 
@@ -101,15 +101,24 @@ npm install
 cp .env.example .env
 ```
 
-最小配置（DashScope）：
+最小配置（默认 OpenAI；换厂商只改这三行）：
 
 ```env
 OPENAI_API_KEY=sk-xxxxxxxx
-OPENAI_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
-MODEL_NAME=qwen-max
+OPENAI_BASE_URL=https://api.openai.com/v1
+MODEL_NAME=gpt-4o-mini
 ```
 
-使用第三方 OpenAI 兼容网关时，若网关要求专用请求头，用 `LLM_EXTRA_HEADERS` 传入（JSON）：
+常见厂商只需替换 `OPENAI_BASE_URL` + `MODEL_NAME`：
+
+| 厂商 | `OPENAI_BASE_URL` | `MODEL_NAME` 示例 |
+|---|---|---|
+| OpenAI | `https://api.openai.com/v1` | `gpt-4o-mini` |
+| 阿里云 DashScope | `https://dashscope.aliyuncs.com/compatible-mode/v1` | `qwen-max` |
+| DeepSeek | `https://api.deepseek.com/v1` | `deepseek-chat` |
+| 本地 vLLM / Ollama | `http://localhost:8000/v1` | 按部署模型填（`OPENAI_API_KEY` 填任意占位值） |
+
+使用第三方网关时，若网关要求专用请求头，用 `LLM_EXTRA_HEADERS` 传入（JSON）：
 
 ```env
 OPENAI_BASE_URL=https://opencode.ai/zen/go/v1

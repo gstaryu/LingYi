@@ -41,9 +41,11 @@ npm install
 在项目根目录创建 `.env` 文件（不提交到版本控制），填入必要的 API Key 和配置：
 
 ```env
-# LLM
-DASHSCOPE_API_KEY=sk-your-api-key-here
-MODEL_NAME=qwen-max
+# LLM（任意 OpenAI 兼容服务）
+OPENAI_API_KEY=sk-your-api-key-here
+OPENAI_BASE_URL=https://api.openai.com/v1
+MODEL_NAME=gpt-4o-mini
+LLM_MAX_TOKENS=8192
 
 # RAG
 RAG_MODE=mock
@@ -70,14 +72,16 @@ WEB_SEARCH_ENABLED=true
 
 | 变量 | 默认值 | 说明 |
 |---|---|---|
-| `DASHSCOPE_API_KEY` | （空） | 阿里云 DashScope API Key |
-| `OPENAI_API_KEY` | （空） | OpenAI 兼容 API Key（备用） |
-| `OPENAI_BASE_URL` | `https://dashscope.aliyuncs.com/compatible-mode/v1` | OpenAI 兼容 API Base URL |
-| `MODEL_NAME` | `qwen-max` | LLM 模型名称 |
+| `OPENAI_API_KEY` | （空） | 任意 OpenAI 兼容服务的 API Key（无鉴权的本地服务可填占位值） |
+| `OPENAI_BASE_URL` | `https://api.openai.com/v1` | OpenAI 兼容 API Base URL（按厂商替换） |
+| `MODEL_NAME` | `gpt-4o-mini` | LLM 模型名称 |
 | `LLM_TEMPERATURE` | `0.7` | LLM 温度参数 |
 | `LLM_TIMEOUT` | `120` | LLM API 超时时间（秒） |
 | `LLM_MAX_RETRIES` | `3` | LLM API 最大重试次数 |
+| `LLM_MAX_TOKENS` | `8192` | 单次生成最大 token 数（按厂商上限调整） |
 | `LLM_SPECIALIST_MAX_RETRIES` | `1` | 专家/综合/审查者 LLM 最大重试次数 |
+| `LLM_EXTRA_HEADERS` | （空） | 附加请求头（JSON），部分网关路由必需 |
+| `LLM_STRUCTURED_OUTPUT_METHOD` | `function_calling` | 结构化输出方式: function_calling / json_schema / json_mode |
 
 #### 多智能体专家模型
 
@@ -93,7 +97,9 @@ WEB_SEARCH_ENABLED=true
 |---|---|---|
 | `EMBEDDING_MODE` | `local` | Embedding 模式: local / online |
 | `EMBEDDING_MODEL_NAME` | `Qwen/Qwen3-Embedding-0.6B` | 本地 Embedding 模型名称 |
-| `EMBEDDING_ONLINE_MODEL_NAME` | `text-embedding-v4` | 在线 DashScope Embedding 模型名 |
+| `EMBEDDING_ONLINE_MODEL_NAME` | `text-embedding-3-small` | 在线 Embedding 模型名（按厂商填写） |
+| `EMBEDDING_ONLINE_API_KEY` | （空） | 在线 Embedding 独立 API Key（留空回退 `OPENAI_API_KEY`） |
+| `EMBEDDING_ONLINE_BASE_URL` | （空） | 在线 Embedding 独立 Base URL（留空回退 `OPENAI_BASE_URL`） |
 | `EMBEDDING_QUERY_PROMPT_NAME` | （空） | 查询嵌入 prompt 名称（Qwen3 需设为 `query`） |
 | `EMBEDDING_DEVICE` | `cuda` | Embedding 设备: cuda / cpu |
 
@@ -227,7 +233,7 @@ python -m lingyi.mcp.server
 
 1. **JWT 密钥**：生产环境必须更换 `JWT_SECRET_KEY`
 2. **CORS 来源**：通过 `CORS_ORIGINS` 环境变量设置允许的前端域名
-3. **API Key**：确保 `DASHSCOPE_API_KEY` 已配置，否则 Agent 不会初始化（认证接口返回 503）
+3. **API Key**：确保 `OPENAI_API_KEY` 已配置，否则 Agent 不会初始化（认证接口返回 503）
 4. **Embedding 模式**：生产环境推荐 `EMBEDDING_MODE=online`（无需本地 GPU）或确保 GPU 可用
 5. **RAG 模式**：生产环境使用 `RAG_MODE=chroma`，需先执行数据入库
 6. **Agent 模式**：`AGENT_MODE=multiagent` 启用多智能体会诊（更高质量，更多 LLM 调用）

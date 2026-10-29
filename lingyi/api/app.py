@@ -81,7 +81,7 @@ async def lifespan(app: FastAPI):
     app.state.profile_writer = None
     app.state.tools = None
     app.state.web_search_tool = None
-    if settings.effective_api_key:
+    if settings.openai_api_key:
         from lingyi.models.factory import create_llm
         from lingyi.parsers.file_parser import FileParser
         from lingyi.tools.factory import create_tools

@@ -62,7 +62,7 @@ async def generate_session_title(
     """调用 LLM 生成会话标题（≤10 字中文）。
 
     Args:
-        llm: 支持 ainvoke 的 LLM 实例（DashScopeLLM / ChatOpenAI）
+        llm: 支持 ainvoke 的 LLM 实例（OpenAICompatLLM / ChatOpenAI）
         first_message: 本会话首条用户消息
         diagnosis: 诊断结论（可选，提升标题质量）
 

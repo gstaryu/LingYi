@@ -406,7 +406,7 @@ def create_multiagent_agent(
     复用 workflow 图的前置/后置节点，替换诊断-处方段为并行专家会诊+综合。
 
     Args:
-        llm: BaseLLM 实例（DashScopeLLM），用于 reader/mem_recall/safety_guard/inquiry
+        llm: BaseLLM 实例（OpenAICompatLLM），用于 reader/mem_recall/safety_guard/inquiry
         rag_client: BaseRAGClient 实例
         storage: BaseProfileStore 实例
         safety_engine: SafetyEngine 实例

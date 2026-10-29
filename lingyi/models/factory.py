@@ -29,18 +29,20 @@ def create_llm(settings: "Settings") -> BaseLLM:
         settings: 全局配置对象
 
     Returns:
-        BaseLLM 实例（DashScopeLLM）
+        BaseLLM 实例（OpenAICompatLLM）
     """
-    from lingyi.models.dashscope import DashScopeLLM
+    from lingyi.models.openai_compat import OpenAICompatLLM
 
-    return DashScopeLLM(
-        api_key=settings.effective_api_key,
+    return OpenAICompatLLM(
+        api_key=settings.openai_api_key,
         base_url=settings.openai_base_url,
         model_name=settings.model_name,
         temperature=settings.llm_temperature,
         timeout=settings.llm_timeout,
         max_retries=settings.llm_max_retries,
+        max_tokens=settings.llm_max_tokens,
         extra_headers=settings.llm_extra_headers_map,
+        structured_output_method=settings.llm_structured_output_method,
     )
 
 
@@ -50,9 +52,9 @@ def create_chat_model(
     """
     根据配置创建 ChatOpenAI 实例（支持 bind_tools / 单次 ainvoke）。
 
-    与 create_llm 返回的 DashScopeLLM 不同，此函数返回原生 ChatOpenAI，
+    与 create_llm 返回的 OpenAICompatLLM 不同，此函数返回原生 ChatOpenAI，
     因为多智能体专家需要 bind_tools 和单次 ainvoke 支持，
-    而 DashScopeLLM 仅暴露 ainvoke()->str 和 with_structured_output。
+    而 OpenAICompatLLM 仅暴露 ainvoke()->str 和 with_structured_output。
 
     按角色读取独立模型配置；留空时回退到 settings.model_name。
     重试次数: 专家角色（bianzheng/fangji/bencao/synthesis/reviewer）默认用
@@ -87,11 +89,11 @@ def create_chat_model(
             max_retries = settings.llm_max_retries
 
     return ChatOpenAI(
-        api_key=settings.effective_api_key,
+        api_key=settings.openai_api_key,
         base_url=settings.openai_base_url,
         model=model_name,
         temperature=settings.llm_temperature,
-        max_tokens=8192,
+        max_tokens=settings.llm_max_tokens,
         timeout=settings.llm_timeout,
         max_retries=max_retries,
         default_headers=settings.llm_extra_headers_map or None,
@@ -104,7 +106,7 @@ def create_embeddings(settings: "Settings") -> BaseEmbedding:
 
     支持两种模式:
     - local: 本地 HuggingFace 模型（默认 Qwen3-Embedding-0.6B，instruction-aware）
-    - online: DashScope Embedding API（text-embedding-v4）
+    - online: 任意 OpenAI 兼容 Embedding API（可独立配置端点，与 chat 模型解耦）
 
     Args:
         settings: 全局配置对象
@@ -127,11 +129,12 @@ def create_embeddings(settings: "Settings") -> BaseEmbedding:
             query_prompt_name=query_prompt or None,
         )
 
-    from lingyi.models.dashscope import DashScopeEmbedding
+    from lingyi.models.openai_compat import OpenAICompatEmbedding
 
-    # online 模式用 DashScope 的 text-embedding-v4（与本地 Qwen3 模型名解耦）
-    return DashScopeEmbedding(
-        api_key=settings.effective_api_key,
-        base_url=settings.openai_base_url,
+    # online 模式可独立配置端点：很多网关只代理 chat、不代理 embedding
+    return OpenAICompatEmbedding(
+        api_key=settings.embedding_online_api_key or settings.openai_api_key,
+        base_url=settings.embedding_online_base_url or settings.openai_base_url,
         model_name=settings.embedding_online_model_name,
+        extra_headers=settings.llm_extra_headers_map,
     )

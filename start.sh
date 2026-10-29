@@ -15,7 +15,7 @@ echo "=== 激活 conda 环境 lingyi ==="
 conda activate lingyi 2>/dev/null || source activate lingyi 2>/dev/null || true
 
 if [ ! -f .env ]; then
-    echo "⚠️ 未找到 .env，请先配置 DASHSCOPE_API_KEY（参考 README）"
+    echo "⚠️ 未找到 .env，请先配置 OPENAI_API_KEY（参考 README）"
 fi
 
 if [ ! -d frontend/node_modules ]; then

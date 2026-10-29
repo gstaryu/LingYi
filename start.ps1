@@ -21,7 +21,7 @@ if ($env:CONDA_DEFAULT_ENV -ne "lingyi") {
 
 # 检查 .env
 if (-not (Test-Path .env)) {
-    Write-Host "⚠️ 未找到 .env，请先配置 DASHSCOPE_API_KEY（参考 README）" -ForegroundColor Yellow
+    Write-Host "⚠️ 未找到 .env，请先配置 OPENAI_API_KEY（参考 README）" -ForegroundColor Yellow
 }
 
 # 检查前端依赖

@@ -108,7 +108,7 @@ tests/
 
 | 桩 | 替代 | 说明 |
 |---|---|---|
-| `StubLLM` | `DashScopeLLM` | 固定响应 LLM，支持 `with_structured_output` |
+| `StubLLM` | `OpenAICompatLLM` | 固定响应 LLM，支持 `with_structured_output` |
 | `StubChatModel` | `ChatOpenAI` | 支持 `ainvoke` 和 `bind_tools` |
 | `StubRAGClient` | `BaseRAGClient` | 返回预设检索结果 |
 | `StubStorage` | `SQLiteStorage` | 内存字典模拟存储 |

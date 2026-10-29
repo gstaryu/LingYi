@@ -52,21 +52,18 @@ class Settings(BaseSettings):
     )
 
     # ==================== 大语言模型 (LLM) 配置 ====================
-    dashscope_api_key: str = Field(
-        default="",
-        description="阿里云 DashScope API Key",
-    )
     openai_api_key: str = Field(
         default="",
-        description="OpenAI 兼容 API Key（DashScope 或其他兼容服务）",
+        description="任意 OpenAI 兼容服务的 API Key（OpenAI / DashScope / DeepSeek / 本地网关等；"
+        "无鉴权的本地服务可填任意占位值）",
     )
     openai_base_url: str = Field(
-        default="https://dashscope.aliyuncs.com/compatible-mode/v1",
-        description="OpenAI 兼容 API 的 Base URL",
+        default="https://api.openai.com/v1",
+        description="OpenAI 兼容 API 的 Base URL（需包含 /v1 等版本前缀；按厂商替换）",
     )
     model_name: str = Field(
-        default="qwen-max",
-        description="LLM 模型名称",
+        default="gpt-4o-mini",
+        description="LLM 模型名称（按厂商与 base_url 填写对应模型）",
     )
     llm_temperature: float = Field(default=0.7, description="LLM 温度参数")
     llm_timeout: int = Field(default=120, description="LLM API 超时时间（秒）")
@@ -80,6 +77,15 @@ class Settings(BaseSettings):
         default="",
         description="LLM 请求附加 HTTP 头（JSON 字符串）。部分 OpenAI 兼容网关需要专用头"
         "才能路由，如 opencode 网关要求 {\"x-opencode-session\": \"<uuid>\"}",
+    )
+    llm_max_tokens: int = Field(
+        default=8192,
+        description="单次生成的最大 token 数（按厂商上限调整，超出会报 400）",
+    )
+    llm_structured_output_method: str = Field(
+        default="function_calling",
+        description="结构化输出方式: function_calling（兼容性最好）/ json_schema / json_mode，"
+        "需与服务端能力匹配",
     )
 
     # 多智能体专家模型配置（留空则回退到 model_name）
@@ -96,25 +102,29 @@ class Settings(BaseSettings):
         description="本草专家模型名（留空回退到 model_name）",
     )
 
-    # 本地模型（vLLM 等部署）
-    local_model_name: str = Field(default="qwen-local", description="本地模型名称")
-    local_model_url: str = Field(
-        default="http://localhost:8000/v1",
-        description="本地模型 API 地址",
-    )
-
     # ==================== Embedding 配置 ====================
     embedding_mode: str = Field(
         default="local",
-        description="Embedding 模式: local（本地 HuggingFace，默认 Qwen3-Embedding-0.6B）/ online（DashScope API）",
+        description="Embedding 模式: local（本地 HuggingFace，默认 Qwen3-Embedding-0.6B）/ "
+        "online（任意 OpenAI 兼容 Embedding API）",
     )
     embedding_model_name: str = Field(
         default="Qwen/Qwen3-Embedding-0.6B",
         description="本地 Embedding 模型名称（HuggingFace）。默认 Qwen3-Embedding-0.6B（1024 维，instruction-aware）",
     )
     embedding_online_model_name: str = Field(
-        default="text-embedding-v4",
-        description="online 模式下的 DashScope Embedding 模型名（text-embedding-v3 / v4）",
+        default="text-embedding-3-small",
+        description="online 模式下的 Embedding 模型名（按厂商填写，如 text-embedding-3-small、"
+        "text-embedding-v4、bge-m3 等）",
+    )
+    embedding_online_api_key: str = Field(
+        default="",
+        description="online Embedding 独立 API Key；留空回退 openai_api_key",
+    )
+    embedding_online_base_url: str = Field(
+        default="",
+        description="online Embedding 独立 Base URL（网关只代理 chat 不代理 embedding 时使用）；"
+        "留空回退 openai_base_url",
     )
     embedding_query_prompt_name: str = Field(
         default="",
@@ -218,11 +228,6 @@ class Settings(BaseSettings):
     )
 
     # ==================== 便捷属性 ====================
-    @property
-    def effective_api_key(self) -> str:
-        """获取有效的 API Key（优先 DashScope，回退 OpenAI）。"""
-        return self.dashscope_api_key or self.openai_api_key
-
     @property
     def llm_extra_headers_map(self) -> dict[str, str]:
         """解析 llm_extra_headers（JSON）为请求头字典；空或格式错误时返回空字典。"""
