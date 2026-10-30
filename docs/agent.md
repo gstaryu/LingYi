@@ -178,7 +178,7 @@ START -> reader -> mem_recall -> safety_guard -> inquiry -> 路由
 
 ### 安全校验节点（safety_check）
 
-`_make_safety_check_node` 从 `treatment_plan` 提取药材，用 `SafetyEngine.check_prescription(herbs)` 校验配伍禁忌。不通过则设置 `safety_errors` + 递增 `safety_retry_count`，通过则清除错误。
+`_make_safety_check_node` 从 `treatment_plan` 提取药材，用 `SafetyEngine.check_prescription(herbs)` 校验配伍禁忌，并用 `SafetyEngine.check_allergies(herbs, allergies)` 校验过敏原。任一不通过则设置 `safety_errors` + 递增 `safety_retry_count`，通过则清除错误。
 
 **safety_check 路由**（复用 `safety_check_logic`）：
 - 不通过且未超限 -> `synthesis`（回退重生成，携带错误反馈）
@@ -188,7 +188,7 @@ START -> reader -> mem_recall -> safety_guard -> inquiry -> 路由
 
 多智能体模式采用双重安全防御：
 1. **智能审查层**（`reviewer`）：`SafetyReviewerAgent`，LLM 驱动的对抗性批评者
-2. **确定性硬校验**（`safety_check`）：`SafetyEngine`，十八反/十九畏规则引擎
+2. **确定性硬校验**（`safety_check`）：`SafetyEngine`，十八反/十九畏 + 过敏原规则引擎
 
 SafetyEngine 为最终裁决者。两层独立计数（`reviewer_retry_count` 与 `safety_retry_count`），互不干扰。
 
@@ -212,6 +212,16 @@ SafetyEngine 为最终裁决者。两层独立计数（`reviewer_retry_count` �
 - 十九畏：12 条配伍禁忌规则
 - `check_prescription(herb_list)` 返回 `(is_safe, error_msg)`
 - 在 `treatment` 节点（workflow）/ `safety_check` 节点（multiagent）自动校验
+
+### 过敏原判定（`lingyi/safety/allergens.py`）
+
+与 SafetyEngine 并列的确定性规则层，不依赖 LLM：
+- 过敏史取自画像字符串，按顿号/逗号/分号等切分并规范化（去「过敏」「及相关制品」等后缀）
+- 匹配分四档：`exact`（同名药材）、`alias`（俗名→正名，如元参→玄参）、`class`（同类同源，如海鲜→牡蛎/海藻）、`none`（已收录但方剂中无对应成分）
+- 表外过敏原退化为「整词比对药材名」，仍能拦同名药材；未命中仅记日志，不阻断
+- **绝不拿过敏原词做子串匹配药材**，避免「花粉」误伤「天花粉」
+- 食物类过敏原额外扫描回答中的食疗建议，命中则追加确定性提示（不阻断回答）
+- 接入点：`treatment` 节点与 multiagent `safety_check` 节点，错误信息以 `【过敏原】` 前缀与配伍禁忌区分
 
 ## 记忆系统
 

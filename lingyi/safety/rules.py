@@ -11,6 +11,8 @@
 import logging
 from typing import Optional
 
+from lingyi.safety import allergens
+
 logger = logging.getLogger(__name__)
 
 
@@ -64,9 +66,10 @@ class SafetyEngine:
             merged = self._all_rules.setdefault(key, [])
             merged.extend(x for x in forbidden if x not in merged)
         logger.info(
-            "SafetyEngine 初始化完成: 十八反 %d 条, 十九畏 %d 条",
+            "SafetyEngine 初始化完成: 十八反 %d 条, 十九畏 %d 条, 过敏原 %d 条",
             len(self.EIGHTEEN_ANTAGONISMS),
             len(self.NINETEEN_INHIBITIONS),
+            len(allergens.ALLERGEN_MAP),
         )
 
     def check_prescription(self, herb_list: list[str]) -> tuple[bool, Optional[str]]:
@@ -111,6 +114,21 @@ class SafetyEngine:
             return False, error_msg
 
         return True, None
+
+    def check_allergies(
+        self, herb_list: list[str], allergy_text: str
+    ) -> tuple[bool, Optional[str]]:
+        """
+        校验处方是否包含患者过敏原（委托 allergens 模块）。
+
+        Args:
+            herb_list: 药材名称列表
+            allergy_text: 患者过敏史原文（如 "青霉素、海鲜"）
+
+        Returns:
+            (is_safe, error_msg)；表外过敏原不拦截，仅记日志。
+        """
+        return allergens.check_allergies(herb_list, allergy_text)
 
     def get_rules_text(self) -> str:
         """

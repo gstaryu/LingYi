@@ -20,6 +20,7 @@ from typing import Any
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 
 from lingyi.agent.skills.base import BaseSkill
+from lingyi.safety.allergens import normalize_allergen_term, parse_allergy_terms
 
 logger = logging.getLogger(__name__)
 
@@ -292,33 +293,6 @@ class ProfileWriterSkill(BaseSkill):
             profile_data.pop("medical_history", None)
 
     @staticmethod
-    def _normalize_allergy_item(item: str) -> str:
-        """规范化过敏原名称：去除 LLM 常附加的冗余后缀，便于匹配/去重/移除。
-
-        例: "白芷过敏" -> "白芷", "党参及相关制品" -> "党参", "茯苓类药物" -> "茯苓"。
-        反复剥离尾部后缀以处理 "白芷及相关制品过敏" 这类多层堆叠。
-        """
-        s = (item or "").strip()
-        prev = None
-        while prev != s:
-            prev = s
-            s = re.sub(r"(及相关制品|及制品|相关制品|类药物|过敏)+$", "", s).strip()
-        return s or (item or "").strip()
-
-    @staticmethod
-    def _parse_allergy_list(s: str) -> list[str]:
-        """将过敏原字符串解析为列表（支持各种分隔符），并规范化每项名称。"""
-        if not s or s.strip() in ("", "无", "未知"):
-            return []
-        parts = re.split(r"[、，,；;]\s*", s.strip())
-        items = [
-            ProfileWriterSkill._normalize_allergy_item(p)
-            for p in parts
-            if p.strip() and p.strip() not in ("无", "未知")
-        ]
-        return [i for i in items if i]
-
-    @staticmethod
     def _detect_allergy_removal(messages: list[BaseMessage]) -> list[str]:
         """确定性检测：用户明确表示不再对某物过敏时，直接提取该过敏原。
 
@@ -350,14 +324,14 @@ class ProfileWriterSkill(BaseSkill):
         ]
         for pat in direct:
             for m in re.finditer(pat, latest_user_text):
-                item = ProfileWriterSkill._normalize_allergy_item(m.group(1))
+                item = normalize_allergen_term(m.group(1))
                 if item and "不" not in item and item not in excludes:
                     removes.append(item)
         # 2) 零指代回溯：句中有否定但物质名省略时（如"我对白芷过敏，现在不过敏了"），
         #    从"对X过敏"提取物质名（要求"对"锚定，避免贪婪吞掉前文）
         if not removes:
             for m in re.finditer(rf"对({token})过敏", latest_user_text):
-                item = ProfileWriterSkill._normalize_allergy_item(m.group(1))
+                item = normalize_allergen_term(m.group(1))
                 if item and "不" not in item and item not in excludes:
                     removes.append(item)
         return list(dict.fromkeys(removes))
@@ -385,13 +359,13 @@ class ProfileWriterSkill(BaseSkill):
         detected_removes = self._detect_allergy_removal(messages)
         allergies_remove = profile_data.pop("allergies_remove", "")
         remove_items = list(dict.fromkeys(
-            self._parse_allergy_list(allergies_remove) + detected_removes
+            parse_allergy_terms(allergies_remove) + detected_removes
         ))
 
         if remove_items:
             # 有移除：重算完整过敏列表（现有 - 移除 + 新增），用 set_allergies 覆盖
-            current_items = self._parse_allergy_list(current_allergies)
-            add_items = self._parse_allergy_list(profile_data.get("allergies", ""))
+            current_items = parse_allergy_terms(current_allergies)
+            add_items = parse_allergy_terms(profile_data.get("allergies", ""))
             new_items = [i for i in current_items if i not in remove_items]
             for item in add_items:
                 if item not in new_items and item not in remove_items:

@@ -27,6 +27,7 @@ from langgraph.types import Send
 
 from lingyi.agent.profile_format import format_profile
 from lingyi.agent.state import AgentState
+from lingyi.safety.allergens import dietary_caution, parse_allergy_terms
 
 if TYPE_CHECKING:
     from lingyi.config import Settings
@@ -250,7 +251,7 @@ def _make_synthesis_node(chat_model: Any, safety_engine: Any = None):
         "```json\n"
         '{"herb_names": ["人参", "白术", ...]}\n'
         "```\n"
-        "3. 如有安全校验失败反馈，必须删除或替换存在配伍禁忌的药材。\n"
+        "3. 如有安全校验失败反馈，必须删除或替换存在配伍禁忌或属于患者过敏原的药材。\n"
         "4. 如有配伍禁忌规则，必须严格遵守。\n"
         "5. 【安全校验失败】反馈仅针对处方本身的配伍/剂量问题，"
         "不得据此编造或修改患者未提及的生理状态（如妊娠、年龄、性别）；"
@@ -274,10 +275,21 @@ def _make_synthesis_node(chat_model: Any, safety_engine: Any = None):
         profile_text = format_profile(state.get("patient_profile"))
         if profile_text:
             context_parts.append(profile_text)
+
+        allergy_terms = parse_allergy_terms(
+            (state.get("patient_profile") or {}).get("allergies", "")
+        )
+        if allergy_terms:
+            context_parts.append(
+                "【过敏原规避 - 必须遵守】患者报告过敏: "
+                + "、".join(allergy_terms)
+                + "。处方与食疗建议均不得包含上述物质及其同源/炮制品；"
+                "确需使用时必须说明理由并提示就医。"
+            )
         if safety_errors:
             context_parts.append(
                 f"【安全校验失败 - 必须修正】\n{safety_errors}\n"
-                "请删除或替换存在配伍禁忌的药材，重新生成处方。"
+                "请删除或替换存在配伍禁忌或属于患者过敏原的药材，重新生成处方。"
             )
         # 注入安全规则
         if safety_engine:
@@ -305,6 +317,13 @@ def _make_synthesis_node(chat_model: Any, safety_engine: Any = None):
                 "treatment_plan": f"处方生成失败: {e}",
                 "has_provided_treatment": False,
             }
+
+        caution = dietary_caution(
+            content, (state.get("patient_profile") or {}).get("allergies", "")
+        )
+        if caution:
+            content = f"{content}\n\n{caution}"
+            logger.info("综合节点已追加食物过敏提示")
 
         # 优先尝试 JSON 解析（向后兼容：旧桩或 LLM 偶尔输出 JSON 时仍可工作）
         data = _parse_json_content(content)
@@ -371,12 +390,22 @@ def _make_safety_check_node(safety_engine: Any):
             logger.info("安全校验：未提取到药材，跳过配伍检查")
             return {"safety_errors": None}
 
+        errors: list[str] = []
         is_safe, error_msg = safety_engine.check_prescription(herbs)
-        if not is_safe:
+        if not is_safe and error_msg:
+            errors.append(error_msg)
+
+        allergies = (state.get("patient_profile") or {}).get("allergies", "")
+        allergies_safe, allergy_msg = safety_engine.check_allergies(herbs, allergies)
+        if not allergies_safe and allergy_msg:
+            errors.append(allergy_msg)
+
+        if errors:
+            combined = "；".join(errors)
             retry_count = state.get("safety_retry_count", 0)
-            logger.warning("安全校验失败（第 %d 次）: %s", retry_count + 1, error_msg)
+            logger.warning("安全校验失败（第 %d 次）: %s", retry_count + 1, combined)
             return {
-                "safety_errors": error_msg,
+                "safety_errors": combined,
                 "safety_retry_count": retry_count + 1,
             }
 

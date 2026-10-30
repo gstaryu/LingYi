@@ -14,6 +14,7 @@ from langchain_core.messages import BaseMessage
 
 from lingyi.agent.profile_format import format_profile
 from lingyi.agent.skills.base import BaseSkill
+from lingyi.safety.allergens import dietary_caution, parse_allergy_terms
 
 logger = logging.getLogger(__name__)
 
@@ -22,8 +23,8 @@ class TreatmentSkill(BaseSkill):
     """
     处方技能节点。
 
-    生成处方建议后，自动调用 SafetyEngine 进行十八反十九畏校验。
-    若检测到配伍禁忌，将冲突信息反馈给 LLM 要求重写。
+    生成处方建议后，自动调用 SafetyEngine 进行十八反十九畏与过敏原校验。
+    若检测到配伍禁忌或过敏原，将冲突信息反馈给 LLM 要求重写。
     """
 
     def __init__(
@@ -70,11 +71,22 @@ class TreatmentSkill(BaseSkill):
         if profile_text:
             context_parts.append(profile_text)
 
+        allergy_terms = parse_allergy_terms(
+            (state.get("patient_profile") or {}).get("allergies", "")
+        )
+        if allergy_terms:
+            context_parts.append(
+                "【过敏原规避 - 必须遵守】患者报告过敏: "
+                + "、".join(allergy_terms)
+                + "。处方与食疗建议均不得包含上述物质及其同源/炮制品；"
+                "确需使用时必须说明理由并提示就医。"
+            )
+
         safety_errors = state.get("safety_errors", "")
         if safety_errors:
             context_parts.append(
                 f"【安全校验失败 - 必须修正以下问题】\n{safety_errors}\n"
-                "请删除或替换存在配伍禁忌的药材，重新生成处方。"
+                "请删除或替换存在配伍禁忌或属于患者过敏原的药材，重新生成处方。"
             )
 
         messages = self._build_system_messages(system_prompt, context_parts)
@@ -98,19 +110,35 @@ class TreatmentSkill(BaseSkill):
             logger.error("处方 LLM 调用失败: %s", e)
             return {"treatment_plan": f"处方生成失败: {e}"}
 
-        # 安全校验
+        # 安全校验（配伍禁忌 + 过敏原）
+        allergies = (state.get("patient_profile") or {}).get("allergies", "")
         if self.safety_engine:
             herbs = self._extract_herbs(response)
             if herbs:
+                errors: list[str] = []
                 is_safe, error_msg = self.safety_engine.check_prescription(herbs)
-                if not is_safe:
-                    logger.warning("处方安全校验失败: %s", error_msg)
+                if not is_safe and error_msg:
+                    errors.append(error_msg)
+                allergies_safe, allergy_msg = self.safety_engine.check_allergies(
+                    herbs, allergies
+                )
+                if not allergies_safe and allergy_msg:
+                    errors.append(allergy_msg)
+
+                if errors:
+                    combined = "；".join(errors)
+                    logger.warning("处方安全校验失败: %s", combined)
                     return {
                         "messages": [{"role": "assistant", "content": response}],
                         "treatment_plan": response,
-                        "safety_errors": error_msg,
+                        "safety_errors": combined,
                         "safety_retry_count": state.get("safety_retry_count", 0) + 1,
                     }
+
+        caution = dietary_caution(response, allergies)
+        if caution:
+            response = f"{response}\n\n{caution}"
+            logger.info("已追加食物过敏提示")
 
         return {
             "messages": [{"role": "assistant", "content": response}],

@@ -20,6 +20,7 @@ from pydantic import BaseModel, Field
 
 from lingyi.agent.profile_format import format_profile
 from lingyi.agent.specialists.base import SpecialistBase
+from lingyi.safety.allergens import parse_allergy_terms
 
 logger = logging.getLogger(__name__)
 
@@ -104,11 +105,12 @@ class SafetyReviewerAgent(SpecialistBase):
     SYSTEM_PROMPT = (
         "你是中医处方安全审查官，扮演对抗性批评者角色。\n"
         "你的职责是尽力发现处方中的安全问题：十八反/十九畏配伍禁忌、"
-        "体质禁忌、剂量风险。\n\n"
+        "过敏原规避、体质禁忌、剂量风险。\n\n"
         "工作流程：\n"
         "1. 调用 check_herb_safety 工具核查配伍禁忌\n"
         "2. 调用 lookup_herb 工具了解药材的禁忌信息\n"
-        "3. 综合分析后给出审查结论\n\n"
+        "3. 核对处方与食疗建议是否包含【过敏原】清单中的物质及其同源/炮制品，命中即不批准\n"
+        "4. 综合分析后给出审查结论\n\n"
         "审查原则：\n"
         "- 只有确认无安全问题才批准\n"
         "- 有任何疑虑一律不批准并给出修改建议\n"
@@ -167,6 +169,17 @@ class SafetyReviewerAgent(SpecialistBase):
         profile_text = format_profile(state.get("patient_profile"))
         if profile_text:
             parts.append(profile_text)
+
+        # 过敏原清单（确定性解析，避免模型只盯「药物」二字）
+        allergy_terms = parse_allergy_terms(
+            (state.get("patient_profile") or {}).get("allergies", "")
+        )
+        if allergy_terms:
+            parts.append(
+                "【过敏原 - 必须核对】患者报告过敏: "
+                + "、".join(allergy_terms)
+                + "。处方与食疗建议不得包含上述物质及其同源/炮制品；命中即不批准。"
+            )
 
         # 完整处方文本（供审查者参考剂量、用法等）
         if treatment_plan:

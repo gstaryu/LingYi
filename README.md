@@ -227,6 +227,7 @@ START -> reader -> mem_recall -> safety_guard -> inquiry -> 路由
 |---|---|
 | `SafetyGuardSkill` | 前置拦截，关键词预检 + LLM 审查用户输入中的禁忌意图 |
 | `SafetyEngine` | 确定性规则引擎，十八反 6 条 + 十九畏 12 条，处方生成后硬校验 |
+| `AllergyEngine`（`lingyi/safety/allergens.py`） | 过敏原规则表：别名/同类同源/同名药材拦截；食物过敏额外扫描食疗建议并追加提示 |
 | `SafetyReviewerAgent` | 对抗式批评者（multiagent），智能审查处方，不通过则回综合节点重生成 |
 | `SAFETY_FAIL_MODE` | 前置审查 LLM 异常时策略：`closed`（拒绝，默认）/ `open`（放行） |
 
