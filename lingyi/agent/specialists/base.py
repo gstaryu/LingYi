@@ -17,6 +17,7 @@ from typing import Any
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from lingyi.agent.profile_format import format_profile
+from lingyi.agent.text_utils import normalize_llm_text
 
 logger = logging.getLogger(__name__)
 
@@ -135,38 +136,77 @@ class SpecialistBase:
     @staticmethod
     def _parse_json(content: str) -> dict | None:
         """
-        解析 LLM 返回的 JSON（支持直接 JSON、代码块、嵌入 JSON）。
+        解析 LLM 返回的 JSON（直接 JSON / 代码块 / 嵌入 JSON / 轻微损坏修复）。
 
-        与 BaseSkill.parse_json_response 逻辑一致，但独立实现避免循环依赖。
+        fallback 链：原文 → 代码块内容 → 最外层大括号 → 上述三者的修复版。
+        修复只处理低风险问题（中文引号、单引号键、尾随逗号），解析结果仍要求是 dict。
         """
         if not content:
             return None
-        # 直接解析
-        try:
-            result = json.loads(content)
+
+        candidates: list[str] = [content]
+        fence = re.search(r"```(?:json)?\s*(.*?)\s*```", content, re.DOTALL)
+        if fence:
+            candidates.append(fence.group(1))
+        start, end = content.find("{"), content.rfind("}")
+        if start != -1 and end > start:
+            candidates.append(content[start : end + 1])
+
+        candidates.extend(SpecialistBase._repair_json(c) for c in list(candidates))
+
+        for cand in candidates:
+            if not cand:
+                continue
+            try:
+                result = json.loads(cand)
+            except (json.JSONDecodeError, ValueError):
+                continue
             if isinstance(result, dict):
                 return result
-        except (json.JSONDecodeError, ValueError):
-            pass
-        # 代码块提取
-        match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", content, re.DOTALL)
-        if match:
-            try:
-                result = json.loads(match.group(1))
-                if isinstance(result, dict):
-                    return result
-            except (json.JSONDecodeError, ValueError):
-                pass
-        # 嵌入 JSON 提取（非贪婪匹配最外层大括号）
-        match = re.search(r"\{.*\}", content, re.DOTALL)
-        if match:
-            try:
-                result = json.loads(match.group())
-                if isinstance(result, dict):
-                    return result
-            except (json.JSONDecodeError, ValueError):
-                pass
         return None
+
+    @staticmethod
+    def _repair_json(text: str) -> str:
+        """修复常见的轻度 JSON 损坏：中文引号、单引号键、尾随逗号。"""
+        t = text.strip()
+        t = t.replace("“", '"').replace("”", '"')
+        t = t.replace("‘", "'").replace("’", "'")
+        t = re.sub(r"'([^'\"\n]{1,40})'\s*:", r'"\1":', t)
+        t = re.sub(r"'([^'\"\n]{0,200})'", r'"\1"', t)
+        t = re.sub(r",(\s*[}\]])", r"\1", t)
+        return t
+
+    @staticmethod
+    def _fallback_reasoning(content: str, default: str) -> str:
+        """解析失败时的可读兜底：优先抽取 reasoning 字段，绝不回显原始 JSON。"""
+        if not content:
+            return default
+        # 纯文本回答（模型没按 JSON 输出）：保留可读文本
+        if "{" not in content:
+            text = normalize_llm_text(content).strip()
+            return text[:500] if text else default
+        match = re.search(r'"reasoning"\s*:\s*"((?:[^"\\]|\\.)*)"', content, re.DOTALL)
+        if match:
+            raw = match.group(1)
+            try:
+                value = json.loads(f'"{raw}"')
+            except (json.JSONDecodeError, ValueError):
+                value = raw
+            value = normalize_llm_text(str(value)).strip()
+            if value:
+                return value[:500]
+        return "（专家输出解析失败，已隐藏原始内容）"
+
+    @staticmethod
+    def _normalize_note(value: Any) -> Any:
+        """递归归一化笔记中的字符串字段（还原字面 \\n 等转义）。"""
+        if isinstance(value, str):
+            return normalize_llm_text(value)
+        if isinstance(value, list):
+            return [SpecialistBase._normalize_note(v) for v in value]
+        if isinstance(value, dict):
+            return {k: SpecialistBase._normalize_note(v) for k, v in value.items()}
+        return value
 
     # ==================== 节点入口 ====================
 
@@ -198,7 +238,7 @@ class SpecialistBase:
             logger.error("专家 %s 执行失败: %s", self.specialist_name, e, exc_info=True)
             final_content = ""
 
-        note = self._parse_note(final_content)
+        note = self._normalize_note(self._parse_note(final_content))
         logger.info("专家 %s 完成会诊笔记", self.specialist_name)
         return {"consultation_notes": [note]}
 

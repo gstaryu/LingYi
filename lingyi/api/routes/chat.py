@@ -12,6 +12,7 @@ from langchain_core.messages import AIMessage, AIMessageChunk, BaseMessage, Huma
 from pydantic import BaseModel
 
 from lingyi.agent.session_naming import DEFAULT_THREAD_TITLE
+from lingyi.agent.text_utils import normalize_llm_text
 from lingyi.api.deps import (
     decode_access_token,
     get_agent,
@@ -58,8 +59,8 @@ def _extract_last_ai_response(messages: list[BaseMessage]) -> str:
     """
     for msg in reversed(messages):
         if getattr(msg, "type", "") in ("ai", "assistant") and getattr(msg, "content", ""):
-            return msg.content
-    return messages[-1].content if messages else ""
+            return normalize_llm_text(msg.content)
+    return normalize_llm_text(messages[-1].content) if messages else ""
 
 
 async def _persist_partial_answer(
@@ -416,7 +417,11 @@ async def get_thread_messages(thread_id: str, agent: Any = Depends(get_agent)):
                     (getattr(msg, "additional_kwargs", None) or {}).get("stopped", False)
                 )
                 result.append(
-                    MessageItem(role="assistant", content=msg.content, stopped=stopped)
+                    MessageItem(
+                        role="assistant",
+                        content=normalize_llm_text(msg.content),
+                        stopped=stopped,
+                    )
                 )
         if result and notes:
             for item in reversed(result):

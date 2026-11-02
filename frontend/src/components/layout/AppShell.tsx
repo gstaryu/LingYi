@@ -33,6 +33,7 @@ import {
   HeartPulse,
 } from "lucide-react";
 import type { ProfileUpdate } from "@/lib/types";
+import { NO_MEMBER_ID, useMemberStore } from "@/stores/member";
 import {
   formatHistoryInline,
   historyIssue,
@@ -87,14 +88,17 @@ function SidebarContent({
 }) {
   const router = useRouter();
   const qc = useQueryClient();
+  const { activeMemberId } = useMemberStore();
+  // 画像归属：不结合咨询人 → 不展示；否则跟随当前咨询人（空值回退主账号）
+  const profileId = activeMemberId === NO_MEMBER_ID ? null : activeMemberId || username;
   const { data: threads } = useQuery({
     queryKey: ["threads"],
     queryFn: api.listThreads,
   });
   const { data: profile } = useQuery({
-    queryKey: ["profile", username],
-    queryFn: () => api.getProfile(username),
-    enabled: !!username,
+    queryKey: ["profile", profileId],
+    queryFn: () => api.getProfile(profileId as string),
+    enabled: !!profileId,
   });
 
   const createMut = useMutation({
@@ -135,7 +139,7 @@ function SidebarContent({
     mutationFn: ({ user, data }: { user: string; data: ProfileUpdate }) =>
       api.updateProfile(user, data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["profile", username] });
+      qc.invalidateQueries({ queryKey: ["profile", profileId] });
       toast.success("画像已更新");
     },
     onError: (e) => toast.error(e instanceof ApiError ? e.message : "更新失败"),
@@ -215,8 +219,10 @@ function SidebarContent({
         <div className="mb-2 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
           <HeartPulse className="h-3.5 w-3.5" aria-hidden /> 用户画像
           <button
-            className="ml-auto rounded p-0.5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="ml-auto rounded p-0.5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-40"
+            disabled={!profileId}
             onClick={() => {
+              if (!profileId) return;
               setProfileForm({
                 allergies: profile?.allergies ?? "无",
                 age: profile?.age != null ? String(profile.age) : "",
@@ -237,6 +243,11 @@ function SidebarContent({
             <Pencil className="h-3 w-3" />
           </button>
         </div>
+        {!profileId && (
+          <p className="mb-1 text-[11px] text-muted-foreground">
+            当前为「不结合咨询人」，不加载任何画像
+          </p>
+        )}
         <dl className="space-y-1 text-sm">
           <div className="flex justify-between gap-2">
             <dt className="shrink-0 text-muted-foreground">年龄/性别</dt>
@@ -490,7 +501,7 @@ function SidebarContent({
                 ) {
                   data.age = Math.round(ageNum);
                 }
-                updateProfileMut.mutate({ user: username, data });
+                updateProfileMut.mutate({ user: profileId as string, data });
                 setEditingProfile(false);
               }}
             >

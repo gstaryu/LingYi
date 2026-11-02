@@ -44,7 +44,7 @@ class SpecialistBianzheng(SpecialistBase):
             return {
                 "specialist": self.SPECIALIST_NAME,
                 "syndrome": "",
-                "reasoning": content[:500] if content else "辨证分析失败",
+                "reasoning": self._fallback_reasoning(content, "辨证分析失败"),
                 "confidence": 0.0,
             }
         try:

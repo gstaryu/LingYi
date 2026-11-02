@@ -53,7 +53,7 @@ class SpecialistBencao(SpecialistBase):
                 "specialist": self.SPECIALIST_NAME,
                 "herb_notes": [],
                 "safety_warnings": [],
-                "reasoning": content[:500] if content else "本草核查失败",
+                "reasoning": self._fallback_reasoning(content, "本草核查失败"),
             }
         herb_notes = data.get("herb_notes", [])
         if not isinstance(herb_notes, list):

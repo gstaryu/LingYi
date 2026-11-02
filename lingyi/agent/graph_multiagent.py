@@ -18,6 +18,7 @@
 import json
 import logging
 import re
+import time
 import uuid
 from typing import TYPE_CHECKING, Any
 
@@ -88,12 +89,15 @@ def _wrap_with_stage(stage: str, label: str, node_fn: Any):
 
     async def wrapped(state: dict[str, Any]) -> dict[str, Any]:
         _emit_stage(stage, label, "start")
+        started = time.perf_counter()
         result = await node_fn(state)
+        elapsed = time.perf_counter() - started
         note = None
         if stage in _NOTE_STAGES and isinstance(result, dict):
             notes = result.get("consultation_notes") or []
             if notes:
                 note = notes[0]
+        logger.info("阶段耗时: %s(%s) %.2fs", label, stage, elapsed)
         _emit_stage(stage, label, "done", note)
         return result
 

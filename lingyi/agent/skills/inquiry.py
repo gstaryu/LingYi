@@ -21,6 +21,8 @@ from typing import Any
 from langchain_core.messages import BaseMessage
 from pydantic import BaseModel, Field
 
+from lingyi.agent.text_utils import normalize_llm_text
+
 from lingyi.agent.skills.base import BaseSkill
 
 logger = logging.getLogger(__name__)
@@ -188,7 +190,9 @@ class InquirySkill(BaseSkill):
         # diagnose 时不添加消息--理法方药由后续 specialists + synthesis 生成，
         # 避免追问/过渡语与诊断结论同时出现。
         if intent_type in ("chat", "consult"):
-            out["messages"] = [{"role": "assistant", "content": result.response or ""}]
+            out["messages"] = [
+                {"role": "assistant", "content": normalize_llm_text(result.response or "")}
+            ]
         # 只在生成追问（将展示给用户）时才递增计数
         if intent_type == "consult":
             out["inquiry_count"] = current_count + 1

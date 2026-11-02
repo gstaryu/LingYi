@@ -45,7 +45,7 @@ class SpecialistFangji(SpecialistBase):
                 "specialist": self.SPECIALIST_NAME,
                 "recommended_formulas": [],
                 "modifications": "",
-                "reasoning": content[:500] if content else "方剂推荐失败",
+                "reasoning": self._fallback_reasoning(content, "方剂推荐失败"),
             }
         formulas = data.get("recommended_formulas", [])
         if not isinstance(formulas, list):
