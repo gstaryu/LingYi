@@ -16,8 +16,8 @@ from lingyi.config import get_settings
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-# 允许的文件类型（与 FileParser 支持的范围一致）
-_ALLOWED_EXTS = {".pdf", ".docx", ".txt"}
+# 允许的文件类型（与 FileParser 支持的范围一致，含 OCR 图片）
+_ALLOWED_EXTS = {".pdf", ".docx", ".txt", ".png", ".jpg", ".jpeg", ".webp", ".bmp"}
 # 单文件大小上限（10MB）
 _MAX_SIZE = 10 * 1024 * 1024
 

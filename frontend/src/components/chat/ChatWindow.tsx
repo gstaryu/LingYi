@@ -319,7 +319,7 @@ export function ChatWindow({ threadId }: { threadId: string }) {
             <input
               ref={fileInputRef}
               type="file"
-              accept=".pdf,.docx,.txt"
+              accept=".pdf,.docx,.txt,.png,.jpg,.jpeg,.webp,.bmp"
               className="hidden"
               onChange={(e) => {
                 const f = e.target.files?.[0];
@@ -333,7 +333,7 @@ export function ChatWindow({ threadId }: { threadId: string }) {
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading || streaming}
               aria-label="上传病历文件"
-              title="上传病历文件（PDF/DOCX/TXT）"
+              title="上传病历文件（PDF/DOCX/TXT/图片）"
             >
               <Paperclip className="h-4 w-4" />
             </Button>

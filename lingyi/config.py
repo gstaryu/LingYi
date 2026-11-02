@@ -135,6 +135,33 @@ class Settings(BaseSettings):
         description="Embedding 设备: cuda / cpu",
     )
 
+    # ==================== 文件解析 / OCR 配置 ====================
+    ocr_enabled: bool = Field(
+        default=True,
+        description="是否启用 OCR（图片直接识别；PDF 每页文本不足时栅格化识别）",
+    )
+    ocr_engine: str = Field(
+        default="rapidocr",
+        description="OCR 引擎: rapidocr（当前唯一内置实现）",
+    )
+    ocr_min_text_chars: int = Field(
+        default=30,
+        description="PDF 每页提取文本少于该字符数时，改用 OCR 识别该页",
+    )
+    ocr_max_pages: int = Field(
+        default=10,
+        description="单文件最多 OCR 页数（控制耗时与内存）",
+    )
+    ocr_dpi: int = Field(default=200, description="PDF 栅格化 DPI")
+    ocr_max_image_side: int = Field(
+        default=2400,
+        description="图片长边上限（像素），超过则等比缩放后再识别",
+    )
+    ocr_timeout_seconds: int = Field(
+        default=30,
+        description="单页 OCR 超时时间（秒），超时跳过该页",
+    )
+
     # ==================== Reranker 配置 ====================
     rerank_model_name: str = Field(
         default="BAAI/bge-reranker-v2-m3",

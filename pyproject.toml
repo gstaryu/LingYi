@@ -46,6 +46,10 @@ dependencies = [
     "pypdf>=4.0",
     "python-docx>=1.0",
 
+    # OCR（图片 / 扫描版 PDF；模型随 wheel 内置，离线可用）
+    "rapidocr-onnxruntime>=1.4,<2",
+    "pypdfium2>=4",
+
     # 工具
     "python-dotenv>=1.0",
     "tqdm>=4.0",

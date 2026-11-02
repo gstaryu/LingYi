@@ -103,6 +103,21 @@ WEB_SEARCH_ENABLED=true
 | `EMBEDDING_QUERY_PROMPT_NAME` | （空） | 查询嵌入 prompt 名称（Qwen3 需设为 `query`） |
 | `EMBEDDING_DEVICE` | `cuda` | Embedding 设备: cuda / cpu |
 
+#### OCR 配置（图片 / 扫描版 PDF）
+
+| 变量 | 默认值 | 说明 |
+|---|---|---|
+| `OCR_ENABLED` | `true` | 是否启用 OCR；关闭后图片返回空文本、PDF 只用提取文本 |
+| `OCR_ENGINE` | `rapidocr` | OCR 引擎（当前仅内置 RapidOCR） |
+| `OCR_MIN_TEXT_CHARS` | `30` | PDF 某页提取文本少于该字符数时改用 OCR |
+| `OCR_MAX_PAGES` | `10` | 单文件最多 OCR 页数 |
+| `OCR_DPI` | `200` | PDF 栅格化 DPI（越高越清晰、越慢） |
+| `OCR_MAX_IMAGE_SIDE` | `2400` | 图片长边上限（像素），超过先等比缩放 |
+| `OCR_TIMEOUT_SECONDS` | `30` | 单页 OCR 超时，超时跳过该页 |
+
+依赖随 `pip install -e .` 安装（`rapidocr-onnxruntime` + `pypdfium2`，约 +20MB）；
+手写处方识别率有限，OCR 文本会带 `【OCR识别，可能存在误差】` 前缀。
+
 #### RAG 配置
 
 | 变量 | 默认值 | 说明 |
