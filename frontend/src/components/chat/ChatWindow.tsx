@@ -39,6 +39,9 @@ import {
   Check,
   UserPlus,
   UserX,
+  Settings2,
+  Trash2,
+  Pencil,
 } from "lucide-react";
 
 interface UploadedFile {
@@ -97,6 +100,10 @@ export function ChatWindow({ threadId }: { threadId: string }) {
   const { data: threads } = useQuery({ queryKey: ["threads"], queryFn: api.listThreads });
   const [addingMember, setAddingMember] = useState(false);
   const [newMemberName, setNewMemberName] = useState("");
+  const [managingMembers, setManagingMembers] = useState(false);
+  const [confirmDeleteMember, setConfirmDeleteMember] = useState<string | null>(null);
+  const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
+  const [editMemberName, setEditMemberName] = useState("");
 
   // 成员列表就绪后：显式 none → null；具体 id 失效（换账号/被删）→ 回退主成员
   const memberReady = Array.isArray(members) && members.length > 0;
@@ -111,6 +118,10 @@ export function ChatWindow({ threadId }: { threadId: string }) {
   const memberLabel = memberReady
     ? (selectedMember?.display_name ?? "不结合咨询人")
     : "本人";
+  const memberNameCounts = (members ?? []).reduce<Record<string, number>>((acc, m) => {
+    acc[m.display_name] = (acc[m.display_name] ?? 0) + 1;
+    return acc;
+  }, {});
 
   const createMemberMut = useMutation({
     mutationFn: (name: string) => api.createMember(name),
@@ -122,6 +133,42 @@ export function ChatWindow({ threadId }: { threadId: string }) {
       handleSelectMember(m.member_id);
     },
     onError: (e) => toast.error(e instanceof ApiError ? e.message : "新增失败"),
+  });
+
+  const deleteMemberMut = useMutation({
+    mutationFn: (id: string) => api.deleteMember(id),
+    onSuccess: (_data, id) => {
+      const boundToDeleted = threads?.some(
+        (t) => t.thread_id === currentThreadId && t.member_id === id
+      );
+      const deletingActive = activeMemberId === id;
+      if (deletingActive) {
+        setActiveMember("");
+      }
+      // 先移除被删咨询人的画像缓存，避免 invalidate 时用已失效 id 重新请求（404）
+      qc.removeQueries({ queryKey: ["profile", id] });
+      qc.invalidateQueries({ queryKey: ["members"] });
+      qc.invalidateQueries({ queryKey: ["threads"] });
+      qc.invalidateQueries({ queryKey: ["profile"] });
+      // 当前会话属于被删咨询人（或正选中它）→ 回到新会话空页
+      if (currentThreadId && (deletingActive || boundToDeleted)) {
+        router.push("/chat");
+      }
+      setConfirmDeleteMember(null);
+      toast.success("咨询人已删除");
+    },
+    onError: (e) => toast.error(e instanceof ApiError ? e.message : "删除失败"),
+  });
+
+  const renameMemberMut = useMutation({
+    mutationFn: ({ id, name }: { id: string; name: string }) => api.renameMember(id, name),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["members"] });
+      setEditingMemberId(null);
+      setEditMemberName("");
+      toast.success("咨询人已重命名");
+    },
+    onError: (e) => toast.error(e instanceof ApiError ? e.message : "重命名失败"),
   });
 
   const newThreadMut = useMutation({
@@ -299,6 +346,9 @@ export function ChatWindow({ threadId }: { threadId: string }) {
                 <DropdownMenuItem onClick={() => setAddingMember(true)}>
                   <UserPlus className="mr-2 h-3.5 w-3.5" aria-hidden /> 新增咨询人
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setManagingMembers(true)}>
+                  <Settings2 className="mr-2 h-3.5 w-3.5" aria-hidden /> 管理咨询人
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleSelectMember(NO_MEMBER_ID)}>
                   <UserX className="mr-2 h-3.5 w-3.5" aria-hidden />
                   <span className="flex-1">不结合咨询人</span>
@@ -390,6 +440,145 @@ export function ChatWindow({ threadId }: { threadId: string }) {
                   onClick={() => createMemberMut.mutate(newMemberName.trim())}
                 >
                   创建
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          {/* 管理咨询人 */}
+          <Dialog
+            open={managingMembers}
+            onOpenChange={(o) => {
+              if (!o) {
+                setManagingMembers(false);
+                setConfirmDeleteMember(null);
+              }
+            }}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>管理咨询人</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-2">
+                {members?.map((m) => (
+                  <div
+                    key={m.member_id}
+                    className="flex min-h-10 items-center gap-2 rounded-md border px-3 py-1.5"
+                  >
+                    <UserRound className="h-3.5 w-3.5 shrink-0 text-primary/70" aria-hidden />
+                    {editingMemberId === m.member_id ? (
+                      <>
+                        <Input
+                          value={editMemberName}
+                          onChange={(e) => setEditMemberName(e.target.value)}
+                          className="h-7 flex-1 text-sm"
+                          maxLength={30}
+                          autoFocus
+                          aria-label={`重命名咨询人 ${m.display_name}`}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" && editMemberName.trim()) {
+                              renameMemberMut.mutate({ id: m.member_id, name: editMemberName.trim() });
+                            }
+                            if (e.key === "Escape") {
+                              setEditingMemberId(null);
+                              setEditMemberName("");
+                            }
+                          }}
+                        />
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-7 px-2 text-xs"
+                          onClick={() => {
+                            setEditingMemberId(null);
+                            setEditMemberName("");
+                          }}
+                        >
+                          取消
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="h-7 px-2 text-xs"
+                          disabled={!editMemberName.trim() || renameMemberMut.isPending}
+                          onClick={() =>
+                            renameMemberMut.mutate({
+                              id: m.member_id,
+                              name: editMemberName.trim(),
+                            })
+                          }
+                        >
+                          保存
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <span className="flex-1 truncate text-sm">
+                          {m.display_name}
+                          {m.is_primary && m.display_name !== "本人" ? "（本人）" : ""}
+                          {memberNameCounts[m.display_name] > 1
+                            ? `（${m.member_id.slice(-4)}）`
+                            : ""}
+                        </span>
+                        {m.is_primary ? (
+                          <span className="text-[11px] text-muted-foreground">主成员</span>
+                        ) : confirmDeleteMember === m.member_id ? (
+                          <>
+                            <span className="text-[11px] text-destructive">确认删除？</span>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-7 px-2 text-xs"
+                              onClick={() => setConfirmDeleteMember(null)}
+                            >
+                              取消
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              className="h-7 px-2 text-xs"
+                              disabled={deleteMemberMut.isPending}
+                              onClick={() => deleteMemberMut.mutate(m.member_id)}
+                            >
+                              删除
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-7 px-2"
+                              aria-label={`重命名咨询人 ${m.display_name}`}
+                              onClick={() => {
+                                setConfirmDeleteMember(null);
+                                setEditingMemberId(m.member_id);
+                                setEditMemberName(m.display_name);
+                              }}
+                            >
+                              <Pencil className="h-3.5 w-3.5" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-7 px-2 text-destructive hover:text-destructive"
+                              aria-label={`删除咨询人 ${m.display_name}`}
+                              onClick={() => setConfirmDeleteMember(m.member_id)}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </>
+                        )}
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p className="text-[11px] leading-snug text-muted-foreground">
+                可点铅笔重命名；删除咨询人会同时删除其画像与名下会话，无法恢复；主成员不可删除。
+              </p>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setManagingMembers(false)}>
+                  关闭
                 </Button>
               </DialogFooter>
             </DialogContent>
