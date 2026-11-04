@@ -14,6 +14,7 @@ from langchain_core.messages import BaseMessage
 
 from lingyi.agent.profile_format import format_profile
 from lingyi.agent.skills.base import BaseSkill
+from lingyi.agent.text_utils import strip_herb_json_block
 from lingyi.safety.allergens import dietary_caution, parse_allergy_terms
 
 logger = logging.getLogger(__name__)
@@ -129,7 +130,9 @@ class TreatmentSkill(BaseSkill):
                     combined = "；".join(errors)
                     logger.warning("处方安全校验失败: %s", combined)
                     return {
-                        "messages": [{"role": "assistant", "content": response}],
+                        "messages": [
+                            {"role": "assistant", "content": strip_herb_json_block(response)}
+                        ],
                         "treatment_plan": response,
                         "safety_errors": combined,
                         "safety_retry_count": state.get("safety_retry_count", 0) + 1,
@@ -141,7 +144,9 @@ class TreatmentSkill(BaseSkill):
             logger.info("已追加食物过敏提示")
 
         return {
-            "messages": [{"role": "assistant", "content": response}],
+            "messages": [
+                {"role": "assistant", "content": strip_herb_json_block(response)}
+            ],
             "treatment_plan": response,
             "safety_errors": None,
             "has_provided_treatment": True,

@@ -110,6 +110,21 @@ function SidebarContent({
     onError: (e) => toast.error(e instanceof ApiError ? e.message : "创建失败"),
   });
 
+  // 当前会话 ID（/chat/{id}）；在 /chat 空白页时为空
+  const currentThreadId = pathname.startsWith("/chat/") ? pathname.slice("/chat/".length) : "";
+
+  /** 新建对话前先判断当前是否已是空白对话，避免堆积空线程。 */
+  async function handleNewThread() {
+    if (!currentThreadId) return; // 已经在新对话页
+    try {
+      const msgs = await api.getMessages(currentThreadId);
+      if (msgs.length === 0) return; // 当前会话没有任何记录
+    } catch {
+      // 读取失败时按“有内容”处理，保持原有行为
+    }
+    createMut.mutate();
+  }
+
   const renameMut = useMutation({
     mutationFn: ({ id, title }: { id: string; title: string }) => api.renameThread(id, title),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["threads"] }),
@@ -154,8 +169,8 @@ function SidebarContent({
         <Button
           size="sm"
           className="ml-auto"
-          onClick={() => createMut.mutate()}
-          disabled={createMut.isPending}
+          onClick={handleNewThread}
+          disabled={createMut.isPending || !currentThreadId}
         >
           <Plus className="mr-1 h-4 w-4" /> 新对话
         </Button>

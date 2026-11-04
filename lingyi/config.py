@@ -228,12 +228,12 @@ class Settings(BaseSettings):
         description="是否启用 web_search 工具（复用 RivalSearchMCP 服务，失败时按 fallback 策略处理）",
     )
     rivalsearch_mcp_command: str = Field(
-        default="C:/Users/start/mcp-servers/RivalSearchMCP/.venv/Scripts/python.exe",
-        description="RivalSearchMCP stdio 启动命令（解释器路径）",
+        default="",
+        description="RivalSearchMCP 解释器路径；与脚本路径任一为空则省略 web_search",
     )
     rivalsearch_mcp_script: str = Field(
-        default="C:/Users/start/mcp-servers/RivalSearchMCP/server.py",
-        description="RivalSearchMCP server.py 脚本路径（作为 stdio 启动参数）",
+        default="",
+        description="RivalSearchMCP server.py 路径（stdio 参数）；为空则省略 web_search",
     )
     web_search_fallback_to_ddgs: bool = Field(
         default=False,

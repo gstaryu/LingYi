@@ -37,6 +37,7 @@ dependencies = [
 
     # 向量数据库
     "chromadb>=0.6",
+    "rank_bm25>=0.2",  # chroma 模式混合检索的 BM25 分支
 
     # Embedding / Reranker（仅 chroma 模式）
     "sentence-transformers>=3.0",
@@ -49,6 +50,10 @@ dependencies = [
     # OCR（图片 / 扫描版 PDF；模型随 wheel 内置，离线可用）
     "rapidocr-onnxruntime>=1.4,<2",
     "pypdfium2>=4",
+
+    # MCP（服务端 lingyi/mcp/server.py + web_search 客户端适配）
+    "mcp>=1.0",
+    "langchain-mcp-adapters>=0.1",
 
     # 工具
     "python-dotenv>=1.0",

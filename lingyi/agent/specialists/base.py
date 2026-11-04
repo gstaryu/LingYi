@@ -178,13 +178,18 @@ class SpecialistBase:
 
     @staticmethod
     def _fallback_reasoning(content: str, default: str) -> str:
-        """解析失败时的可读兜底：优先抽取 reasoning 字段，绝不回显原始 JSON。"""
+        """解析失败时的可读兜底：优先抽取 reasoning 字段，否则回显模型原文。
+
+        专家笔记是用户可见的诊断依据，结构化解析失败也不能吞掉模型输出。
+        """
         if not content:
             return default
-        # 纯文本回答（模型没按 JSON 输出）：保留可读文本
-        if "{" not in content:
-            text = normalize_llm_text(content).strip()
-            return text[:500] if text else default
+        text = normalize_llm_text(content).strip()
+        if not text:
+            return default
+        # 纯文本回答（模型没按 JSON 输出）：直接返回原文
+        if "{" not in text:
+            return text[:500]
         match = re.search(r'"reasoning"\s*:\s*"((?:[^"\\]|\\.)*)"', content, re.DOTALL)
         if match:
             raw = match.group(1)
@@ -195,7 +200,8 @@ class SpecialistBase:
             value = normalize_llm_text(str(value)).strip()
             if value:
                 return value[:500]
-        return "（专家输出解析失败，已隐藏原始内容）"
+        # 连 reasoning 字段都取不到：回显原文，让用户看到专家到底说了什么
+        return text[:800]
 
     @staticmethod
     def _normalize_note(value: Any) -> Any:

@@ -160,51 +160,46 @@ async def build_web_search_tool(settings: Any) -> BaseTool | None:
         logger.info("web_search 已通过配置禁用，省略该工具")
         return None
 
-    command = getattr(
-        settings,
-        "rivalsearch_mcp_command",
-        "C:/Users/start/mcp-servers/RivalSearchMCP/.venv/Scripts/python.exe",
-    )
-    script = getattr(
-        settings,
-        "rivalsearch_mcp_script",
-        "C:/Users/start/mcp-servers/RivalSearchMCP/server.py",
-    )
+    command = getattr(settings, "rivalsearch_mcp_command", "")
+    script = getattr(settings, "rivalsearch_mcp_script", "")
     fallback_to_ddgs = getattr(settings, "web_search_fallback_to_ddgs", False)
 
-    # ---- 1) 尝试 MCP stdio 复用 ----
-    try:
-        from langchain_mcp_adapters.client import MultiServerMCPClient
-
-        client = MultiServerMCPClient(
-            {
-                "rivalsearch": {
-                    "command": command,
-                    "args": [script],
-                    "transport": "stdio",
-                }
-            }
-        )
+    # ---- 1) 尝试 MCP stdio 复用（未配置路径则跳过）----
+    if not (command and script):
+        logger.info("未配置 RIVALSEARCH_MCP_COMMAND / RIVALSEARCH_MCP_SCRIPT，跳过 MCP web_search")
+    else:
         try:
-            tools = await asyncio.wait_for(client.get_tools(), timeout=_MCP_CONNECT_TIMEOUT)
-        except asyncio.TimeoutError:
-            logger.warning("RivalSearchMCP 连接超时（%ds）", _MCP_CONNECT_TIMEOUT)
-            await _safe_close_client(client)
-            tools = []
-        except Exception as e:  # noqa: BLE001 - 连接失败进入回退逻辑
-            logger.warning("RivalSearchMCP 连接失败: %s", e)
-            await _safe_close_client(client)
-            tools = []
+            from langchain_mcp_adapters.client import MultiServerMCPClient
 
-        mcp_web_search = next((t for t in tools if t.name == "web_search"), None)
-        if mcp_web_search is not None:
-            logger.info("web_search 工具已通过 RivalSearchMCP(stdio) 加载")
-            return _make_mcp_web_search_tool(mcp_web_search, client)
-        # 未找到 web_search 工具，清理已建立的子进程连接
-        await _safe_close_client(client)
-        logger.warning("RivalSearchMCP 已连接但未暴露 web_search 工具")
-    except Exception as e:  # noqa: BLE001 - 适配器缺失等
-        logger.warning("加载 langchain-mcp-adapters 失败，将尝试回退: %s", e)
+            client = MultiServerMCPClient(
+                {
+                    "rivalsearch": {
+                        "command": command,
+                        "args": [script],
+                        "transport": "stdio",
+                    }
+                }
+            )
+            try:
+                tools = await asyncio.wait_for(client.get_tools(), timeout=_MCP_CONNECT_TIMEOUT)
+            except asyncio.TimeoutError:
+                logger.warning("RivalSearchMCP 连接超时（%ds）", _MCP_CONNECT_TIMEOUT)
+                await _safe_close_client(client)
+                tools = []
+            except Exception as e:  # noqa: BLE001 - 连接失败进入回退逻辑
+                logger.warning("RivalSearchMCP 连接失败: %s", e)
+                await _safe_close_client(client)
+                tools = []
+
+            mcp_web_search = next((t for t in tools if t.name == "web_search"), None)
+            if mcp_web_search is not None:
+                logger.info("web_search 工具已通过 RivalSearchMCP(stdio) 加载")
+                return _make_mcp_web_search_tool(mcp_web_search, client)
+            # 未找到 web_search 工具，清理已建立的子进程连接
+            await _safe_close_client(client)
+            logger.warning("RivalSearchMCP 已连接但未暴露 web_search 工具")
+        except Exception as e:  # noqa: BLE001 - 适配器缺失等
+            logger.warning("加载 langchain-mcp-adapters 失败，将尝试回退: %s", e)
 
     # ---- 2) 回退 DuckDuckGo 或优雅返回 None ----
     if fallback_to_ddgs:

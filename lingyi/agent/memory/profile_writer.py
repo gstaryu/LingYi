@@ -52,6 +52,10 @@ class ProfileWriterSkill(BaseSkill):
         # 待完成的后台写入任务集合：防止任务被 GC，并在应用关闭时 flush
         self._pending: set[asyncio.Task] = set()
 
+    def _load_prompt(self) -> str:
+        """画像提取使用内联提示词，不依赖 skills/ 目录下的 .md 文件。"""
+        return ""
+
     async def execute(self, state: dict[str, Any]) -> dict[str, Any]:
         """
         调度后台画像提取与持久化（fire-and-forget，不阻塞响应）。

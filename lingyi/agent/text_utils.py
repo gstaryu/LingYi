@@ -10,6 +10,22 @@ import re
 
 _ESCAPE_PATTERN = re.compile(r"\\r\\n|\\n|\\t")
 
+# treatment / synthesis 提示词要求模型在正文末尾附带的药材清单代码块
+_HERB_JSON_TAIL = re.compile(
+    r"\n*```(?:json)?\s*\{[^`]*?\"herb_names\"[^`]*?\}\s*```\s*$",
+    re.DOTALL,
+)
+
+
+def strip_herb_json_block(text: str) -> str:
+    """移除正文末尾的 herb_names JSON 代码块（只保留用户可见内容）。
+
+    该代码块仅供 SafetyEngine 解析药材，不应出现在用户回复里。
+    """
+    if not text or "herb_names" not in text:
+        return text
+    return _HERB_JSON_TAIL.sub("", text).rstrip()
+
 
 def normalize_llm_text(text: str) -> str:
     """把字面量转义序列还原为真实字符（\\n -> 换行，\\t -> 制表符）。

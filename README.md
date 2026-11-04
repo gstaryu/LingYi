@@ -79,7 +79,7 @@ LingYi/
 ### 环境要求
 
 - Python 3.12（conda 环境名 `lingyi`）
-- Node.js 18+（前端）
+- Node.js 20.9+（前端，Next.js 16 的最低要求）
 - 任意 OpenAI 兼容模型服务：OpenAI、DashScope、DeepSeek、本地 vLLM/Ollama 或第三方网关，需提供 API Key
 
 ### 1. 安装
@@ -131,8 +131,13 @@ LLM_EXTRA_HEADERS={"x-opencode-session":"<任意 uuid4>"}
 
 ### 3. 知识库（仓库已内置，通常可跳过）
 
-`storage/patient_profiles.db` 随仓库提供，已含本草 614 味、方剂 1855 首、禁忌 38 条，
-新环境**无需初始化即可启动**。仅在需要重建时执行：
+`storage/patient_profiles.db` 随仓库提供，已含本草 614 味、方剂 1855 首、禁忌 38 条；
+`storage/chroma_db/` 随仓库提供，已含 1537 条古籍向量（伤寒论 / 金匮要略 / 温病条辨 /
+神农本草经 / 脉经 / 素问），新环境**无需初始化即可启动**。
+
+默认 `RAG_MODE=mock`（预设规则，不读向量库）；启用古籍检索需设 `RAG_MODE=chroma`。
+向量库由 `Qwen3-Embedding-0.6B`（1024 维）生成，改用其他 embedding 模型后必须重新入库。
+仅在需要重建时执行：
 
 ```bash
 # 结构化知识库（本草/方剂/禁忌，幂等）

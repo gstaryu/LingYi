@@ -79,6 +79,7 @@ class RAGSearchSkill(BaseSkill):
         try:
             # 粗排：向量检索召回 recall_k 条
             results = await self.rag_client.hybrid_search(query, n_results=self.recall_k)
+            recalled = len(results)
 
             # 精排：Cross-Encoder 重排，取 top rerank_k（无 reranker 时跳过，向后兼容）
             if self.reranker and results:
@@ -88,7 +89,7 @@ class RAGSearchSkill(BaseSkill):
             logger.info(
                 "RAG 检索完成: 查询='%s', 召回 %d 条, 精排后 %d 条",
                 query[:50],
-                self.recall_k,
+                recalled,
                 len(docs),
             )
             return {"retrieved_docs": docs}

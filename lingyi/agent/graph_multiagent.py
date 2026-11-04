@@ -28,6 +28,7 @@ from langgraph.types import Send
 
 from lingyi.agent.profile_format import format_profile
 from lingyi.agent.state import AgentState
+from lingyi.agent.text_utils import strip_herb_json_block
 from lingyi.safety.allergens import dietary_caution, parse_allergy_terms
 
 if TYPE_CHECKING:
@@ -353,7 +354,7 @@ def _make_synthesis_node(chat_model: Any, safety_engine: Any = None):
         # synthesis_message_id：先用 RemoveMessage 移除旧处方消息，再追加新版，
         # 确保历史中只保留最终批准的处方，避免前端 mergeAssistantMessages 拼接出
         # 重复的【辨证结论】/【处方建议】及药材 chips。
-        new_msg = AIMessage(content=user_message, id=str(uuid.uuid4()))
+        new_msg = AIMessage(content=strip_herb_json_block(user_message), id=str(uuid.uuid4()))
         prev_id = state.get("synthesis_message_id")
         messages_out: list = []
         if prev_id:
