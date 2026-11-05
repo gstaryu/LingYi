@@ -9,6 +9,10 @@
 | Mock | `mock`（默认） | 从本地 JSON 文件加载预设检索结果 | 本地开发、测试 |
 | ChromaDB | `chroma` | ChromaDB + Embedding 向量检索 + BM25 混合检索 | 生产环境 |
 
+> 仓库内置 `storage/chroma_db/`（1537 条古籍向量，由 Qwen3-Embedding-0.6B 生成），
+> clone 后设 `RAG_MODE=chroma` 即可直接用；更换 embedding 模型后需重新入库。
+> BM25 分支依赖 `rank_bm25`（已在 `pyproject.toml` 依赖中）。
+
 ## Mock 模式
 
 `lingyi/rag/mock.py: MockRAGClient` 从 `storage/mock_rag_data.json` 加载预设检索结果。

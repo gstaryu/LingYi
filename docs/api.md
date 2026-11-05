@@ -95,7 +95,8 @@ Authorization: Bearer <token>
 {
   "message": "string  (最长 10000 字符)",
   "thread_id": "string  (为空时自动创建)",
-  "files": ["string"]  (最多 10 个文件路径)
+  "files": ["string"]  (最多 10 个文件路径),
+  "member_id": "string | null  (null=主成员本人；\"\"=不结合咨询人；其他值须归属当前账号)"
 }
 ```
 
@@ -247,6 +248,76 @@ WebSocket 流式聊天端点。
 ]
 ```
 
+## 咨询人管理
+
+咨询人是账号下的就诊对象（本人 / 家庭成员）。主成员的 `member_id` 等于用户名，
+保证历史画像（`patient_id == username`）无需迁移即可继续使用。
+所有接口均需认证，且只能操作本账号的咨询人。
+
+### GET /api/members
+
+列出当前账号的咨询人（主成员在前）；老账号首次访问时自动补建主成员。
+
+**响应**（200）：
+```json
+[
+  {
+    "member_id": "alice",
+    "display_name": "本人",
+    "created_at": "2026-01-01T00:00:00",
+    "is_primary": true
+  }
+]
+```
+
+### POST /api/members
+
+新建咨询人。
+
+**请求体**：
+```json
+{ "display_name": "母亲" }
+```
+
+**响应**（200）：单个 `MemberResponse`（结构同上）。
+
+**错误**：
+| 状态码 | 说明 |
+|---|---|
+| 400 | 显示名不能为空 |
+
+### PATCH /api/members/{member_id}
+
+重命名咨询人。
+
+**请求体**：
+```json
+{ "display_name": "外婆" }
+```
+
+**响应**（200）：单个 `MemberResponse`。
+
+**错误**：
+| 状态码 | 说明 |
+|---|---|
+| 400 | 显示名不能为空 |
+| 404 | 咨询人不存在或不归属当前账号 |
+
+### DELETE /api/members/{member_id}
+
+删除咨询人及其画像、会话。
+
+**响应**（200）：
+```json
+{ "status": "ok" }
+```
+
+**错误**：
+| 状态码 | 说明 |
+|---|---|
+| 400 | 主成员不可删除 / 至少保留一个咨询人 |
+| 404 | 咨询人不存在或不归属当前账号 |
+
 ## 患者画像
 
 ### GET /api/profiles/{patient_id}
@@ -265,7 +336,7 @@ WebSocket 流式聊天端点。
 
 ### PATCH /api/profiles/{patient_id}
 
-更新患者画像。需认证，仅限本人编辑（`patient_id` 必须等于当前用户名）。
+更新患者画像。需认证，仅限本账号的咨询人（`patient_id` 为 `member_id`）。
 
 **请求体**（部分更新）：
 ```json
@@ -288,7 +359,7 @@ WebSocket 流式聊天端点。
 **错误**：
 | 状态码 | 说明 |
 |---|---|
-| 403 | 只能修改自己的画像 |
+| 404 | 咨询人不存在或不归属当前账号 |
 
 ### GET /api/profiles
 

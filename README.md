@@ -66,7 +66,7 @@ LingYi/
 │   └── config.py            # pydantic-settings 配置
 ├── frontend/               # Next.js 前端
 ├── data_pipeline/          # TCM 数据处理（ingest + seed_knowledge）
-├── tests/                  # pytest 测试套件
+├── tests/                  # pytest 测试套件（开发产物，不随仓库分发）
 └── docs/                   # 项目文档
 ```
 

@@ -4,6 +4,9 @@
 
 灵医项目包含后端和前端两套测试体系，全部使用桩（stub）离线运行，无需真实 LLM API。此外提供一套六维在线评测体系（需要 LLM API Key）。
 
+> **注意**：`tests/` 与 `evaluation/` 属于开发产物，被 `.gitignore` 排除，**不随仓库分发**。
+> clone 下来后这两个目录为空，本文档描述的是本地开发环境中的完整测试体系。
+
 | 端 | 框架 | 测试数 | 运行目录 |
 |---|---|---|---|
 | 后端 | pytest | 319 passed + 1 skipped | 项目根目录 |
@@ -22,7 +25,6 @@
 | router | 意图路由准确率（chat/consult/diagnose） | 30 条标注查询 | 否 |
 | safety | SafetyEngine 规则准确率 + 端到端拦截率 | 20 药对 + 30 对抗用例 | 否 |
 | performance | 端到端/分节点延迟 P50/P95、Token/请求 | 30 轮（15 chat + 15 diagnose） | 否 |
-| performance | 端到端/分节点延迟 P50/P95、Token/请求 | 30 轮（15 chat + 15 diagnose） | 否 |
 
 运行示例：
 
@@ -38,8 +40,6 @@ python -m evaluation.runner --only safety --limit 5
 ```
 
 报告落 `evaluation/reports/`（JSON 明细 + summary.md 汇总），完整分析见 [evaluation_report.md](evaluation_report.md)。
-
-## 后端测试
 
 ## 后端测试
 

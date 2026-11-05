@@ -83,13 +83,14 @@ python -m data_pipeline.ingest --mode mock
 | `content` | `str` | 文本内容 |
 | `metadata` | `dict` | 元数据（书名、章节等） |
 
-## 知识库种子（seed_knowledge.py）
+## 知识库种子
 
-### 功能
+三个幂等脚本共同构建结构化知识库。仓库已内置 `storage/patient_profiles.db`，通常无需执行；
+仅在需要重建时按需运行。
 
-将结构化的中医知识库种子数据（本草、方剂、禁忌）写入 `storage/patient_profiles.db` 的 `herbs`、`formulas`、`contraindications` 表。
+### seed_knowledge.py（手工整理基础库）
 
-### 用法
+将手工整理的本草、方剂、禁忌写入 `storage/patient_profiles.db`。
 
 ```bash
 # 使用默认 db_path
@@ -99,13 +100,37 @@ python -m data_pipeline.seed_knowledge
 python -m data_pipeline.seed_knowledge --db-path /tmp/test.db
 ```
 
-### 种子数据
+### seed_pharmacopoeia.py（本草扩充，+581 味）
 
-| 类别 | 数量 | 数据来源 |
+从 2015 版《中国药典》xlsx 批量导入，需指定外部 xlsx 路径（见脚本内默认值）。
+字段映射自药典「功能与主治 / 用法与用量」，别名、炮制、禁忌留空，由 SafetyEngine 兜底。
+
+```bash
+python -m data_pipeline.seed_pharmacopoeia
+```
+
+### seed_formulas_classics.py（方剂扩充，+1833 首）
+
+导入四部古籍的全量处方提取结果（产物在 `storage/extracted_formulas/`）：
+
+| 古籍 | 条数 |
+|---|---|
+| 《备急千金要方》 | 901 |
+| 《太平惠民和剂局方》 | 569 |
+| 《外台秘要》 | 242 |
+| 《医方集解》 | 121 |
+
+```bash
+python -m data_pipeline.seed_formulas_classics
+```
+
+### 种子数据总览
+
+| 类别 | 数量 | 构成 |
 |---|---|---|
-| 本草（Herbs） | 33 味 | 《神农本草经》、《中药学》教材 |
-| 方剂（Formulas） | 22 首 | 《伤寒论》、《金匮要略》 |
-| 禁忌（Contraindications） | 14 条 | 十八反/十九畏配伍 + 体质禁忌 |
+| 本草（Herbs） | 614 味 | 手工整理 33 + 《中国药典》581 |
+| 方剂（Formulas） | 1855 首 | 手工整理 22 + 四部古籍提取 1833 |
+| 禁忌（Contraindications） | 38 条 | 十八反 / 十九畏配伍禁忌 |
 
 ### 数据模型
 

@@ -3,6 +3,10 @@
 **日期**: 2026-09-02（含 09-01 首轮与 09-02 改进轮）｜ **被测模型**: doubao-seed-2.0-lite（ARK 网关）｜ **AGENT_MODE**: workflow ｜ **标注数据总量**: 201 条
 **复现命令**: 见 `docs/testing.md`「评测体系」；JSON 明细（含完整原始响应）在 `evaluation/reports/`。
 
+> **可复现性说明**：`evaluation/` 与 `tests/` 被 `.gitignore` 排除，**不随仓库分发**。
+> 本文档记录的是 2026-09-02 在本地开发环境、指定模型下的一次历史结果，clone 后无法直接复现；
+> 复现需自备 `evaluation/` 目录、标注数据与可用的 LLM API Key。
+
 ## 汇总表（改进轮终值）
 
 | 维度 | 指标 | 首轮 → 终值 | 数据量 |

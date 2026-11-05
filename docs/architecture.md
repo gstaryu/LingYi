@@ -14,7 +14,7 @@
                 │ REST + SSE / WebSocket
 ┌───────────────▼─────────────────────────────┐
 │  API 层 (FastAPI)                             │
-│  routes: auth / chat / threads / profiles / upload │
+│  routes: auth / chat / threads / members / profiles / upload │
 │  lifespan 组装实例 -> app.state，请求级 Depends 注入 │
 └───────────────┬─────────────────────────────┘
                 │ 调用
@@ -34,7 +34,7 @@
 
 | 层 | 职责 | 依赖规则 |
 |---|---|---|
-| **Core**（agent / rag / safety / storage / knowledge / tools / parsers） | 领域逻辑 | 构造函数注入，**不 import FastAPI / Streamlit** |
+| **Core**（agent / rag / safety / storage / knowledge / tools / parsers） | 领域逻辑 | 构造函数注入，**不 import FastAPI 等 Web 框架** |
 | **API**（lingyi/api） | HTTP 接口、鉴权、流式 | 实例在 `lifespan` 创建存 `app.state`；请求级 `Depends` 读取；`deps.py` 无模块级全局单例 |
 | **UI**（frontend） | 用户交互 | 通过 `lib/api.ts` 调后端 |
 

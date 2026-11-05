@@ -140,6 +140,18 @@ WEB_SEARCH_ENABLED=true
 | `REVIEWER_MAX_RETRIES` | `2` | 对抗审查者最大重试次数 |
 | `SAFETY_FAIL_MODE` | `closed` | 前置安全审查 LLM 异常策略: closed / open |
 | `TOKEN_COMPRESSION_THRESHOLD` | `8000` | 上下文压缩触发阈值（字符数） |
+| `MAX_HISTORY_MESSAGES_INQUIRY` | `5` | 问诊节点携带的历史对话轮次 |
+| `MAX_HISTORY_MESSAGES_DIAGNOSIS` | `3` | 辨证节点携带的历史对话轮次 |
+| `MAX_HISTORY_MESSAGES_TREATMENT` | `2` | 处方节点携带的历史对话轮次 |
+
+#### 运行时与路径
+
+| 变量 | 默认值 | 说明 |
+|---|---|---|
+| `ENVIRONMENT` | `development` | 运行环境: development / testing / production |
+| `LOG_LEVEL` | `INFO` | 日志级别 |
+| `BASE_DIR` | 项目根目录 | 项目根路径（一般无需修改） |
+| `STORAGE_DIR` | `<项目根>/storage` | 运行时数据目录（SQLite / ChromaDB / 上传文件） |
 
 #### 认证与网络
 
@@ -158,6 +170,9 @@ WEB_SEARCH_ENABLED=true
 | `LANGSMITH_API_KEY` | （空） | LangSmith API Key |
 | `LANGSMITH_PROJECT` | `lingyi` | LangSmith 项目名 |
 | `WEB_SEARCH_ENABLED` | `true` | 是否启用 web_search 工具 |
+| `RIVALSEARCH_MCP_COMMAND` | （空） | RivalSearchMCP 解释器路径；与脚本路径任一为空则省略 web_search |
+| `RIVALSEARCH_MCP_SCRIPT` | （空） | RivalSearchMCP `server.py` 路径 |
+| `WEB_SEARCH_FALLBACK_TO_DDGS` | `false` | MCP 不可用时是否回退 DuckDuckGo（需自行安装 ddgs） |
 
 ## 启动
 
