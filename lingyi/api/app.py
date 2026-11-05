@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from lingyi.config import get_settings
 from lingyi.logging import setup_logging
-from lingyi.tracing import setup_tracing
+from lingyi.tracing import create_langfuse_callbacks, setup_tracing
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +52,9 @@ async def lifespan(app: FastAPI):
     settings = get_settings()
     setup_logging(settings.log_level)
     setup_tracing(settings)
+    # Langfuse 回调：必须在上面的环境变量写入之后创建（SDK 单例首次读取 LANGFUSE_*）
+    app.state.langfuse_callbacks = create_langfuse_callbacks(settings)
+    app.state.agent_mode = settings.agent_mode
     logger.info("灵医 API 启动中... 环境: %s, RAG 模式: %s", settings.environment, settings.rag_mode)
 
     # storage（始终创建，无 API 依赖）
@@ -154,6 +157,11 @@ async def lifespan(app: FastAPI):
             await _safe_close_client(mcp_client)
     await close_checkpointer(app.state.checkpointer)
     await storage.close()
+    # 刷出待上报的 Langfuse trace（OTel 批量上报，进程退出前需显式 flush 否则丢失尾部数据）
+    if getattr(app.state, "langfuse_callbacks", None):
+        from langfuse import get_client
+
+        get_client().flush()
     logger.info("灵医 API 关闭")
 
 

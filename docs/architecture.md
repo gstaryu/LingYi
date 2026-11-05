@@ -95,4 +95,6 @@ LangGraph 状态（`lingyi/agent/state.py`）核心字段：
 ## 日志与追踪
 
 - 所有模块 `logger = logging.getLogger(__name__)`，`lingyi/logging.py` 统一配置（UTF-8 强制，避免 Windows 控制台乱码）。
-- `ENABLE_TRACING=true` 时 `lingyi/tracing.py` 配置 LangSmith 链路追踪。
+- `ENABLE_LANGFUSE=true` 时 `lingyi/tracing.py` 设置 `LANGFUSE_*` 环境变量并创建 `CallbackHandler`；
+  `api/routes/chat.py` 把它注入 LangGraph 的 `config["callbacks"]`，节点与 LLM 调用自动形成嵌套 trace。
+  `metadata` 中的 `langfuse_session_id`/`langfuse_user_id` 分别映射咨询线程与账号。

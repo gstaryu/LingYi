@@ -218,9 +218,13 @@ class Settings(BaseSettings):
     )
 
     # ==================== 追踪配置 ====================
-    enable_tracing: bool = Field(default=False, description="是否启用 LangSmith 链路追踪")
-    langsmith_api_key: str = Field(default="", description="LangSmith API Key")
-    langsmith_project: str = Field(default="lingyi", description="LangSmith 项目名")
+    enable_langfuse: bool = Field(default=False, description="是否启用自托管 Langfuse 链路追踪")
+    langfuse_public_key: str = Field(default="", description="Langfuse 项目 Public Key（pk-lf-...）")
+    langfuse_secret_key: str = Field(default="", description="Langfuse 项目 Secret Key（sk-lf-...）")
+    langfuse_host: str = Field(
+        default="http://localhost:3001",
+        description="自托管 Langfuse 服务地址（默认 3001，避开前端 Next.js 的 3000）",
+    )
 
     # ==================== 网络搜索配置 ====================
     web_search_enabled: bool = Field(

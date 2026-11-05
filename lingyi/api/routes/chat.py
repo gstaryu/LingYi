@@ -21,6 +21,7 @@ from lingyi.api.deps import (
     resolve_member_id,
 )
 from lingyi.api.schemas import ChatRequest, ChatResponse
+from lingyi.tracing import trace_metadata
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -37,6 +38,38 @@ _SLOW_THRESHOLD = 30.0
 # LangGraph 递归深度上限：多智能体会诊图含 synthesis<->reviewer/safety_check 重试循环，
 # 默认 25 可能不够；设 50 留足余量（单次路径约 8 步，重试最多 3 轮）。
 _RECURSION_LIMIT = 50
+
+
+def _build_config(
+    app_state: Any,
+    *,
+    thread_id: str,
+    username: str,
+    member_id: str | None,
+    streaming: bool,
+) -> dict:
+    """
+    构造 LangGraph 调用配置。
+
+    启用 Langfuse 时把 CallbackHandler 注入 config["callbacks"]——LangGraph 会把它
+    传播到所有子 run（节点、LLM 调用、工具调用），一次请求即一条完整 trace。
+    metadata 中的 langfuse_session_id / langfuse_user_id 让 UI 按会话和账号聚合。
+    """
+    config: dict[str, Any] = {
+        "configurable": {"thread_id": thread_id},
+        "recursion_limit": _RECURSION_LIMIT,
+    }
+    callbacks = getattr(app_state, "langfuse_callbacks", None)
+    if callbacks:
+        config["callbacks"] = callbacks
+        config["metadata"] = trace_metadata(
+            thread_id=thread_id,
+            username=username,
+            member_id=member_id,
+            agent_mode=getattr(app_state, "agent_mode", "workflow"),
+            streaming=streaming,
+        )
+    return config
 
 
 class MessageItem(BaseModel):
@@ -192,7 +225,13 @@ async def chat(
         "member_id": member_id,
         "intent_type": "chat",
     }
-    config = {"configurable": {"thread_id": thread_id}, "recursion_limit": _RECURSION_LIMIT}
+    config = _build_config(
+        http_request.app.state,
+        thread_id=thread_id,
+        username=username,
+        member_id=member_id,
+        streaming=stream,
+    )
 
     # 流式模式 - 边收边发，前端实时显示
     if stream:
@@ -348,7 +387,13 @@ async def websocket_chat(websocket: WebSocket):
                 "member_id": member_id,
                 "intent_type": "chat",
             }
-            config = {"configurable": {"thread_id": thread_id}, "recursion_limit": _RECURSION_LIMIT}
+            config = _build_config(
+                websocket.app.state,
+                thread_id=thread_id,
+                username=username,
+                member_id=member_id,
+                streaming=True,
+            )
 
             try:
                 import time

@@ -35,6 +35,9 @@ dependencies = [
     # 配置管理
     "pydantic-settings>=2.0",
 
+    # 链路追踪（自托管 Langfuse；LangChain Callback 自动接入）
+    "langfuse>=5.1",
+
     # 向量数据库
     "chromadb>=0.6",
     "rank_bm25>=0.2",  # chroma 模式混合检索的 BM25 分支

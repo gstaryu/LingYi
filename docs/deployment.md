@@ -57,8 +57,11 @@ AGENT_MODE=workflow
 # 安全
 SAFETY_FAIL_MODE=closed
 
-# 追踪
-ENABLE_TRACING=false
+# 链路追踪（自托管 Langfuse，可选）
+ENABLE_LANGFUSE=false
+LANGFUSE_HOST=http://localhost:3001
+LANGFUSE_PUBLIC_KEY=
+LANGFUSE_SECRET_KEY=
 
 # 网络搜索
 WEB_SEARCH_ENABLED=true
@@ -166,9 +169,10 @@ WEB_SEARCH_ENABLED=true
 
 | 变量 | 默认值 | 说明 |
 |---|---|---|
-| `ENABLE_TRACING` | `false` | 是否启用 LangSmith 链路追踪 |
-| `LANGSMITH_API_KEY` | （空） | LangSmith API Key |
-| `LANGSMITH_PROJECT` | `lingyi` | LangSmith 项目名 |
+| `ENABLE_LANGFUSE` | `false` | 是否启用自托管 Langfuse 链路追踪 |
+| `LANGFUSE_HOST` | `http://localhost:3001` | Langfuse 服务地址 |
+| `LANGFUSE_PUBLIC_KEY` | （空） | Langfuse 项目 Public Key |
+| `LANGFUSE_SECRET_KEY` | （空） | Langfuse 项目 Secret Key |
 | `WEB_SEARCH_ENABLED` | `true` | 是否启用 web_search 工具 |
 | `RIVALSEARCH_MCP_COMMAND` | （空） | RivalSearchMCP 解释器路径；与脚本路径任一为空则省略 web_search |
 | `RIVALSEARCH_MCP_SCRIPT` | （空） | RivalSearchMCP `server.py` 路径 |
@@ -190,6 +194,8 @@ WEB_SEARCH_ENABLED=true
 - 切换 Windows 控制台代码页为 UTF-8（65001）
 - 激活 conda 环境，启动后端 `uvicorn lingyi.api.app:app --port 8000`
 - 启动前端 `npm run dev`（:3000）
+- `.env` 中 `ENABLE_LANGFUSE=true` 时，先调用 `deploy/langfuse/start.ps1` 拉起 Langfuse 容器
+  （Docker 未运行会自动启动 Docker Desktop；失败仅告警，不影响问诊）
 - Linux/macOS 用 `./start.sh`
 
 **方式二：分别启动**
@@ -246,6 +252,29 @@ python -m data_pipeline.ingest --mode mock
 python -m lingyi.mcp.server
 ```
 
+## 链路追踪（Langfuse）
+
+自托管 Langfuse 给出逐请求的 trace：LangGraph 节点链、每次 LLM 调用的 prompt / 回复 /
+token / 耗时，以及异常与重试。数据全部留在本机。
+
+```bash
+cd deploy/langfuse
+cp .env.example .env
+docker compose up -d
+```
+
+随后在项目根 `.env` 中启用：
+
+```env
+ENABLE_LANGFUSE=true
+LANGFUSE_HOST=http://localhost:3001
+LANGFUSE_PUBLIC_KEY=pk-lf-lingyi-local
+LANGFUSE_SECRET_KEY=sk-lf-lingyi-local
+```
+
+组件清单、端口占用、镜像拉取失败等常见问题见
+[deploy/langfuse/README.md](../deploy/langfuse/README.md)。
+
 ## 运行时数据
 
 所有运行时数据存储在 `storage/` 目录（不提交到版本控制）：
@@ -267,4 +296,5 @@ python -m lingyi.mcp.server
 4. **Embedding 模式**：生产环境推荐 `EMBEDDING_MODE=online`（无需本地 GPU）或确保 GPU 可用
 5. **RAG 模式**：生产环境使用 `RAG_MODE=chroma`，需先执行数据入库
 6. **Agent 模式**：`AGENT_MODE=multiagent` 启用多智能体会诊（更高质量，更多 LLM 调用）
-7. **追踪**：`ENABLE_TRACING=true` 启用 LangSmith 链路追踪，便于调试
+7. **追踪**：先按 `deploy/langfuse/README.md` 启动自托管 Langfuse，再设 `ENABLE_LANGFUSE=true`；
+   trace 全部留在本机，问诊内容不外传
