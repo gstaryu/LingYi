@@ -67,6 +67,7 @@ LingYi/
 ├── frontend/               # Next.js 前端
 ├── data_pipeline/          # TCM 数据处理（ingest + seed_knowledge）
 ├── tests/                  # pytest 测试套件（开发产物，不随仓库分发）
+├── deploy/                 # 自托管基础设施（Langfuse 观测栈）
 └── docs/                   # 项目文档
 ```
 
@@ -137,6 +138,19 @@ LLM_EXTRA_HEADERS={"x-opencode-session":"<任意 uuid4>"}
 
 默认 `RAG_MODE=mock`（预设规则，不读向量库）；启用古籍检索需设 `RAG_MODE=chroma`。
 向量库由 `Qwen3-Embedding-0.6B`（1024 维）生成，改用其他 embedding 模型后必须重新入库。
+
+### 4. 链路追踪（可选）
+
+自托管 Langfuse 可逐请求记录 LangGraph 节点链、每次 LLM 调用的 prompt / 回复 / token / 耗时，
+数据全部留在本机。默认关闭，未安装 Docker 也能正常使用灵医：
+
+```powershell
+.\deploy\langfuse\start.ps1      # 或 cd deploy/langfuse && docker compose up -d
+```
+
+随后在 `.env` 设 `ENABLE_LANGFUSE=true`、`LANGFUSE_HOST`、`LANGFUSE_PUBLIC_KEY`、`LANGFUSE_SECRET_KEY`
+（`start.ps1` 会在启用时自动拉起容器）。UI 地址与账号见
+[deploy/langfuse/README.md](deploy/langfuse/README.md)。
 仅在需要重建时执行：
 
 ```bash
@@ -252,6 +266,7 @@ START -> reader -> mem_recall -> safety_guard -> inquiry -> 路由
 | [docs/deployment.md](docs/deployment.md) | 部署、配置项、环境变量 |
 | [docs/data_pipeline.md](docs/data_pipeline.md) | 数据处理与知识库种子 |
 | [docs/testing.md](docs/testing.md) | 测试体系与运行 |
+| [deploy/langfuse/README.md](deploy/langfuse/README.md) | 自托管 Langfuse 观测栈（启动、端口、排障） |
 
 ---
 
